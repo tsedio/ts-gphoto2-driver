@@ -1,11 +1,12 @@
-import {alloc, refType} from "ref";
-import {Pointer, PointerRef} from "../types/Pointer";
+import {alloc, allocCString, refType} from "ref";
+import {PointerRef} from "../types";
+
 /**
  *
  * @param type
- * @returns {PointerRef<T extends Pointer>}
+ * @returns {PointerRef<T>}
  * @constructor
  */
-export function GPPointerRef<T extends Pointer>(type: any = "void"): PointerRef<T> {
+export function GPPointerRef<T>(type: any = "void"): PointerRef<T> {
   return alloc(refType(type)) as any;
 }

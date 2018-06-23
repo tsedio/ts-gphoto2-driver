@@ -1,7 +1,7 @@
 {
-  "name": "gphoto2-driver",
+  "name": "ts-gphoto2-driver",
   "version": "1.0.0",
-  "description": "Node.js wrapper of C library libgphoto2",
+  "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
   "main": "lib/index.js",
   "typings": "lib/index.d.js",
   "repository": "https://github.com/romakita/gphoto2-driver.git",

@@ -1,13 +1,18 @@
 import {readCString} from "ref";
 import {ICloseable} from "../../interfaces";
 import {GPhoto2Driver} from "../GPhoto2Driver";
-import {GPCodes} from "../types/GPCodes";
-import {Pointer} from "../types/Pointer";
+import {GPCodes, PointerOf} from "../types";
 
-export function checkCode(returnValue: any) {
+/**
+ *
+ * @param returnValue
+ * @param method
+ * @returns {any}
+ */
+export function checkCode(returnValue: any, method: string = "") {
   if (returnValue < GPCodes.GP_OK) {
     const errorStr = GPhoto2Driver.gp_port_result_as_string(returnValue);
-    throw new Error(" returned " + returnValue + ": " + errorStr);
+    throw new Error((`${method} returned ${returnValue}: ${errorStr}`));
   }
   return returnValue;
 }
@@ -36,6 +41,12 @@ export function closeQuietly(c: ICloseable) {
   }
 }
 
-export function PointerToString(p: Pointer) {
+/**
+ * Return the string value of the pointer.
+ * @param {PointerOf<string>} p
+ * @returns {string}
+ * @constructor
+ */
+export function PointerToString(p: PointerOf<string>) {
   return readCString(p, 0);
 }

@@ -1,11 +1,11 @@
 /**
- *
+ * In C => *Type
  */
-export type Pointer = Buffer;
-
-/**
- *
- */
-export type PointerRef<T extends Pointer> = Buffer & {
+export type PointerOf<T> = Buffer & {
   deref(): T;
 };
+
+/**
+ * In C => **Type
+ */
+export type PointerRef<T> = PointerOf<PointerOf<T>>;

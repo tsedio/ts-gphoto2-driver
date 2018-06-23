@@ -1,12 +1,11 @@
 import {refType, types} from "ref";
-import {GPCodes} from "../types/GPCodes";
-import {Pointer, PointerRef} from "../types/Pointer";
+import {GPCodes, PointerOf} from "../types";
 import {PointerCameraList, RefCameraList} from "./GPCameraModule";
 
 /**
  *
  */
-export type PointerList = Pointer;
+export type PointerList = PointerOf<void>;
 
 export const GPListModuleDescription = {
   gp_list_new: ["int", [refType(RefCameraList)]],
@@ -34,7 +33,7 @@ export interface IGPListModule {
    * @returns {GPCodes}
    * @param buffer
    */
-  gp_list_new(buffer: PointerRef<PointerCameraList>): GPCodes;
+  gp_list_new(buffer: PointerOf<PointerCameraList>): GPCodes;
 
   /**
    *

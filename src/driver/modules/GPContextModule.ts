@@ -1,10 +1,9 @@
-import {Pointer} from "../types/Pointer";
-import {Ref} from "../types/Ref";
+import {PointerOf, Ref} from "../types";
 
 /**
  *
  */
-export type PointerContext = Pointer;
+export type PointerContext = PointerOf<void>;
 /**
  *
  */
@@ -12,7 +11,7 @@ export const RefContext = Ref;
 /**
  *
  */
-export type PointerCB = Pointer;
+export type PointerCB = PointerOf<void>;
 /**
  *
  * @type {Type}

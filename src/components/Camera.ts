@@ -1,17 +1,17 @@
-import {checkCode, closeQuietly, GPCaptureTypes, GPhoto2Driver, newPointerCamera} from "../driver";
-import {PointerPortInfo} from "../driver/modules";
-import {ICloseable} from "../interfaces";
+import {checkCode, closeQuietly, GPCaptureTypes, GPhoto2Driver} from "../driver";
+import {PointerCamera, PointerPortInfo} from "../driver/modules";
 import {CameraFile} from "./CameraFile";
 import {CameraFilePath} from "./CameraFilePath";
-import {CameraWidgets} from "./CameraWidgets";
 import {Context} from "./Context";
+import {PointerWrapper} from "./PointerWrapper";
 
-export class Camera implements ICloseable {
-  readonly pointer = newPointerCamera();
+export class Camera extends PointerWrapper<PointerCamera> {
   private initialized: boolean = false;
   private closed: boolean = false;
 
-  constructor() {}
+  constructor() {
+    super("gp_camera");
+  }
 
   /**
    *
@@ -60,7 +60,7 @@ export class Camera implements ICloseable {
     if (!this.closed) {
       this.deinitialize();
       this.closed = true;
-      checkCode(GPhoto2Driver.gp_camera_free(this.pointer));
+      super.close();
     }
     return this;
   }
@@ -99,11 +99,12 @@ export class Camera implements ICloseable {
    * Returns new configuration for the camera.
    * @return the configuration, never null. Must be closed afterwards.
    */
-  public newConfiguration(): CameraWidgets {
+
+  /* public newConfiguration(): CameraWidgets {
     this.checkNotClosed();
 
     return new CameraWidgets(this);
-  }
+  } */
 
   /**
    * Captures a full-quality image image on the camera.

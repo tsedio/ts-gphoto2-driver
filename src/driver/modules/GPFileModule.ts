@@ -1,6 +1,5 @@
 import {refType, types} from "ref";
-import {GPCodes} from "../types/GPCodes";
-import {PointerRef} from "../types/Pointer";
+import {GPCodes, PointerOf} from "../types";
 import {PointerCameraFile, RefCameraFile} from "./GPCameraModule";
 
 export const GPFileModuleDescription = {
@@ -14,10 +13,10 @@ export const GPFileModuleDescription = {
 export interface IGPFileModule {
   /**
    *
-   * @param {PointerRef<PointerCameraFile>} buffer
+   * @param {PointerOf<PointerCameraFile>} buffer
    * @returns {GPCodes}
    */
-  gp_file_new(buffer: PointerRef<PointerCameraFile>): GPCodes;
+  gp_file_new(buffer: PointerOf<PointerCameraFile>): GPCodes;
 
   /**
    *

@@ -1,5 +1,4 @@
 import {checkCode, GPhoto2Driver} from "..";
-import {getListName, getListValue} from "../driver/GPPointerOf";
 import {ICamera} from "../interfaces/ICamera";
 import {AbilitiesList} from "./AbilitiesList";
 import {List} from "./List";
@@ -25,8 +24,8 @@ export class CameraList extends List<ICamera> {
     const count = cameraList.size;
 
     for (let i = 0; i < count; i++) {
-      const model = getListName(cameraList, i);
-      const path = getListValue(cameraList, i);
+      const model = this.getName(i);
+      const path = this.getValue(i);
 
       if (path.match(CameraList.USB_PATTERN)) {
         this.push(model, path);
@@ -38,9 +37,14 @@ export class CameraList extends List<ICamera> {
     cameraList.close();
   }
 
+  /**
+   *
+   * @param {number} index
+   * @returns {PortInfo}
+   */
   public getPortInfo(index: number) {
     const portInfo = new PortInfo();
-    checkCode(GPhoto2Driver.gp_port_info_list_get_info(this.pointer, index, portInfo.buffer));
+    checkCode(GPhoto2Driver.gp_port_info_list_get_info(this.pointer, index, portInfo.pointer));
     return portInfo;
   }
 
@@ -61,11 +65,11 @@ export class CameraList extends List<ICamera> {
    * @returns {ICamera}
    */
   public toArray() {
-    return super.toArray().map((item: any) => {
+    return super.toArray().map((item: any, index: number) => {
       return {
         model: item.name,
-        port: item.value
-        //  portInfo:
+        port: item.value,
+        portInfo: this.getPortInfo(index)
       };
     });
   }

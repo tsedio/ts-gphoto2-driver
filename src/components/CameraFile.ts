@@ -1,20 +1,15 @@
-import {checkCode, GPhoto2Driver, newPointerCameraFile} from "../driver";
-import {ICloseable} from "../interfaces";
+import {checkCode, GPhoto2Driver} from "../driver";
+import {PointerCameraFile} from "../driver/modules";
+import {PointerWrapper} from "./PointerWrapper";
 
-export class CameraFile implements ICloseable {
-  readonly pointer = newPointerCameraFile();
+export class CameraFile extends PointerWrapper<PointerCameraFile> {
+
+  constructor() {
+    super("gp_file");
+  }
 
   public clean(): void {
     checkCode(GPhoto2Driver.gp_file_clean(this.pointer));
-  }
-
-  /**
-   * Closes this file link and frees allocated resources.
-   */
-  public close(): this {
-    checkCode(GPhoto2Driver.gp_file_free(this.pointer));
-
-    return this;
   }
 
   /**

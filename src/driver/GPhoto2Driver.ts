@@ -63,37 +63,6 @@ export const GPhoto2Driver = ffi.Library("libgphoto2", {
   gp_library_version: [types.CString, ["int"]]
 });
 
-/**
- *
- * @returns {any}
- */
-export function newPointerCamera(): PointerCamera {
-  return GPPointerOf<PointerCamera>("gp_camera_new");
-}
-
-/**
- *
- * @returns {any}
- */
-export function newPointerCameraFile(): PointerCameraFile {
-  return GPPointerOf("gp_file_new");
-}
-
-/**
- *
- * @returns {any}
- */
-export function newPointerList(): PointerList {
-  return GPPointerOf("gp_list_new");
-}
-
-/**
- *
- * @returns {any}
- */
-export function newPointerAbilitiesList(): PointerAbilityList {
-  return GPPointerOf("gp_abilities_list_new");
-}
 
 /**
  *
@@ -101,34 +70,6 @@ export function newPointerAbilitiesList(): PointerAbilityList {
  */
 export function newPointerPortInfoList(): PointerPortInfoList {
   return GPPointerOf("gp_port_info_list_new");
-}
-
-/**
- *
- * @param list
- * @param {number} index
- * @returns {any}
- */
-export function getListName(list: PointerList, index: number): string {
-  const buffer = GPPointerRef(types.CString);
-
-  GPhoto2Driver.gp_list_get_name(list, index, buffer);
-
-  return readCString(buffer.deref(), 0);
-}
-
-/**
- *
- * @param list
- * @param {number} index
- * @returns {any}
- */
-export function getListValue(list: PointerList, index: number): string {
-  const buffer = GPPointerRef(types.CString);
-
-  GPhoto2Driver.gp_list_get_value(list, index, buffer);
-
-  return readCString(buffer.deref(), 0);
 }
 
 /**

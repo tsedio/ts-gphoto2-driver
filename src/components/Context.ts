@@ -1,13 +1,13 @@
 import {GPhoto2Driver} from "../driver/GPhoto2Driver";
+import {PointerContext} from "../driver/modules";
 import {ICloseable} from "../interfaces/ICloseable";
-import {IGPContext} from "../interfaces/PointerContext";
 
 export class Context implements ICloseable {
   /**
    *
-   * @type {IGPContext}
+   * @type {PointerContext}
    */
-  readonly pointer: IGPContext = GPhoto2Driver.gp_context_new();
+  readonly pointer: PointerContext = GPhoto2Driver.gp_context_new();
   /**
    *
    */
@@ -25,16 +25,16 @@ export class Context implements ICloseable {
 
   /**
    *
-   * @param {IGPContext} context
+   * @param {PointerContext} context
    * @param {string} str
    * @param data
    */
-  private onError(context: IGPContext, str: string, data: any) {
+  private onError(context: PointerContext, str: string, data: any) {
     // fprintf(stderr, "### %s\n", str);
     console.error(str);
   }
 
-  private onStatus(context: IGPContext, str: string, data: any) {
+  private onStatus(context: PointerContext, str: string, data: any) {
     // fprintf(stderr, "### %s\n", str);
     console.error(str);
   }

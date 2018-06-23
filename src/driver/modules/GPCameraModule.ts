@@ -1,13 +1,13 @@
 import {refType, types} from "ref";
 import * as ArrayType from "ref-array";
 import * as StructType from "ref-struct";
-import {GPCodes, GPCaptureTypes, Pointer, PointerRef, Ref} from "../types";
+import {GPCaptureTypes, GPCodes, PointerOf, Ref} from "../types";
 import {PointerContext, RefContext} from "./GPContextModule";
 import {PointerCameraWidget, RefCameraWidget} from "./GPWidgetModule";
 /**
  *
  */
-export type PointerCamera = Pointer;
+export type PointerCamera = PointerOf<void>;
 
 /**
  *
@@ -17,7 +17,7 @@ export const RefCamera = Ref;
 /**
  *
  */
-export type PointerCameraList = Pointer;
+export type PointerCameraList = PointerOf<void>;
 
 /**
  *
@@ -26,7 +26,7 @@ export const RefCameraList = Ref;
 /**
  *
  */
-export type PointerCameraFile = Pointer;
+export type PointerCameraFile = PointerOf<void>;
 
 /**
  *
@@ -36,12 +36,12 @@ export const RefCameraFile = Ref;
 /**
  *
  */
-export type PointerCameraText = Pointer;
+export type PointerCameraText = PointerOf<void>;
 
 /**
  *
  */
-export type StructCameraText = StructType & {text: Pointer};
+export type StructCameraText = StructType & { text: PointerOf<string> };
 /**
  *
  * @type {StructType}
@@ -52,11 +52,14 @@ export const StructCameraText = StructType({
 /**
  *
  */
-export type PointerCameraFilePath = Pointer;
+export type PointerCameraFilePath = PointerOf<void>;
 /**
  *
  */
-export type StructCameraFilePath = StructType & {name: Pointer; folder: Pointer};
+export type StructCameraFilePath = StructType & {
+  name: PointerOf<string>;
+  folder: PointerOf<string>
+};
 /**
  *
  * @type {StructType}
@@ -104,7 +107,7 @@ export interface IGPCameraModule {
    * @param {Buffer} buffer
    * @returns {GPCodes}
    */
-  gp_camera_new(buffer: Buffer): GPCodes;
+  gp_camera_new(buffer: PointerOf<PointerCamera>): GPCodes;
 
   /**
    *
@@ -147,7 +150,7 @@ export interface IGPCameraModule {
    * Retrieve a configuration window for the camera.
    * @returns {GPCodes}
    */
-  gp_camera_get_config(camera: PointerCamera, buffer: PointerRef<PointerCameraWidget>, context: PointerContext): GPCodes;
+  gp_camera_get_config(camera: PointerCamera, buffer: PointerOf<PointerCameraWidget>, context: PointerContext): GPCodes;
 
   /**
    *
@@ -172,7 +175,7 @@ export interface IGPCameraModule {
   gp_camera_get_single_config(
     camera: PointerCamera,
     name: string,
-    buffer: PointerRef<PointerCameraWidget>,
+    buffer: PointerOf<PointerCameraWidget>,
     context: PointerContext
   ): GPCodes;
 
@@ -220,7 +223,7 @@ export interface IGPCameraModule {
   gp_camera_capture(
     camera: PointerCamera,
     cameraCaptureType: number,
-    path: PointerRef<PointerCameraFilePath>,
+    path: PointerOf<PointerCameraFilePath>,
     context: PointerContext
   ): GPCodes;
 

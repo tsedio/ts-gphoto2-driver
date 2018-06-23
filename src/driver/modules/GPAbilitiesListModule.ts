@@ -1,15 +1,15 @@
 import {refType} from "ref";
+import {PointerOf} from "../types";
 import {GPCodes} from "../types/GPCodes";
-import {Pointer} from "../types/Pointer";
 import {Ref} from "../types/Ref";
 import {PointerCameraList, RefCameraList} from "./GPCameraModule";
 import {PointerContext, RefContext} from "./GPContextModule";
-import {PointerPortList, RefPortInfoList} from "./GPPortInfoModule";
+import {PointerPortInfoList, RefPortInfoList} from "./GPPortInfoModule";
 
 /**
  *
  */
-export type PointerAbilityList = Pointer;
+export type PointerAbilityList = PointerOf<void>;
 /**
  *
  */
@@ -33,7 +33,7 @@ export interface IGPAbilitiesListModule {
    *
    * @param {Buffer} buffer
    */
-  gp_abilities_list_new(buffer: Buffer): void;
+  gp_abilities_list_new(buffer: PointerOf<PointerAbilityList>): void;
 
   /**
    *
@@ -53,7 +53,7 @@ export interface IGPAbilitiesListModule {
    */
   gp_abilities_list_detect(
     abilitiesList: PointerAbilityList,
-    portInfoList: PointerPortList,
+    portInfoList: PointerPortInfoList,
     cameraList: PointerCameraList,
     context: PointerContext
   ): GPCodes;

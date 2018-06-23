@@ -1,14 +1,14 @@
-import {GPhoto2Driver, newPointerAbilitiesList} from "../driver";
-import {checkCode} from "../driver/utils/GPUtils";
-import {ICloseable} from "../interfaces/ICloseable";
+import {checkCode, GPhoto2Driver} from "../driver";
+import {PointerAbilityList} from "../driver/modules";
 import {Context} from "./Context";
 import {List} from "./List";
+import {PointerWrapper} from "./PointerWrapper";
 import {PortInfoList} from "./PortInfoList";
 
-export class AbilitiesList implements ICloseable {
-  readonly pointer = newPointerAbilitiesList();
+export class AbilitiesList extends PointerWrapper<PointerAbilityList> {
 
   constructor() {
+    super("gp_abilities_list");
     this.load();
   }
 
@@ -32,15 +32,5 @@ export class AbilitiesList implements ICloseable {
     checkCode(GPhoto2Driver.gp_abilities_list_detect(this.pointer, portInfoList.pointer, list.pointer, Context.get().pointer));
 
     return list;
-  }
-
-  /**
-   *
-   * @returns {this}
-   */
-  close(): this {
-    GPhoto2Driver.gp_abilities_list_free(this.pointer);
-
-    return this;
   }
 }

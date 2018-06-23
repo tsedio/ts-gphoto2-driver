@@ -1,12 +1,14 @@
-import {checkCode, GPhoto2Driver} from "../driver/GPhoto2Driver";
-import {newPointerList, getListName, getListValue} from "../driver/GPPointerOf";
-import {ICamera} from "../interfaces/ICamera";
-import {ICloseable} from "../interfaces/ICloseable";
+import {readCString, types} from "ref";
+import {checkCode, GPhoto2Driver, GPPointerRef} from "../driver";
+import {PointerList} from "../driver/modules";
+import {ICamera} from "../interfaces";
+import {PointerWrapper} from "./PointerWrapper";
 
-export class List<T> implements ICloseable {
-  readonly pointer = newPointerList();
+export class List<T> extends PointerWrapper<PointerList> {
 
-  constructor() {}
+  constructor() {
+    super("gp_list");
+  }
 
   /**
    *
@@ -22,7 +24,11 @@ export class List<T> implements ICloseable {
    * @returns {any}
    */
   public getName(index: number): string {
-    return getListName(this.pointer, index);
+    const buffer = GPPointerRef(types.CString);
+
+    GPhoto2Driver.gp_list_get_name(this.pointer, index, buffer);
+
+    return readCString(buffer.deref(), 0);
   }
 
   /**
@@ -31,16 +37,15 @@ export class List<T> implements ICloseable {
    * @returns {any}
    */
   public getValue(index: number): string {
-    return getListValue(this.pointer, index);
+    const buffer = GPPointerRef(types.CString);
+
+    GPhoto2Driver.gp_list_get_value(this.pointer, index, buffer);
+
+    return readCString(buffer.deref(), 0);
   }
 
   public push(name: string, value: string) {
     checkCode(GPhoto2Driver.gp_list_append(this.pointer, name, value));
-  }
-
-  public close(): this {
-    checkCode(GPhoto2Driver.gp_list_free(this.pointer));
-    return this;
   }
 
   /**

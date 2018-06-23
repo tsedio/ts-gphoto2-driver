@@ -1,12 +1,10 @@
-import {newPointerPortInfoList} from "../driver";
-import {GPhoto2Driver} from "../driver/GPhoto2Driver";
-import {checkCode} from "../driver/utils/GPUtils";
-import {ICloseable} from "../interfaces/ICloseable";
+import {checkCode, GPhoto2Driver, PointerList} from "../driver";
+import {PointerWrapper} from "./PointerWrapper";
 
-export class PortInfoList implements ICloseable {
-  readonly pointer = newPointerPortInfoList();
+export class PortInfoList extends PointerWrapper<PointerList> {
 
   constructor() {
+    super("gp_port_info_list");
     this.load();
   }
 
@@ -15,14 +13,6 @@ export class PortInfoList implements ICloseable {
    */
   load(): this {
     checkCode(GPhoto2Driver.gp_port_info_list_load(this.pointer));
-    return this;
-  }
-
-  /**
-   *
-   */
-  close(): this {
-    GPhoto2Driver.gp_port_info_list_free(this.pointer);
     return this;
   }
 }

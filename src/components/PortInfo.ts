@@ -1,12 +1,13 @@
-import {ICloseable} from "../interfaces/ICloseable";
-import {PointerPortInfo} from "../interfaces/Pointer";
+import {PointerPortInfo} from "../driver/modules";
+import {PointerWrapper} from "./PointerWrapper";
 
-export class PortInfo implements ICloseable {
-  readonly pointer: PointerPortInfo;
+export class PortInfo extends PointerWrapper<PointerPortInfo> {
 
-  // readonly buffer = GPPointerRef();
+  constructor() {
+    super("gp_port_info");
+  }
 
-  close(): this {
+  close() {
     return this;
   }
 }
