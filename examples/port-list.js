@@ -1,0 +1,12 @@
+const { PortInfoList } = require('../src');
+
+const portList = new PortInfoList();
+
+console.log('Nb port =>', portList.size);
+
+portList.toArray().forEach((port, index) => {
+  console.log(`[Port.${index}] name =>`, port.name);
+  console.log(`[Port.${index}] path =>`, port.path);
+});
+
+portList.close();

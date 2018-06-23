@@ -1,13 +1,13 @@
-import {readCString, types} from "ref";
-import {checkCode, GPhoto2Driver, GPPointerRef} from "../driver";
-import {PointerList} from "../driver/modules";
+import {types} from "ref";
+import {checkCode, GPhoto2Driver, GPPointer} from "../driver";
+import {PointerList, RefList} from "../driver/modules";
 import {ICamera} from "../interfaces";
 import {PointerWrapper} from "./PointerWrapper";
 
 export class List<T> extends PointerWrapper<PointerList> {
 
   constructor() {
-    super("gp_list");
+    super("gp_list", RefList);
   }
 
   /**
@@ -24,11 +24,11 @@ export class List<T> extends PointerWrapper<PointerList> {
    * @returns {any}
    */
   public getName(index: number): string {
-    const buffer = GPPointerRef(types.CString);
+    const ref = GPPointer<string>(types.CString);
 
-    GPhoto2Driver.gp_list_get_name(this.pointer, index, buffer);
+    GPhoto2Driver.gp_list_get_name(this.pointer, index, ref);
 
-    return readCString(buffer.deref(), 0);
+    return ref.deref();
   }
 
   /**
@@ -37,11 +37,11 @@ export class List<T> extends PointerWrapper<PointerList> {
    * @returns {any}
    */
   public getValue(index: number): string {
-    const buffer = GPPointerRef(types.CString);
+    const ref = GPPointer<string>(types.CString);
 
-    GPhoto2Driver.gp_list_get_value(this.pointer, index, buffer);
+    GPhoto2Driver.gp_list_get_value(this.pointer, index, ref);
 
-    return readCString(buffer.deref(), 0);
+    return ref.deref();
   }
 
   public push(name: string, value: string) {

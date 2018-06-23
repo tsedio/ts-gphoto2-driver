@@ -2,7 +2,10 @@ import {refType, types} from "ref";
 import * as ArrayType from "ref-array";
 import * as StructType from "ref-struct";
 import {GPCaptureTypes, GPCodes, PointerOf, Ref} from "../types";
+import {PointerAbilityList, RefAbilitiesList} from "./GPAbilitiesListModule";
 import {PointerContext, RefContext} from "./GPContextModule";
+import {PointerList, RefList} from "./GPListModule";
+import {PointerPortInfo, RefPortInfo} from "./GPPortInfoModule";
 import {PointerCameraWidget, RefCameraWidget} from "./GPWidgetModule";
 /**
  *
@@ -17,26 +20,12 @@ export const RefCamera = Ref;
 /**
  *
  */
-export type PointerCameraList = PointerOf<void>;
-
-/**
- *
- */
-export const RefCameraList = Ref;
-/**
- *
- */
 export type PointerCameraFile = PointerOf<void>;
 
 /**
  *
  */
 export const RefCameraFile = Ref;
-
-/**
- *
- */
-export type PointerCameraText = PointerOf<void>;
 
 /**
  *
@@ -49,10 +38,7 @@ export type StructCameraText = StructType & { text: PointerOf<string> };
 export const StructCameraText = StructType({
   text: ArrayType(types.char, 32 * 1024)
 });
-/**
- *
- */
-export type PointerCameraFilePath = PointerOf<void>;
+
 /**
  *
  */
@@ -74,7 +60,7 @@ export const StructCameraFilePath = StructType({
  * @type {any}
  */
 export const GPCameraModuleDescription = {
-  gp_camera_autodetect: ["int", [RefCameraList, RefContext]],
+  gp_camera_autodetect: ["int", [RefList, RefContext]],
   gp_camera_new: ["int", [refType(RefCamera)]],
   gp_camera_init: ["int", [RefCamera, RefContext]],
   gp_camera_exit: ["int", [RefCamera, RefContext]],
@@ -82,40 +68,93 @@ export const GPCameraModuleDescription = {
   gp_camera_unref: ["int", [RefCamera]],
   gp_camera_free: ["int", [RefCamera]],
   gp_camera_get_config: ["int", [RefCamera, refType(RefCameraWidget), RefContext]],
-  gp_camera_list_config: ["int", [RefCamera, RefCameraList, RefContext]],
+  gp_camera_list_config: ["int", [RefCamera, RefList, RefContext]],
   gp_camera_get_single_config: ["int", [RefCamera, types.CString, refType(RefCameraWidget), RefContext]],
   gp_camera_set_config: ["int", [RefCamera, RefCameraWidget, RefContext]],
   gp_camera_set_single_config: ["int", [RefCamera, types.CString, RefCameraWidget, RefContext]],
   gp_camera_get_summary: ["int", [RefCamera, StructCameraText, RefContext]],
   gp_camera_get_manual: ["int", [RefCamera, StructCameraText, RefContext]],
   gp_camera_get_about: ["int", [RefCamera, StructCameraText, RefContext]],
-  gp_camera_capture: ["int", [RefCamera, "int", refType(StructCameraFilePath), RefContext]],
+  gp_camera_get_storageinfo: ["int", [RefCamera, refType(refType("void")), refType("void"), RefContext]],
+
+  gp_camera_capture: ["int", [RefCamera, "int", StructCameraFilePath, RefContext]],
   gp_camera_trigger_capture: ["int", [RefCamera, RefContext]],
   gp_camera_capture_preview: ["int", [RefCamera, RefCameraFile, RefContext]],
-  gp_camera_file_get: ["int", [RefCameraFile, types.CString, types.CString, "int", RefCameraFile, RefContext]]
+  gp_camera_file_get: ["int", [RefCameraFile, types.CString, types.CString, "int", RefCameraFile, RefContext]],
+
+  gp_camera_set_abilities: ["int", [RefCamera, RefAbilitiesList]],
+  gp_camera_set_port_info: ["int", [RefCamera, RefPortInfo]]
 };
 
 export interface IGPCameraModule {
   /**
+   * Autodetect all detectable camera
    *
-   * @returns {GPCodes}
+   * This camera will autodetected all cameras that can be autodetected.
+   * This will for instance detect all USB cameras.
+   *
+   *   CameraList *list;
+   *   gp_list_new (&list);
+   *   gp_camera_autodetect (list, context);
+   *   ... done! ...
+   *
+   * @param cameraList a #CameraList that receives the autodetected cameras
+   * @param context a #GPContext
+   * @return the number of cameras detected (0 to n) or a gphoto2 error code (<0)
+   *
    */
-  gp_camera_autodetect(cameraList: PointerCameraList, context: PointerContext): GPCodes;
+  gp_camera_autodetect(cameraList: PointerList, context: PointerContext): GPCodes;
+
+  /**
+   * Allocates the memory for a #Camera.
+   *
+   * @param camera the #Camera object to initialize.
+   * @return a gphoto2 error code
+   *
+   */
+  gp_camera_new(camera: PointerOf<PointerCamera>): GPCodes;
 
   /**
    *
-   * @param {Buffer} buffer
-   * @returns {GPCodes}
+   * @param {PointerCamera} camera
+   * @param {PointerPortInfo} portInfo
    */
-  gp_camera_new(buffer: PointerOf<PointerCamera>): GPCodes;
+  gp_camera_set_port_info(camera: PointerCamera, portInfo: PointerPortInfo): void
 
   /**
+   * Sets the camera abilities.
    *
-   * @param camera
-   * @param {PointerContext} context
-   * @returns {GPCodes}
+   * @param camera a #Camera
+   * @param abilities the #CameraAbilities to be set
+   * @return a gphoto2 error code
+   *
+   * You need to call this function before calling #gp_camera_init the
+   * first time unless you want gphoto2 to autodetect cameras and choose
+   * the first detected one. By setting the abilities, you
+   * tell gphoto2 what model the camera is and what camera driver should
+   * be used for accessing the camera. You can get abilities by calling
+   * #gp_abilities_list_get_abilities.
+   *
+   */
+  gp_camera_set_abilities(camera: PointerCamera, abilities: PointerAbilityList): GPCodes;
+
+  /**
+   * Initiate a connection to the camera.
+   *
+   * Before calling this function, the camera should be set up using gp_camera_set_port_path() or
+   * gp_camera_set_port_name() and gp_camera_set_abilities(). If that has been
+   * omitted, gphoto2 tries to autodetect any cameras and chooses the first one
+   * if any cameras are found. It is generally a good idea to call
+   * gp_camera_exit() after transactions have been completed in order to give
+   * other applications the chance to access the camera, too.
+   *
+   * @param camera a #Camera
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
    */
   gp_camera_init(camera: PointerCamera, context: PointerContext): GPCodes;
+
 
   /**
    *
@@ -133,24 +172,38 @@ export interface IGPCameraModule {
   gp_camera_ref(camera: PointerCamera): GPCodes;
 
   /**
+   * Decrements the reference count of a #Camera.
    *
-   * @param camera
-   * @returns {GPCodes}
+   * @param camera a #Camera
+   * @return a gphoto2 error code
+   *
+   * If the reference count reaches %0, the camera will be freed
+   * automatically.
+   *
    */
   gp_camera_unref(camera: PointerCamera): GPCodes;
 
   /**
+   * Free the camera.
    *
-   * @param camera
-   * @returns {GPCodes}
+   * @param camera a #Camera
+   * @return a gphoto2 error code
+   * @deprecated This function should never be used. Please use #gp_camera_unref instead.
    */
   gp_camera_free(camera: PointerCamera): GPCodes;
 
   /**
    * Retrieve a configuration window for the camera.
-   * @returns {GPCodes}
+   *
+   * This window can be used for construction of a configuration dialog.
+   *
+   * @param camera a #Camera
+   * @param window a #CameraWidget
+   * @param context a #GPContext
+   * @return gphoto2 error code
+   *
    */
-  gp_camera_get_config(camera: PointerCamera, buffer: PointerOf<PointerCameraWidget>, context: PointerContext): GPCodes;
+  gp_camera_get_config(camera: PointerCamera, window: PointerOf<PointerCameraWidget>, context: PointerContext): GPCodes;
 
   /**
    *
@@ -159,7 +212,7 @@ export interface IGPCameraModule {
    * @param {PointerContext} context
    * @returns {GPCodes}
    */
-  gp_camera_list_config(camera: PointerCamera, cameraList: PointerCameraList, context: PointerContext): GPCodes;
+  gp_camera_list_config(camera: PointerCamera, cameraList: PointerList, context: PointerContext): GPCodes;
 
   /**
    * Retrieve a single configuration widget for the camera.
@@ -180,82 +233,162 @@ export interface IGPCameraModule {
   ): GPCodes;
 
   /**
+   * Sets the configuration.
    *
-   * @param camera
-   * @param cameraWidget
-   * @param {PointerContext} context
-   * @returns {GPCodes}
-   */
-  gp_camera_set_config(camera: PointerCamera, cameraWidget: PointerCameraWidget, context: PointerContext): GPCodes;
+   * @param camera a #Camera
+   * @param window a #CameraWidget
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
+   * Typically, a window is retrieved using #gp_camera_get_config and passed
+   * to this function in order to adjust the settings on the camera.
+   *
+   **/
+  gp_camera_set_config(camera: PointerCamera, window: PointerCameraWidget, context: PointerContext): GPCodes;
+
 
   /**
+   * Set a single configuration widget for the camera.
    *
-   * @param camera
-   * @param {string} value
-   * @param cameraWidget
-   * @param {PointerContext} context
-   * @returns {GPCodes}
+   * @param camera a #Camera
+   * @param name the name of a configuration widget
+   * @param widget a #CameraWidget
+   * @param context a #GPContext
+   * @return gphoto2 error code
+   *
+   * This widget contains the new value of the widget to set.
+   *
    */
-  gp_camera_set_single_config(camera: PointerCamera, value: string, cameraWidget: PointerCameraWidget, context: PointerContext): GPCodes;
+  gp_camera_set_single_config(camera: PointerCamera, name: string, widget: PointerCameraWidget, context: PointerContext): GPCodes;
 
   /**
+   * Retrieves a camera summary.
    *
-   * @returns {GPCodes}
-   */
-  gp_camera_get_summary(camera: PointerCamera, cameraText: PointerCameraText, context: PointerContext): GPCodes;
+   * @param camera a #Camera
+   * @param summary a #CameraText
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
+   * This summary typically contains information like manufacturer, pictures
+   * taken, or generally information that is not configurable.
+   *
+   **/
+  gp_camera_get_summary(camera: PointerCamera, summary: StructCameraText, context: PointerContext): GPCodes;
 
   /**
+   * Retrieves the manual for given camera.
    *
-   * @returns {GPCodes}
-   */
-  gp_camera_get_manual(camera: PointerCamera, cameraText: PointerCameraText, context: PointerContext): GPCodes;
+   * @param camera a #Camera
+   * @param manual a #CameraText
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
+   * This manual typically contains information about using the camera.
+   *
+   **/
+  gp_camera_get_manual(camera: PointerCamera, manual: StructCameraText, context: PointerContext): GPCodes;
 
   /**
+   * Retrieves information about the camera driver.
    *
-   * @returns {GPCodes}
+   * @param camera a #Camera
+   * @param about a #CameraText
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
+   * Typically, this information contains name and address of the author,
+   * acknowledgements, etc.
+   *
    */
-  gp_camera_get_about(camera: PointerCamera, cameraText: PointerCameraText, context: PointerContext): GPCodes;
+  gp_camera_get_about(camera: PointerCamera, about: StructCameraText, context: PointerContext): GPCodes;
 
   /**
+   * Gets information on the camera attached storage.
    *
-   * @returns {GPCodes}
+   * @param camera a #Camera
+   * @param sifs Pointer to receive a pointer to/array of storage info items
+   * @param nrofsifs Pointer to receive number of array entries
+   * @param context a #GPContext
+   * @returns a gphoto2 error code
+   *
+   * Retrieves the storage information, like maximum and free space, for
+   * the specified filesystem, if supported by the device. The storage
+   * information is returned in an newly allocated array of
+   * #CameraStorageInformation objects, to which the pointer pointed to
+   * by #sifs will be set.
+   *
+   * The variable pointed to by #nrofsifs will be set to the number of
+   * elements in that array.
+   *
+   * It is the caller's responsibility to free the memory of the array.
+   *
+   */
+  gp_camera_get_storageinfo(camera: PointerCamera, sifs: any, nrofsifs: any, context: PointerContext): GPCodes;
+
+  /**
+   * Captures an image, movie, or sound clip depending on the given type.
+   *
+   * @param camera a #Camera
+   * @param type a #CameraCaptureType
+   * @param path a #CameraFilePath
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
+   * The resulting file will be stored on the camera. The location gets stored
+   * in path. The file can then be downloaded using #gp_camera_file_get.
+   *
    */
   gp_camera_capture(
     camera: PointerCamera,
-    cameraCaptureType: number,
-    path: PointerOf<PointerCameraFilePath>,
+    type: number,
+    path: StructCameraFilePath,
     context: PointerContext
   ): GPCodes;
 
   /**
+   * Triggers capture of one or more images.
    *
-   * @returns {GPCodes}
-   */
+   * @param camera a #Camera
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
+   * This functions just remotely causes the shutter release and returns
+   * immediately. You will want to run #gp_camera_wait_event until a image
+   * is added which can be downloaded using #gp_camera_file_get.
+   **/
   gp_camera_trigger_capture(camera: PointerCamera, context: PointerContext): GPCodes;
 
   /**
+   * Captures a preview that won't be stored on the camera but returned in
+   * supplied file.
    *
-   * @param camera
-   * @param {Buffer} path
-   * @param {PointerContext} context
-   * @returns {GPCodes}
-   */
-  gp_camera_capture_preview(camera: PointerCamera, path: PointerCameraFile, context: PointerContext): GPCodes;
+   * @param camera a #Camera
+   * @param file a #CameraFile
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
+   * For example, you could use gp_capture_preview() for taking some sample
+   * pictures before calling gp_capture().
+   *
+   **/
+  gp_camera_capture_preview(camera: PointerCamera, file: PointerCameraFile, context: PointerContext): GPCodes;
 
   /**
+   * Retrieves a file from the #Camera.
    *
-   * @param camera
-   * @param {PointerCameraFile} cameraFile
-   * @param path
-   * @param filename
-   * @param type
-   * @param context
-   * @returns {GPCodes}
-   */
+   * @param camera a #Camera
+   * @param folder a folder
+   * @param file the name of a file
+   * @param type the #CameraFileType
+   * @param cameraFile a #CameraFile
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
+   **/
   gp_camera_file_get(
     camera: PointerCamera,
-    path: string,
-    filename: string,
+    folder: string,
+    file: string,
     type: GPCaptureTypes,
     cameraFile: PointerCameraFile,
     context: PointerContext

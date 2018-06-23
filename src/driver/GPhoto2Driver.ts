@@ -1,4 +1,4 @@
-import {readCString, types} from "ref";
+import {types} from "ref";
 import {
   GPAbilitiesListModuleDescription,
   GPCameraModuleDescription,
@@ -13,16 +13,9 @@ import {
   IGPFileModule,
   IGPListModule,
   IGPPortInfoModule,
-  IGPWidgetModule,
-  PointerAbilityList,
-  PointerCamera,
-  PointerCameraFile,
-  PointerList,
-  PointerPortInfoList
+  IGPWidgetModule
 } from "./modules";
 import {GPVersionTypes} from "./types";
-import {GPPointerOf} from "./utils/GPPointerOf";
-import {GPPointerRef} from "./utils/GPPointerRef";
 
 const ffi = require("ffi-napi");
 /**
@@ -62,15 +55,6 @@ export const GPhoto2Driver = ffi.Library("libgphoto2", {
 
   gp_library_version: [types.CString, ["int"]]
 });
-
-
-/**
- *
- * @returns {any}
- */
-export function newPointerPortInfoList(): PointerPortInfoList {
-  return GPPointerOf("gp_port_info_list_new");
-}
 
 /**
  * Returns library versions as a displayable string.

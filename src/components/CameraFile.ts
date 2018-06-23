@@ -1,11 +1,11 @@
 import {checkCode, GPhoto2Driver} from "../driver";
-import {PointerCameraFile} from "../driver/modules";
+import {PointerCameraFile, RefCameraFile} from "../driver/modules";
 import {PointerWrapper} from "./PointerWrapper";
 
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
 
   constructor() {
-    super("gp_file");
+    super("gp_file", RefCameraFile);
   }
 
   public clean(): void {

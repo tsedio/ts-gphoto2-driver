@@ -1,6 +1,7 @@
-import {checkCode, GPhoto2Driver} from "..";
-import {ICamera} from "../interfaces/ICamera";
+import {checkCode, GPhoto2Driver} from "../driver";
+import {ICamera} from "../interfaces";
 import {AbilitiesList} from "./AbilitiesList";
+import {Context} from "./Context";
 import {List} from "./List";
 import {PortInfo} from "./PortInfo";
 import {PortInfoList} from "./PortInfoList";
@@ -10,18 +11,22 @@ export class CameraList extends List<ICamera> {
 
   constructor() {
     super();
-    this.populateList();
+  }
+
+  autodetect() {
+    GPhoto2Driver.gp_camera_autodetect(this.pointer, Context.get().pointer);
   }
 
   /**
    *
    */
-  private populateList(): void {
+  populate(): void {
     const portInfoList = new PortInfoList();
     const abilitiesList = new AbilitiesList();
     const cameraList = abilitiesList.detect(portInfoList);
 
     const count = cameraList.size;
+
 
     for (let i = 0; i < count; i++) {
       const model = this.getName(i);
@@ -44,7 +49,7 @@ export class CameraList extends List<ICamera> {
    */
   public getPortInfo(index: number) {
     const portInfo = new PortInfo();
-    checkCode(GPhoto2Driver.gp_port_info_list_get_info(this.pointer, index, portInfo.pointer));
+    checkCode(GPhoto2Driver.gp_port_info_list_get_info(this.pointer, index, portInfo.buffer));
     return portInfo;
   }
 

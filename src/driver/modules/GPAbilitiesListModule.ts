@@ -1,9 +1,8 @@
 import {refType} from "ref";
 import {PointerOf} from "../types";
 import {GPCodes} from "../types/GPCodes";
-import {Ref} from "../types/Ref";
-import {PointerCameraList, RefCameraList} from "./GPCameraModule";
 import {PointerContext, RefContext} from "./GPContextModule";
+import {PointerList, RefList} from "./GPListModule";
 import {PointerPortInfoList, RefPortInfoList} from "./GPPortInfoModule";
 
 /**
@@ -13,7 +12,7 @@ export type PointerAbilityList = PointerOf<void>;
 /**
  *
  */
-export const RefAbilitiesList = Ref;
+export const RefAbilitiesList = refType("void");
 /**
  *
  * @type {any}
@@ -21,7 +20,7 @@ export const RefAbilitiesList = Ref;
 export const GPAbilitiesListModuleDescription = {
   gp_abilities_list_new: ["void", [refType(RefAbilitiesList)]],
   gp_abilities_list_load: ["int", [RefAbilitiesList, RefContext]],
-  gp_abilities_list_detect: ["int", [RefAbilitiesList, RefPortInfoList, RefCameraList, RefContext]],
+  gp_abilities_list_detect: ["int", [RefAbilitiesList, RefPortInfoList, RefList, RefContext]],
   gp_abilities_list_free: ["int", [RefAbilitiesList]]
 };
 
@@ -30,38 +29,53 @@ export const GPAbilitiesListModuleDescription = {
  */
 export interface IGPAbilitiesListModule {
   /**
+   * Allocate the memory for a new abilities list.
    *
-   * @param {Buffer} buffer
+   * Function to allocate the memory for a new abilities list.
+   *
+   * You would then call `gp_abilities_list_load()` in order to
+   * populate it.
+   *
+   * @param abilitiesList CameraAbilitiesList object to initialize
+   * @returns gphoto2 error code
+   *
+
    */
-  gp_abilities_list_new(buffer: PointerOf<PointerAbilityList>): void;
+  gp_abilities_list_new(abilitiesList: PointerOf<PointerAbilityList>): void;
 
   /**
+   * Scans the system for camera drivers.
    *
-   * @param abilitiesList
-   * @param {PointerContext} context
-   * @returns {GPCodes}
+   * All supported camera models will then be added to the list.
+   *
+   * @params list a CameraAbilitiesList
+   * @params context a GPContext
+   * @returns a gphoto2 error code
    */
   gp_abilities_list_load(abilitiesList: PointerAbilityList, context: PointerContext): GPCodes;
 
   /**
+   * Tries to detect any camera connected to the computer using the supplied
+   * list of supported cameras and the supplied info_list of ports.
    *
-   * @param abilitiesList
-   * @param portInfoList
-   * @param cameraList
-   * @param {PointerContext} context
-   * @returns {GPCodes}
+   * @returns a gphoto2 error code
+   * @param abilitiesList a CameraAbilitiesList
+   * @param infoList the GPPortInfoList of ports to use for detection
+   * @param cameraList a #CameraList that contains the autodetected cameras after the call
+   * @param context a #GPContext
    */
   gp_abilities_list_detect(
     abilitiesList: PointerAbilityList,
-    portInfoList: PointerPortInfoList,
-    cameraList: PointerCameraList,
+    infoList: PointerPortInfoList,
+    cameraList: PointerOf<PointerList>,
     context: PointerContext
   ): GPCodes;
 
   /**
+   * Free the given CameraAbilitiesList object.
    *
-   * @param abilitiesList
-   * @returns {GPCodes}
+   * @param abilitiesList a CameraAbilitiesList
+   * @return a gphoto2 error code
    */
   gp_abilities_list_free(abilitiesList: PointerAbilityList): GPCodes;
 }

@@ -1,24 +1,30 @@
 import {checkCode, closeQuietly, GPCaptureTypes, GPhoto2Driver} from "../driver";
-import {PointerCamera, PointerPortInfo} from "../driver/modules";
+import {PointerCamera, PointerPortInfo, RefCamera} from "../driver/modules";
 import {CameraFile} from "./CameraFile";
 import {CameraFilePath} from "./CameraFilePath";
 import {Context} from "./Context";
 import {PointerWrapper} from "./PointerWrapper";
+import {PortInfo} from "./PortInfo";
 
 export class Camera extends PointerWrapper<PointerCamera> {
   private initialized: boolean = false;
   private closed: boolean = false;
 
   constructor() {
-    super("gp_camera");
+    super("gp_camera", RefCamera);
   }
 
   /**
    *
    */
-  public initialize(): void {
+  public initialize(portInfo?: PortInfo): void {
     this.checkNotClosed();
     if (!this.isInitialized()) {
+
+      if (portInfo) {
+        this.setPortInfo(portInfo);
+      }
+
       checkCode(GPhoto2Driver.gp_camera_init(this.pointer, Context.get().pointer));
       this.initialized = true;
     }
@@ -96,17 +102,6 @@ export class Camera extends PointerWrapper<PointerCamera> {
   }
 
   /**
-   * Returns new configuration for the camera.
-   * @return the configuration, never null. Must be closed afterwards.
-   */
-
-  /* public newConfiguration(): CameraWidgets {
-    this.checkNotClosed();
-
-    return new CameraWidgets(this);
-  } */
-
-  /**
    * Captures a full-quality image image on the camera.
    * @return camera file, never null. Must be closed afterwards.
    */
@@ -139,8 +134,8 @@ export class Camera extends PointerWrapper<PointerCamera> {
    *
    * @param {PointerPortInfo} portInfo
    */
-  public setPortInfo(portInfo: PointerPortInfo): void {
+  public setPortInfo(portInfo: PortInfo): void {
     this.checkNotClosed();
-    checkCode(GPhoto2Driver.gp_camera_set_port_info(this.pointer, portInfo));
+    checkCode(GPhoto2Driver.gp_camera_set_port_info(this.pointer, portInfo.pointer));
   }
 }

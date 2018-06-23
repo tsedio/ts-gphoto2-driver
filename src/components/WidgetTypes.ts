@@ -1,5 +1,7 @@
 import {GPWidgetTypes} from "../driver/types";
 
+const enums: WidgetTypes[] = [];
+
 export class WidgetTypes {
   /**
    * Window widget This is the toplevel configuration widget. It should likely contain multiple GP_WIDGET_SECTION entries.
@@ -38,14 +40,12 @@ export class WidgetTypes {
    */
   static Date = new WidgetTypes(GPWidgetTypes.GP_WIDGET_DATE, true, false, false, Date);
 
-  private static enums: WidgetTypes[] = [];
-
   constructor(private _cval: number,
               private _hasValue: boolean,
               private _hasChoices: boolean,
               private _acceptNullValue: boolean,
               private _valueType: any) {
-    WidgetTypes.enums.push(this);
+    enums.push(this);
   }
 
   get cval(): number {
@@ -69,7 +69,7 @@ export class WidgetTypes {
   }
 
   static fromCVal(cval: number): WidgetTypes {
-    const type: WidgetTypes | undefined = WidgetTypes.enums.find((item) => item._cval === cval);
+    const type: WidgetTypes | undefined = enums.find((item) => item._cval === cval);
 
     if (!type) {
       throw new Error("Parameter cval: invalid value " + cval + ": no such widget type");

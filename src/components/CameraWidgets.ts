@@ -86,10 +86,10 @@ export class CameraWidgets implements ICloseable {
   private getBasename(widget: PointerCameraWidget): string {
     this.checkNotClosed();
 
-    const ref = GPPointerRef<string>("string");
+    const ref = GPPointerString();
     checkCode(GPhoto2Driver.gp_widget_get_name(widget, ref));
 
-    return PointerToString(ref.deref());
+    return ref.deref();
   }
 
   /**
@@ -99,11 +99,11 @@ export class CameraWidgets implements ICloseable {
    */
   public getLabel(name: string): string {
     this.checkNotClosed();
-    const ref = GPPointerRef<string>("string");
+    const ref = GPPointerString();
 
     checkCode(GPhoto2Driver.gp_widget_get_label(this.get(name), ref));
 
-    return PointerToString(ref.deref());
+    return ref.deref();
   }
 
   /**
@@ -113,11 +113,11 @@ export class CameraWidgets implements ICloseable {
    */
   public getInfo(name: string): string {
     this.checkNotClosed();
-    const ref = GPPointerRef<string>("string");
+    const ref = GPPointerString();
 
     checkCode(GPhoto2Driver.gp_widget_get_info(this.get(name), ref));
 
-    return PointerToString(ref.deref());
+    return ref.deref();
   }
 
   /**
@@ -127,7 +127,7 @@ export class CameraWidgets implements ICloseable {
    */
   public getType(name: string): WidgetTypes {
     this.checkNotClosed();
-    const ref = GPPointer<number>("int");
+    const ref = GPPointerInt();
 
     checkCode(GPhoto2Driver.gp_widget_get_type(this.get(name), ref));
 
@@ -157,21 +157,21 @@ export class CameraWidgets implements ICloseable {
       }
 
       case WidgetTypes.Range: {
-        const pref = GPPointer<number>("float");
+        const pref = GPPointerFloat();
         checkCode(GPhoto2Driver.gp_widget_get_value(this.get(name), pref));
         return pref.deref();
       }
 
       case WidgetTypes.Toggle: {
-        const pref = GPPointer<number>("int");
+        const pref = GPPointerInt();
         checkCode(GPhoto2Driver.gp_widget_get_value(this.get(name), pref));
         return pref.deref() == 2 ? null : pref.deref() == 1;
       }
 
       case WidgetTypes.Date: {
-        const pref = GPPointer<number>("int");
+        const pref = GPPointerInt();
         checkCode(GPhoto2Driver.gp_widget_get_value(this.get(name), pref));
-        return new Date(pref.deref() * 1000);
+        return new Date(pref.deref() * 1000.0);
       }
 
       case WidgetTypes.Button:

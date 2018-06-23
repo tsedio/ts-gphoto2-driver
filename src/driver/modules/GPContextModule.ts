@@ -35,9 +35,7 @@ export interface IGPContextModule {
    * To be used by the frontend.
    * @returns {PointerContext}
    */
-  // gp_context_new(): PointerContext;
-
-  gp_context_new(context: PointerContext): void;
+  gp_context_new(): PointerContext;
 
   /**
    * Decrements reference count of a context.

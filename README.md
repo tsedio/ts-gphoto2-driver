@@ -1,3 +1,18 @@
+
+# ts-gphoto2-driver
+
+```typescript
+import  {Camera, CameraList} from require('ts-gphoto2-driver');
+
+new CameraList().toString(); //
+
+// new Camera()
+
+```
+
+
+
+
 const gp2 = require("gphoto2_ffi");
 
 var context = gp2.gp_context_new();

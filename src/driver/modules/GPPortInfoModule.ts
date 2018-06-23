@@ -1,6 +1,6 @@
 ///<reference path="../types/GPCodes.ts"/>
 import {refType, types} from "ref";
-import {GPCodes, PointerOf, Ref} from "../types";
+import {GPCodes, PointerOf} from "../types";
 import {PointerList} from "./GPListModule";
 
 /**
@@ -11,7 +11,7 @@ export type PointerPortInfoList = PointerOf<void>;
  *
  * @type {Type}
  */
-export const RefPortInfoList = Ref;
+export const RefPortInfoList = refType("void");
 /**
  *
  */
@@ -20,7 +20,18 @@ export type PointerPortInfo = PointerOf<void>;
 /**
  *
  */
-export const RefPortInfo = Ref;
+export const RefPortInfo = refType("void");
+
+/**
+ *
+ * @type {Type}
+ */
+export const RefPortType = refType("void");
+
+/**
+ *
+ */
+export type PointerPortType = PointerOf<void>;
 
 /**
  *
@@ -38,7 +49,13 @@ export const GPPortInfoModuleDescription = {
   gp_port_info_list_get_info: ["int", [RefPortInfoList, "int", RefPortInfo]],
 
   gp_port_info_list_lookup_path: ["int", [RefPortInfoList, types.CString]],
-  gp_port_info_list_lookup_name: ["int", [RefPortInfoList, types.CString]]
+  gp_port_info_list_lookup_name: ["int", [RefPortInfoList, types.CString]],
+
+  gp_port_info_list_count: ["int", [RefPortInfoList]],
+
+  gp_port_info_get_name: ["int", [RefPortInfoList, refType(types.CString)]],
+  gp_port_info_get_path: ["int", [RefPortInfoList, refType(types.CString)]],
+  gp_port_info_get_type: ["int", [RefPortInfoList, refType(RefPortType)]]
 };
 
 /**
@@ -129,4 +146,35 @@ export interface IGPPortInfoModule {
    * @returns {GPCodes} The index of the entry or a gphoto2 error code
    */
   gp_port_info_list_lookup_name(portInfoList: PointerPortInfoList, name: string): GPCodes;
+
+  /**
+   * Number of ports in the list
+   * Returns the number of entries in the passed list.
+   *
+   * @returns The number of entries or a gphoto2 error code
+   * @param {PointerPortInfoList} portInfoList a #GPPortInfoList
+   **/
+  gp_port_info_list_count(portInfoList: PointerPortInfoList): GPCodes;
+
+  /**
+   * Get name of a specific port entry
+   *
+   * Retrieves the name of the passed in GPPortInfo, by reference.
+   *
+   * @param portInfo a #GPPortInfo
+   * @param name a pointer to a char* which will receive the name
+   * @return a gphoto2 error code
+   **/
+  gp_port_info_get_name(portInfo: PointerPortInfoList, name: PointerOf<string>): GPCodes;
+
+  /**
+   * Get path of a specific port entry
+   *
+   * Retrieves the path of the passed in GPPortInfo, by reference.
+   *
+   * @param portInfo a #GPPortInfo
+   * @param path a pointer to a char* which will receive the path
+   * @return a gphoto2 error code
+   **/
+  gp_port_info_get_path(portInfo: PointerPortInfoList, path: PointerOf<string>): GPCodes;
 }

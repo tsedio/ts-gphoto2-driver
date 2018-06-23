@@ -1,5 +1,5 @@
 import {checkCode, GPhoto2Driver} from "../driver";
-import {PointerAbilityList} from "../driver/modules";
+import {PointerAbilityList, RefAbilitiesList} from "../driver/modules";
 import {Context} from "./Context";
 import {List} from "./List";
 import {PointerWrapper} from "./PointerWrapper";
@@ -8,7 +8,7 @@ import {PortInfoList} from "./PortInfoList";
 export class AbilitiesList extends PointerWrapper<PointerAbilityList> {
 
   constructor() {
-    super("gp_abilities_list");
+    super("gp_abilities_list", RefAbilitiesList);
     this.load();
   }
 
@@ -29,7 +29,7 @@ export class AbilitiesList extends PointerWrapper<PointerAbilityList> {
   detect(portInfoList: PortInfoList): List<any> {
     const list = new List();
 
-    checkCode(GPhoto2Driver.gp_abilities_list_detect(this.pointer, portInfoList.pointer, list.pointer, Context.get().pointer));
+    checkCode(GPhoto2Driver.gp_abilities_list_detect(this.pointer, portInfoList.pointer, list.buffer, Context.get().pointer));
 
     return list;
   }

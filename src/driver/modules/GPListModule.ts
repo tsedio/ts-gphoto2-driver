@@ -1,27 +1,31 @@
-import {refType, types} from "ref";
+import {refType} from "ref";
 import {GPCodes, PointerOf} from "../types";
-import {PointerCameraList, RefCameraList} from "./GPCameraModule";
 
 /**
  *
  */
 export type PointerList = PointerOf<void>;
 
+/**
+ *
+ */
+export const RefList = refType("void");
+
 export const GPListModuleDescription = {
-  gp_list_new: ["int", [refType(RefCameraList)]],
-  gp_list_ref: ["int", [RefCameraList]],
-  gp_list_unref: ["int", [RefCameraList]],
-  gp_list_free: ["int", [RefCameraList]],
-  gp_list_count: ["int", [RefCameraList]],
-  gp_list_append: ["int", [RefCameraList, types.CString, types.CString]],
-  gp_list_reset: ["int", [RefCameraList]],
-  gp_list_sort: ["int", [RefCameraList]],
-  gp_list_find_by_name: ["int", [RefCameraList, "int*", types.CString]],
-  gp_list_get_name: ["int", [RefCameraList, "int", refType(types.CString)]],
-  gp_list_get_value: ["int", [RefCameraList, "int", refType(types.CString)]],
-  gp_list_set_name: ["int", [RefCameraList, "int", types.CString]],
-  gp_list_set_value: ["int", [RefCameraList, "int", types.CString]]
-  // "gp_list_populate":     ["int", [RefCameraList, types.CString, "int"]],
+  gp_list_new: ["int", [refType(RefList)]],
+  gp_list_ref: ["int", [RefList]],
+  gp_list_unref: ["int", [RefList]],
+  gp_list_free: ["int", [RefList]],
+  gp_list_count: ["int", [RefList]],
+  gp_list_append: ["int", [RefList, "string", "string"]],
+  gp_list_reset: ["int", [RefList]],
+  gp_list_sort: ["int", [RefList]],
+  gp_list_find_by_name: ["int", [RefList, "int*", "string"]],
+  gp_list_get_name: ["int", [RefList, "int", refType("string")]],
+  gp_list_get_value: ["int", [RefList, "int", refType("string")]],
+  gp_list_set_name: ["int", [RefList, "int", "string"]],
+  gp_list_set_value: ["int", [RefList, "int", "string"]]
+  // "gp_list_populate":     ["int", [RefList, "string", "int"]],
 };
 
 /**
@@ -33,32 +37,32 @@ export interface IGPListModule {
    * @returns {GPCodes}
    * @param buffer
    */
-  gp_list_new(buffer: PointerOf<PointerCameraList>): GPCodes;
+  gp_list_new(buffer: PointerOf<PointerList>): GPCodes;
 
   /**
    *
    * @param {Type} cameraList
    * @returns {GPCodes}
    */
-  gp_list_ref(cameraList: PointerCameraList): GPCodes; //, [cameraList]],
+  gp_list_ref(cameraList: PointerList): GPCodes; //, [cameraList]],
   /**
    *
    * @param {Type} cameraList
    * @returns {GPCodes}
    */
-  gp_list_unref(cameraList: PointerCameraList): GPCodes; //, [cameraList]],
+  gp_list_unref(cameraList: PointerList): GPCodes; //, [cameraList]],
   /**
    *
    * @param {Type} cameraList
    * @returns {GPCodes}
    */
-  gp_list_free(cameraList: PointerCameraList): GPCodes; //, [cameraList]],
+  gp_list_free(cameraList: PointerList): GPCodes; //, [cameraList]],
   /**
    *
    * @param {Type} cameraList
    * @returns {GPCodes}
    */
-  gp_list_count(cameraList: PointerCameraList): number; //, [cameraList]],
+  gp_list_count(cameraList: PointerList): number; //, [cameraList]],
   /**
    *
    * @param cameraList
@@ -66,20 +70,20 @@ export interface IGPListModule {
    * @param path
    * @returns {GPCodes}
    */
-  gp_list_append(cameraList: PointerCameraList, name: string, path: string): GPCodes;
+  gp_list_append(cameraList: PointerList, name: string, path: string): GPCodes;
 
   /**
    *
    * @param {Type} cameraList
    * @returns {GPCodes}
    */
-  gp_list_reset(cameraList: PointerCameraList): GPCodes; //, [cameraList]],
+  gp_list_reset(cameraList: PointerList): GPCodes; //, [cameraList]],
   /**
    *
    * @param {Type} cameraList
    * @returns {GPCodes}
    */
-  gp_list_sort(cameraList: PointerCameraList): GPCodes; //, [cameraList]],
+  gp_list_sort(cameraList: PointerList): GPCodes; //, [cameraList]],
   /**
    * Retrieves the index of an arbitrary entry with name.
    * @param cameraList
@@ -87,24 +91,24 @@ export interface IGPListModule {
    * @param name name of the entry
    * @returns {GPCodes} a gphoto2 error code: GP_OK if found.
    */
-  gp_list_find_by_name(cameraList: PointerCameraList, index: number, name: string): GPCodes; //, [cameraList, "int*", "string"]],
+  gp_list_find_by_name(cameraList: PointerList, index: number, name: string): GPCodes; //, [cameraList, "int*", "string"]],
   /**
    *
    * @param {Type} cameraList
    * @param index
-   * @param buffer
+   * @param name
    * @returns {GPCodes}
    */
-  gp_list_get_name(cameraList: PointerCameraList, index: number, buffer: Buffer): GPCodes;
+  gp_list_get_name(cameraList: PointerList, index: number, name: PointerOf<string>): GPCodes;
 
   /**
    *
    * @param {Type} cameraList
    * @param {number} index
-   * @param {Buffer} buffer
+   * @param value
    * @returns {GPCodes}
    */
-  gp_list_get_value(cameraList: PointerCameraList, index: number, buffer: Buffer): GPCodes;
+  gp_list_get_value(cameraList: PointerList, index: number, value: PointerOf<string>): GPCodes;
 
   /**
    *
@@ -113,7 +117,7 @@ export interface IGPListModule {
    * @param {string} value
    * @returns {GPCodes}
    */
-  gp_list_set_name(cameraList: PointerCameraList, index: number, value: string): GPCodes;
+  gp_list_set_name(cameraList: PointerList, index: number, value: string): GPCodes;
 
   /**
    *
@@ -122,7 +126,7 @@ export interface IGPListModule {
    * @param {string} value
    * @returns {GPCodes}
    */
-  gp_list_set_value(cameraList: PointerCameraList, index: number, value: string): GPCodes;
+  gp_list_set_value(cameraList: PointerList, index: number, value: string): GPCodes;
 
   // gp_list_populate(): any; //     ["int", [cameraList, "string", "int"]],
 }

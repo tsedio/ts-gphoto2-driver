@@ -14,8 +14,8 @@ export class Context implements ICloseable {
   private static instance: Context;
 
   constructor() {
-    GPhoto2Driver.gp_context_set_error_func(this.pointer, this.onError, null);
-    GPhoto2Driver.gp_context_set_status_func(this.pointer, this.onStatus, null);
+    // GPhoto2Driver.gp_context_set_error_func(this.pointer, this.onError, null);
+    // GPhoto2Driver.gp_context_set_status_func(this.pointer, this.onStatus, null);
   }
 
   public close(): this {
