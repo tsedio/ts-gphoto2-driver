@@ -1,4 +1,5 @@
 import {GPWidgetTypes} from "../driver/types";
+import {isPrimitiveOrPrimitiveClass, primitiveOf} from "../driver/utils/ObjectUtils";
 
 const enums: WidgetTypes[] = [];
 
@@ -88,6 +89,10 @@ export class WidgetTypes {
       return this.acceptNullValue;
     }
 
-    return this.valueType.isInstance(value);
+    if (isPrimitiveOrPrimitiveClass(value)) {
+      return primitiveOf(this.valueType) === primitiveOf(value);
+    }
+
+    return value instanceof this.valueType;
   }
 }

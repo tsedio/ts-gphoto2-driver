@@ -4,11 +4,13 @@ const camera = new Camera();
 
 camera.initialize();
 
-console.log('Camera =>', camera);
+if (!camera.isClosed()) {
+  console.log('Camera =>', camera);
 
-const cameraFile = camera.captureImage();
+  const cameraFile = camera.captureImage();
 
-// cameraFile.save(path.join(__dirname, 'capture.jpg'));
+  cameraFile.save(path.join(__dirname, '../.tmp/capture.jpeg'));
 
-closeQuietly(cameraFile);
-closeQuietly(camera);
+  closeQuietly(cameraFile);
+  closeQuietly(camera);
+}

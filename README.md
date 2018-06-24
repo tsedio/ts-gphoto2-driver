@@ -2,9 +2,8 @@
 
 [![Build Status](https://travis-ci.org/TypedProject/ts-gphoto2-driver.svg?branch=master)](https://travis-ci.org/TypedProject/ts-gphoto2-driver)
 [![Coverage Status](https://coveralls.io/repos/github/TypedProject/ts-gphoto2-driver/badge.svg?branch=master)](https://coveralls.io/github/TypedProject/ts-gphoto2-driver?branch=master)
-![npm](https://img.shields.io/npm/dm/ts-gphoto2-driver.svg)
-[![Package Quality](http://npm.packagequality.com/shield/ts-gphoto2-driver.png)](http://packagequality.com/#?package=ts-gphoto2-driver)
-[![npm version](https://badge.fury.io/js/ts-gphoto2-driver.svg)](https://badge.fury.io/js/ts-gphoto2-driver)
+![npm](https://img.shields.io/npm/dm/%40typedproject%2Fgphoto2-driver.svg)
+[![npm version](https://badge.fury.io/js/%40typedproject%2Fgphoto2-driver.svg)](https://badge.fury.io/js/%40typedproject%2Fgphoto2-driver)
 [![Dependencies](https://david-dm.org/romakita/ts-gphoto2-driver.svg)](https://david-dm.org/romakita/ts-gphoto2-driver#info=dependencies)
 [![img](https://david-dm.org/romakita/ts-gphoto2-driver/dev-status.svg)](https://david-dm.org/romakita/ts-gphoto2-driver/#info=devDependencies)
 [![img](https://david-dm.org/romakita/ts-gphoto2-driver/peer-status.svg)](https://david-dm.org/romakita/ts-gphoto2-driver/#info=peerDependenciess)
@@ -14,7 +13,16 @@
 
 > This project is under Alpha version.
 
-A Node.js wrapper for libgphoto2 writter in TypeScript. Useful for remote controlling of DSLRs and other digital cameras supported by gphoto2.
+A Node.js wrapper for libgphoto2 written in TypeScript. Useful for remote controlling of DSLRs and other digital cameras supported by gphoto2.
+
+## Features
+
+ - Camera autodetection,
+ - Take a picture/movie capture,
+ - Take a preview (not a live preview mode),
+ - Retrieve camera list,
+ - Select camera,
+ - Display info about your camera (summary, about, manual).
 
 ## Prerequisite
 
@@ -62,6 +70,9 @@ if (cameraList.size) {
 cameraList.close();
 ```
 
+## Examples
+
+Some example
 
 ## Contributors
 Please read [contributing guidelines here](./CONTRIBUTING.md).

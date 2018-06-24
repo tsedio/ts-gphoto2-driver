@@ -1,5 +1,5 @@
 import {alloc, Type} from "ref";
-import {checkCode, GPhoto2Driver} from "../driver";
+import {checkCode, closeQuietly, GPhoto2Driver} from "../driver";
 import {PointerOf} from "../driver/types";
 import {ICloseable} from "../interfaces";
 
@@ -22,11 +22,15 @@ export class PointerWrapper<P extends PointerOf<any>> implements ICloseable {
     return this;
   }
 
+  closeQuietly() {
+    closeQuietly(this);
+  }
+
   call(key: string, ...args: any[]) {
     const method = `${this.gpMethodType}_${key}`;
 
-    if (GPhoto2Driver[method]) {
-      return checkCode(GPhoto2Driver[method](this.pointer, ...args), method);
+    if ((GPhoto2Driver as any)[method]) {
+      return checkCode((GPhoto2Driver as any)[method](this.pointer, ...args), method);
     }
 
     throw new Error(method + " on GPhoto2Driver doesn't exists");

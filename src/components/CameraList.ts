@@ -1,5 +1,5 @@
-import {alloc, deref} from "ref";
-import {checkCode, GPhoto2Driver} from "../driver";
+import {deref} from "ref";
+import {checkCode, GPhoto2Driver, GPPointerString} from "../driver";
 import {ICamera} from "../interfaces";
 import {AbilitiesList} from "./AbilitiesList";
 import {Camera} from "./Camera";
@@ -28,8 +28,8 @@ export class CameraList extends List<ICamera> {
     const count = cameraList.size;
 
     for (let i = 0; i < count; i++) {
-      const model = alloc("string");
-      const path = alloc("string");
+      const model = GPPointerString(); // alloc("string") as PointerOf<string>;
+      const path = GPPointerString(); // alloc("string") as PointerOf<string>;
 
       checkCode(GPhoto2Driver.gp_list_get_name(cameraList.pointer, i, model));
       checkCode(GPhoto2Driver.gp_list_get_value(cameraList.pointer, i, path));

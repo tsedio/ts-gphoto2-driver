@@ -1,6 +1,7 @@
 import {checkCode, GPhoto2Driver, GPPointer, GPPointerFloat, GPPointerInt, GPPointerRef, GPPointerString, PointerToString} from "../driver";
 import {PointerCameraWidget} from "../driver/modules";
 import {PointerOf} from "../driver/types";
+import {classOf} from "../driver/utils/ObjectUtils";
 import {ICloseable} from "../interfaces";
 import {Camera} from "./Camera";
 import {CameraWidgetRange} from "./CameraWidgetRange";
@@ -182,20 +183,18 @@ export class CameraWidgets implements ICloseable {
    */
   public setValue(name: string, value: any): void {
     this.checkNotClosed();
+
     if (this.isReadOnly(name)) {
-      throw new Error("Parameter name: invalid value " + name + ": read-only");
+      throw new Error(`Parameter name: invalid value ${name}: read-only`);
     }
+
     const type = this.getType(name);
     if (!type.acceptsValue(value)) {
       throw new Error(
-        "Parameter value: invalid value " +
-          value +
-          ": expected " +
-          type.valueType +
-          " but got " +
-          (value == null ? "null" : value.getClass())
+        `Parameter value: invalid value ${value}: expected ${type.valueType} but got ${value == null ? "null" : classOf(value)}`
       );
     }
+
     let ptr;
     switch (type) {
       case WidgetTypes.TEXT:
@@ -230,7 +229,7 @@ export class CameraWidgets implements ICloseable {
         throw new Error("Parameter type: invalid value " + type + ": unsupported");
     }
 
-    checkCode(GPhoto2Driver.gp_widget_set_value(this.get(name), ptr));
+    checkCode(GPhoto2Driver.gp_widget_set_value(this.get(name), ptr as PointerOf<any>));
   }
 
   private checkType(name: string, ...types: WidgetTypes[]): void {
@@ -301,10 +300,10 @@ export class CameraWidgets implements ICloseable {
     const result: string[] = [];
 
     for (let i = 0; i < choiceCount; i++) {
-      const ref = GPPointerRef<string>("string");
+      const ref = GPPointerString();
       checkCode(GPhoto2Driver.gp_widget_get_choice(widget, i, ref), "gp_widget_get_choice");
 
-      result.push(PointerToString(ref.deref()));
+      result.push(ref.deref());
     }
 
     return result;
