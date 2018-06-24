@@ -3,7 +3,6 @@ import {PointerCameraFile, RefCameraFile} from "../driver/modules";
 import {PointerWrapper} from "./PointerWrapper";
 
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
-
   constructor() {
     super("gp_file", RefCameraFile);
   }

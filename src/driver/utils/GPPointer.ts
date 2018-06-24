@@ -1,4 +1,4 @@
-import {alloc, allocCString, types} from "ref";
+import {alloc, allocCString} from "ref";
 import {PointerOf} from "../types";
 
 /**
@@ -18,10 +18,7 @@ export function GPPointer<T>(type: any = "void"): PointerOf<T> {
  * @constructor
  */
 export function GPPointerString(value?: string): PointerOf<string> {
-  if (value !== undefined) {
-    return allocCString(value) as any;
-  }
-  return alloc(types.CString) as any;
+  return value !== undefined ? (allocCString(value) as any) : (alloc("string") as any);
 }
 
 /**

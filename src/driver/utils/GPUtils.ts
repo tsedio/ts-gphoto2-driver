@@ -12,8 +12,9 @@ import {GPCodes, PointerOf} from "../types";
 export function checkCode(returnValue: any, method: string = "") {
   if (returnValue < GPCodes.GP_OK) {
     const errorStr = GPhoto2Driver.gp_port_result_as_string(returnValue);
-    throw new Error((`${method} returned ${returnValue}: ${errorStr}`));
+    throw new Error(`${method} returned ${returnValue}: ${errorStr}`);
   }
+
   return returnValue;
 }
 
@@ -37,7 +38,8 @@ export function closeQuietly(c: ICloseable) {
   try {
     c.close();
   } catch (er) {
-    console.warn("Failed to close Closeable " + (c as any).prototype.name, er);
+    const klass: any = (c as any).prototype ? c : c.constructor;
+    console.warn("Failed to close Closeable " + klass.name, er);
   }
 }
 

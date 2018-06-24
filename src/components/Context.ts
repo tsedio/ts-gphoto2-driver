@@ -20,6 +20,7 @@ export class Context implements ICloseable {
 
   public close(): this {
     GPhoto2Driver.gp_context_unref(this.pointer);
+
     return this;
   }
 
@@ -29,15 +30,15 @@ export class Context implements ICloseable {
    * @param {string} str
    * @param data
    */
-  private onError(context: PointerContext, str: string, data: any) {
-    // fprintf(stderr, "### %s\n", str);
-    console.error(str);
-  }
+  // private onError(context: PointerContext, str: string, data: any) {
+  // fprintf(stderr, "### %s\n", str);
+  //  console.error(str);
+  // }
 
-  private onStatus(context: PointerContext, str: string, data: any) {
-    // fprintf(stderr, "### %s\n", str);
-    console.error(str);
-  }
+  // private onStatus(context: PointerContext, str: string, data: any) {
+  // fprintf(stderr, "### %s\n", str);
+  // console.error(str);
+  // }
 
   static get() {
     if (!Context.instance) {

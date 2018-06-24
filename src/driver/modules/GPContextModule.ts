@@ -1,4 +1,5 @@
-import {PointerOf, Ref} from "../types";
+import {refType} from "ref";
+import {PointerOf} from "../types";
 
 /**
  *
@@ -7,7 +8,8 @@ export type PointerContext = PointerOf<void>;
 /**
  *
  */
-export const RefContext = Ref;
+// tslint:disable-next-line: variable-name
+export const RefContext = refType("void");
 /**
  *
  */
@@ -16,11 +18,13 @@ export type PointerCB = PointerOf<void>;
  *
  * @type {Type}
  */
-export const RefCB = Ref;
+// tslint:disable-next-line: variable-name
+export const RefCB = refType("void");
 /**
  *
  * @type {}
  */
+// tslint:disable-next-line: variable-name
 export const GPContextModuleDescription = {
   gp_context_new: [RefContext, []],
   gp_context_unref: ["void", [RefContext]],

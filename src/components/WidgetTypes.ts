@@ -4,47 +4,49 @@ const enums: WidgetTypes[] = [];
 
 export class WidgetTypes {
   /**
-   * Window widget This is the toplevel configuration widget. It should likely contain multiple GP_WIDGET_SECTION entries.
+   * WINDOW widget This is the toplevel configuration widget. It should likely contain multiple GP_WIDGET_SECTION entries.
    */
-  static Window = new WidgetTypes(GPWidgetTypes.GP_WIDGET_WINDOW, false, false, false, null);
+  static WINDOW = new WidgetTypes(GPWidgetTypes.GP_WIDGET_WINDOW, false, false, false, null);
   /**
-   * Section widget (think Tab).
+   * SECTION widget (think Tab).
    */
-  static Section = new WidgetTypes(GPWidgetTypes.GP_WIDGET_SECTION, false, false, false, null);
+  static SECTION = new WidgetTypes(GPWidgetTypes.GP_WIDGET_SECTION, false, false, false, null);
   /**
-   * Text widget.
+   * TEXT widget.
    */
-  static Text = new WidgetTypes(GPWidgetTypes.GP_WIDGET_TEXT, true, false, true, String);
+  static TEXT = new WidgetTypes(GPWidgetTypes.GP_WIDGET_TEXT, true, false, true, String);
   /**
    * Slider widget.
    */
-  static Range = new WidgetTypes(GPWidgetTypes.GP_WIDGET_RANGE, true, false, false, Number);
+  static RANGE = new WidgetTypes(GPWidgetTypes.GP_WIDGET_RANGE, true, false, false, Number);
   /**
    * Toggle widget (think check box).
    */
-  static Toggle = new WidgetTypes(GPWidgetTypes.GP_WIDGET_TOGGLE, true, false, true, Boolean);
+  static TOGGLE = new WidgetTypes(GPWidgetTypes.GP_WIDGET_TOGGLE, true, false, true, Boolean);
   /**
    * Radio button widget.
    */
-  static Radio = new WidgetTypes(GPWidgetTypes.GP_WIDGET_RADIO, true, true, true, String);
+  static RADIO = new WidgetTypes(GPWidgetTypes.GP_WIDGET_RADIO, true, true, true, String);
   /**
-   * Menu widget (same as {@link #Radio}).
+   * Menu widget (same as {@link #RADIO}).
    */
-  static Menu = new WidgetTypes(GPWidgetTypes.GP_WIDGET_MENU, true, true, true, String);
+  static MENU = new WidgetTypes(GPWidgetTypes.GP_WIDGET_MENU, true, true, true, String);
   /**
    * Button press widget.
    */
-  static Button = new WidgetTypes(GPWidgetTypes.GP_WIDGET_BUTTON, true, false, true, undefined);
+  static BUTTON = new WidgetTypes(GPWidgetTypes.GP_WIDGET_BUTTON, true, false, true, undefined);
   /**
    * Date entering widget.
    */
-  static Date = new WidgetTypes(GPWidgetTypes.GP_WIDGET_DATE, true, false, false, Date);
+  static DATE = new WidgetTypes(GPWidgetTypes.GP_WIDGET_DATE, true, false, false, Date);
 
-  constructor(private _cval: number,
-              private _hasValue: boolean,
-              private _hasChoices: boolean,
-              private _acceptNullValue: boolean,
-              private _valueType: any) {
+  constructor(
+    private _cval: number,
+    private _hasValue: boolean,
+    private _hasChoices: boolean,
+    private _acceptNullValue: boolean,
+    private _valueType: any
+  ) {
     enums.push(this);
   }
 
@@ -69,7 +71,7 @@ export class WidgetTypes {
   }
 
   static fromCVal(cval: number): WidgetTypes {
-    const type: WidgetTypes | undefined = enums.find((item) => item._cval === cval);
+    const type: WidgetTypes | undefined = enums.find(item => item._cval === cval);
 
     if (!type) {
       throw new Error("Parameter cval: invalid value " + cval + ": no such widget type");
@@ -85,6 +87,7 @@ export class WidgetTypes {
     if (!value) {
       return this.acceptNullValue;
     }
+
     return this.valueType.isInstance(value);
   }
 }

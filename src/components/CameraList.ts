@@ -1,9 +1,10 @@
+import {alloc, deref} from "ref";
 import {checkCode, GPhoto2Driver} from "../driver";
 import {ICamera} from "../interfaces";
 import {AbilitiesList} from "./AbilitiesList";
+import {Camera} from "./Camera";
 import {Context} from "./Context";
 import {List} from "./List";
-import {PortInfo} from "./PortInfo";
 import {PortInfoList} from "./PortInfoList";
 
 export class CameraList extends List<ICamera> {
@@ -20,37 +21,52 @@ export class CameraList extends List<ICamera> {
   /**
    *
    */
-  populate(): void {
-    const portInfoList = new PortInfoList();
-    const abilitiesList = new AbilitiesList();
+  load(): this {
+    const portInfoList = new PortInfoList().load();
+    const abilitiesList = new AbilitiesList().load();
     const cameraList = abilitiesList.detect(portInfoList);
-
     const count = cameraList.size;
 
-
     for (let i = 0; i < count; i++) {
-      const model = this.getName(i);
-      const path = this.getValue(i);
+      const model = alloc("string");
+      const path = alloc("string");
 
-      if (path.match(CameraList.USB_PATTERN)) {
-        this.push(model, path);
+      checkCode(GPhoto2Driver.gp_list_get_name(cameraList.pointer, i, model));
+      checkCode(GPhoto2Driver.gp_list_get_value(cameraList.pointer, i, path));
+
+      if (deref(path).match(CameraList.USB_PATTERN)) {
+        this.push(deref(model), deref(path));
       }
     }
 
     portInfoList.close();
     abilitiesList.close();
     cameraList.close();
+
+    return this;
   }
 
   /**
    *
    * @param {number} index
-   * @returns {PortInfo}
+   * @returns {Camera | undefined}
    */
-  public getPortInfo(index: number) {
-    const portInfo = new PortInfo();
-    checkCode(GPhoto2Driver.gp_port_info_list_get_info(this.pointer, index, portInfo.buffer));
-    return portInfo;
+  getCamera(index: number): Camera | undefined {
+    const cameraInfo = this.get(index);
+
+    if (cameraInfo) {
+      const portInfoList = new PortInfoList().load();
+      const camera = new Camera();
+      const portInfo = portInfoList.findByPath(cameraInfo.port)!;
+
+      camera.initialize(portInfo);
+
+      portInfoList.close();
+
+      return camera;
+    }
+
+    return undefined;
   }
 
   /**
@@ -59,23 +75,9 @@ export class CameraList extends List<ICamera> {
    */
   public toString(): string {
     const str = this.toArray()
-      .map(item => `${item.model}:${item.port}`)
+      .map(item => `${item.id}:${item.model}:${item.port}`)
       .join(", ");
 
-    return `CameraList[${str}]`;
-  }
-
-  /**
-   *
-   * @returns {ICamera}
-   */
-  public toArray() {
-    return super.toArray().map((item: any, index: number) => {
-      return {
-        model: item.name,
-        port: item.value,
-        portInfo: this.getPortInfo(index)
-      };
-    });
+    return `CameraList{${str}}`;
   }
 }

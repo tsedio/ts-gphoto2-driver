@@ -6,17 +6,19 @@ import {PointerWrapper} from "./PointerWrapper";
 import {PortInfoList} from "./PortInfoList";
 
 export class AbilitiesList extends PointerWrapper<PointerAbilityList> {
-
   constructor() {
     super("gp_abilities_list", RefAbilitiesList);
-    this.load();
+  }
+
+  get size(): number {
+    return checkCode(GPhoto2Driver.gp_abilities_list_count(this.pointer), "gp_abilities_list_count");
   }
 
   /**
    *
    */
   load(): this {
-    checkCode(GPhoto2Driver.gp_abilities_list_load(this.pointer, Context.get().pointer));
+    checkCode(GPhoto2Driver.gp_abilities_list_load(this.pointer, Context.get().pointer), "gp_abilities_list_load");
 
     return this;
   }
@@ -29,7 +31,10 @@ export class AbilitiesList extends PointerWrapper<PointerAbilityList> {
   detect(portInfoList: PortInfoList): List<any> {
     const list = new List();
 
-    checkCode(GPhoto2Driver.gp_abilities_list_detect(this.pointer, portInfoList.pointer, list.buffer, Context.get().pointer));
+    checkCode(
+      GPhoto2Driver.gp_abilities_list_detect(this.pointer, portInfoList.pointer, list.pointer, Context.get().pointer),
+      "gp_abilities_list_detect"
+    );
 
     return list;
   }

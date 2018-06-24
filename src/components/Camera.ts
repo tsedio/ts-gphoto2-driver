@@ -1,5 +1,6 @@
-import {checkCode, closeQuietly, GPCaptureTypes, GPhoto2Driver} from "../driver";
-import {PointerCamera, PointerPortInfo, RefCamera} from "../driver/modules";
+import {checkCode, closeQuietly, GPhoto2Driver} from "../driver";
+import {PointerCamera, RefCamera} from "../driver/modules";
+import {GPCaptureTypes} from "../driver/types";
 import {CameraFile} from "./CameraFile";
 import {CameraFilePath} from "./CameraFilePath";
 import {Context} from "./Context";
@@ -20,7 +21,6 @@ export class Camera extends PointerWrapper<PointerCamera> {
   public initialize(portInfo?: PortInfo): void {
     this.checkNotClosed();
     if (!this.isInitialized()) {
-
       if (portInfo) {
         this.setPortInfo(portInfo);
       }
@@ -68,6 +68,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
       this.closed = true;
       super.close();
     }
+
     return this;
   }
 
@@ -84,7 +85,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * Captures a quick preview image on the camera.
    * @return camera file, never null. Must be closed afterwards.
    */
-  public capturePreview(): CameraFile {
+  public capturePreview(): CameraFile | undefined {
     this.checkNotClosed();
     const cfile = new CameraFile();
     let returnedOk: boolean = false;
@@ -105,13 +106,18 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * Captures a full-quality image image on the camera.
    * @return camera file, never null. Must be closed afterwards.
    */
-  public captureImage(): CameraFile {
+  public captureImage(): CameraFile | undefined {
     this.checkNotClosed();
-    const path = new CameraFilePath();
 
-    checkCode(GPhoto2Driver.gp_camera_capture(this.pointer, GPCaptureTypes.GP_CAPTURE_IMAGE, path.pointer, Context.get().pointer));
+    try {
+      const cfile = new CameraFilePath();
 
-    return path.newFile(this.pointer);
+      checkCode(GPhoto2Driver.gp_camera_capture(this.pointer, GPCaptureTypes.GP_CAPTURE_IMAGE, cfile.buffer, Context.get().pointer));
+
+      return cfile.newFile(this.pointer);
+    } catch (er) {
+      console.error(er);
+    }
   }
 
   /**

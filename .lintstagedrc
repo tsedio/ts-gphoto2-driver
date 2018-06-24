@@ -2,8 +2,7 @@
   "concurrent": true,
   "linters": {
     "*.ts": [
-      "prettier --write",
-      "npm run tslint -- --fix",
+      "prettier --parser typescript --write",
       "git add"
     ]
   }

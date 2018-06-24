@@ -1,7 +1,5 @@
-///<reference path="../types/GPCodes.ts"/>
 import {refType, types} from "ref";
 import {GPCodes, PointerOf} from "../types";
-import {PointerList} from "./GPListModule";
 
 /**
  *
@@ -11,6 +9,7 @@ export type PointerPortInfoList = PointerOf<void>;
  *
  * @type {Type}
  */
+// tslint:disable-next-line: variable-name
 export const RefPortInfoList = refType("void");
 /**
  *
@@ -20,12 +19,14 @@ export type PointerPortInfo = PointerOf<void>;
 /**
  *
  */
+// tslint:disable-next-line: variable-name
 export const RefPortInfo = refType("void");
 
 /**
  *
  * @type {Type}
  */
+// tslint:disable-next-line: variable-name
 export const RefPortType = refType("void");
 
 /**
@@ -37,6 +38,7 @@ export type PointerPortType = PointerOf<void>;
  *
  * @type {any}
  */
+// tslint:disable-next-line: variable-name
 export const GPPortInfoModuleDescription = {
   gp_port_result_as_string: [types.CString, ["int"]],
 
@@ -123,7 +125,7 @@ export interface IGPPortInfoModule {
    * @param portInfo the returned information
    * @returns {GPCodes} a gphoto2 error code
    */
-  gp_port_info_list_get_info(portInfoList: PointerPortInfoList | PointerList, index: number, portInfo: PointerPortInfo): GPCodes;
+  gp_port_info_list_get_info(portInfoList: PointerPortInfoList, index: number, portInfo: PointerPortInfo): GPCodes;
 
   /**
    * Lookup a specific path in the list.

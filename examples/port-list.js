@@ -2,6 +2,8 @@ const { PortInfoList } = require('../src');
 
 const portList = new PortInfoList();
 
+portList.load();
+
 console.log('Nb port =>', portList.size);
 
 portList.toArray().forEach((port, index) => {

@@ -12,16 +12,20 @@ export type PointerAbilityList = PointerOf<void>;
 /**
  *
  */
+// tslint:disable-next-line: variable-name
 export const RefAbilitiesList = refType("void");
 /**
  *
  * @type {any}
  */
+// tslint:disable-next-line: variable-name
 export const GPAbilitiesListModuleDescription = {
   gp_abilities_list_new: ["void", [refType(RefAbilitiesList)]],
   gp_abilities_list_load: ["int", [RefAbilitiesList, RefContext]],
   gp_abilities_list_detect: ["int", [RefAbilitiesList, RefPortInfoList, RefList, RefContext]],
-  gp_abilities_list_free: ["int", [RefAbilitiesList]]
+  gp_abilities_list_free: ["int", [RefAbilitiesList]],
+  gp_abilities_list_count: ["int", [RefAbilitiesList]],
+  gp_abilities_list_load_dir: ["int", [RefAbilitiesList, refType("string"), RefContext]]
 };
 
 /**
@@ -55,6 +59,15 @@ export interface IGPAbilitiesListModule {
   gp_abilities_list_load(abilitiesList: PointerAbilityList, context: PointerContext): GPCodes;
 
   /**
+   *
+   * @param {PointerAbilityList} abilitiesList
+   * @param {string} dir
+   * @param {PointerContext} context
+   * @returns {GPCodes}
+   */
+  gp_abilities_list_load_dir(abilitiesList: PointerAbilityList, dir: string, context: PointerContext): GPCodes;
+
+  /**
    * Tries to detect any camera connected to the computer using the supplied
    * list of supported cameras and the supplied info_list of ports.
    *
@@ -67,7 +80,7 @@ export interface IGPAbilitiesListModule {
   gp_abilities_list_detect(
     abilitiesList: PointerAbilityList,
     infoList: PointerPortInfoList,
-    cameraList: PointerOf<PointerList>,
+    cameraList: PointerList,
     context: PointerContext
   ): GPCodes;
 
@@ -78,4 +91,11 @@ export interface IGPAbilitiesListModule {
    * @return a gphoto2 error code
    */
   gp_abilities_list_free(abilitiesList: PointerAbilityList): GPCodes;
+
+  /**
+   * Count the entries in the supplied list.
+   * @param abilitiesList a #CameraAbilitiesList
+   * @returns The number of entries or a gphoto2 error code
+   */
+  gp_abilities_list_count(abilitiesList: PointerAbilityList): GPCodes;
 }

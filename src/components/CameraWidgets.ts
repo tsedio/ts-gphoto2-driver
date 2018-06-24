@@ -1,13 +1,4 @@
-import {
-  checkCode,
-  GPhoto2Driver,
-  GPPointer,
-  GPPointerFloat,
-  GPPointerInt,
-  GPPointerRef,
-  GPPointerString,
-  PointerToString
-} from "../driver";
+import {checkCode, GPhoto2Driver, GPPointer, GPPointerFloat, GPPointerInt, GPPointerRef, GPPointerString, PointerToString} from "../driver";
 import {PointerCameraWidget} from "../driver/modules";
 import {PointerOf} from "../driver/types";
 import {ICloseable} from "../interfaces";
@@ -21,9 +12,8 @@ export class CameraWidgets implements ICloseable {
   widgets: Map<string, PointerCameraWidget> = new Map();
 
   constructor(private camera: Camera) {
-
     const buffer = GPPointerRef<PointerCameraWidget>();
-    checkCode(GPhoto2Driver.gp_widget_new(WidgetTypes.Window.cval, "", buffer));
+    checkCode(GPhoto2Driver.gp_widget_new(WidgetTypes.WINDOW.cval, "", buffer));
     checkCode(GPhoto2Driver.gp_camera_get_config(camera.pointer, buffer, Context.get().pointer));
 
     this.rootWidget = buffer.deref();
@@ -51,7 +41,6 @@ export class CameraWidgets implements ICloseable {
 
     checkCode(GPhoto2Driver.gp_widget_get_type(widget, type));
 
-
     const widgetType = WidgetTypes.fromCVal(type.deref());
 
     if (widgetType.hasValue) {
@@ -59,7 +48,6 @@ export class CameraWidgets implements ICloseable {
     }
 
     const childcount: number = checkCode(GPhoto2Driver.gp_widget_count_children(widget));
-
 
     for (let i = 0; i < childcount; i++) {
       const buffer = GPPointerRef<PointerCameraWidget>();
@@ -75,6 +63,7 @@ export class CameraWidgets implements ICloseable {
    */
   public getNames(): string[] {
     this.checkNotClosed();
+
     return Array.from(this.widgets.keys()).sort();
   }
 
@@ -145,10 +134,9 @@ export class CameraWidgets implements ICloseable {
     const type = this.getType(name);
 
     switch (type) {
-      case WidgetTypes.Text:
-      case WidgetTypes.Radio:
-      case WidgetTypes.Menu: {
-
+      case WidgetTypes.TEXT:
+      case WidgetTypes.RADIO:
+      case WidgetTypes.MENU: {
         const pref = GPPointerRef<void>();
         checkCode(GPhoto2Driver.gp_widget_get_value(this.get(name), pref));
         const p = pref.deref();
@@ -156,25 +144,28 @@ export class CameraWidgets implements ICloseable {
         return p == null ? null : PointerToString(p as PointerOf<string>);
       }
 
-      case WidgetTypes.Range: {
+      case WidgetTypes.RANGE: {
         const pref = GPPointerFloat();
         checkCode(GPhoto2Driver.gp_widget_get_value(this.get(name), pref));
+
         return pref.deref();
       }
 
-      case WidgetTypes.Toggle: {
+      case WidgetTypes.TOGGLE: {
         const pref = GPPointerInt();
         checkCode(GPhoto2Driver.gp_widget_get_value(this.get(name), pref));
-        return pref.deref() == 2 ? null : pref.deref() == 1;
+
+        return pref.deref() === 2 ? null : pref.deref() === 1;
       }
 
-      case WidgetTypes.Date: {
+      case WidgetTypes.DATE: {
         const pref = GPPointerInt();
         checkCode(GPhoto2Driver.gp_widget_get_value(this.get(name), pref));
+
         return new Date(pref.deref() * 1000.0);
       }
 
-      case WidgetTypes.Button:
+      case WidgetTypes.BUTTON:
         return null;
 
       default:
@@ -196,13 +187,20 @@ export class CameraWidgets implements ICloseable {
     }
     const type = this.getType(name);
     if (!type.acceptsValue(value)) {
-      throw new Error("Parameter value: invalid value " + value + ": expected " + type.valueType + " but got " + (value == null ? "null" : value.getClass()));
+      throw new Error(
+        "Parameter value: invalid value " +
+          value +
+          ": expected " +
+          type.valueType +
+          " but got " +
+          (value == null ? "null" : value.getClass())
+      );
     }
     let ptr;
     switch (type) {
-      case WidgetTypes.Text:
-      case WidgetTypes.Radio:
-      case WidgetTypes.Menu:
+      case WidgetTypes.TEXT:
+      case WidgetTypes.RADIO:
+      case WidgetTypes.MENU:
         if (value == null) {
           ptr = null;
         } else {
@@ -210,22 +208,24 @@ export class CameraWidgets implements ICloseable {
         }
         break;
 
-      case WidgetTypes.Range:
+      case WidgetTypes.RANGE:
         ptr = GPPointerFloat(value);
         break;
 
-      case WidgetTypes.Toggle:
+      case WidgetTypes.TOGGLE:
         const val = value == null ? 2 : !!value ? 1 : 0;
         ptr = GPPointerInt(val);
         break;
 
-      case WidgetTypes.Date:
+      case WidgetTypes.DATE:
         ptr = GPPointerInt(Math.ceil(new Date(value).getTime() / 1000));
         break;
 
-      case WidgetTypes.Button:
+      case WidgetTypes.BUTTON:
         this.setChanged(name, true);
+
         return;
+
       default:
         throw new Error("Parameter type: invalid value " + type + ": unsupported");
     }
@@ -241,12 +241,13 @@ export class CameraWidgets implements ICloseable {
   }
 
   /**
-   * Returns allowed range for {@link WidgetTypes#Range} options.
+   * Returns allowed range for {@link WidgetTypes#RANGE} options.
    * @param name the widget name.
    * @return the range.
    */
   public getRange(name: string): CameraWidgetRange {
-    this.checkType(name, WidgetTypes.Range);
+    this.checkType(name, WidgetTypes.RANGE);
+
     return new CameraWidgetRange(this.get(name));
   }
 
@@ -286,7 +287,7 @@ export class CameraWidgets implements ICloseable {
   }
 
   /**
-   * Lists choices for given widget. Only applicable to {@link WidgetTypes#Radio} and {@link WidgetTypes#Menu} types.
+   * Lists choices for given widget. Only applicable to {@link WidgetTypes#RADIO} and {@link WidgetTypes#MENU} types.
    * @param name widget name.
    * @return list of possible choices captions.
    */
@@ -305,6 +306,7 @@ export class CameraWidgets implements ICloseable {
 
       result.push(PointerToString(ref.deref()));
     }
+
     return result;
   }
 
@@ -312,7 +314,8 @@ export class CameraWidgets implements ICloseable {
     this.checkNotClosed();
     const result = GPPointerInt();
     checkCode(GPhoto2Driver.gp_widget_get_readonly(this.get(name), result), "gp_widget_get_readonly");
-    return result.deref() == 1;
+
+    return result.deref() === 1;
   }
 
   public toString(): string {
@@ -326,32 +329,33 @@ export class CameraWidgets implements ICloseable {
   public inspect(): string {
     this.checkNotClosed();
 
-    return this.getNames().map((name) => {
-      const type = this.getType(name);
-      const value = this.getValue(name);
-      const info = this.getInfo(name);
+    return this.getNames()
+      .map(name => {
+        const type = this.getType(name);
+        const value = this.getValue(name);
+        const info = this.getInfo(name);
 
-      let row = `${name}: ${type} = ${type.valueType.getName()}: ${value}` + "\n"
-        + `    ${this.getLabel(name)}`;
+        let row = `${name}: ${type} = ${type.valueType.getName()}: ${value}` + "\n" + `    ${this.getLabel(name)}`;
 
+        if (info !== null && info.trim() !== "") {
+          row += " - " + info;
+        }
 
-      if (info !== null && info.trim() !== "") {
-        row += " - " + info;
-      }
+        if (type.hasChoices) {
+          row += ": " + this.listChoices(name);
+        }
 
-      if (type.hasChoices) {
-        row += ": " + this.listChoices(name);
-      }
+        if (type === WidgetTypes.RANGE) {
+          row += ": " + this.getRange(name);
+        }
 
-      if (type === WidgetTypes.Range) {
-        row += ": " + this.getRange(name);
-      }
+        if (this.isReadOnly(name)) {
+          row += ": READ_ONLY";
+        }
 
-      if (this.isReadOnly(name)) {
-        row += ": READ_ONLY";
-      }
-      return row + "\n";
-    }).join("");
+        return row + "\n";
+      })
+      .join("");
   }
 
   /**

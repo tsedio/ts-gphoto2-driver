@@ -4,22 +4,26 @@ import {PointerWrapper} from "./PointerWrapper";
 import {PortInfo} from "./PortInfo";
 
 export class PortInfoList extends PointerWrapper<PointerPortInfoList> {
+  private map: Map<string, PortInfo> = new Map();
 
   constructor() {
     super("gp_port_info_list", RefPortInfoList);
-    this.load();
   }
 
   get size(): number {
     return checkCode(GPhoto2Driver.gp_port_info_list_count(this.pointer), "gp_port_info_list_count");
   }
 
-
   /**
    *
    */
   load(): this {
     checkCode(GPhoto2Driver.gp_port_info_list_load(this.pointer), "gp_port_info_list_load");
+
+    this.toArray().forEach(portInfo => {
+      this.map.set(portInfo.path, portInfo);
+    });
+
     return this;
   }
 
@@ -33,6 +37,15 @@ export class PortInfoList extends PointerWrapper<PointerPortInfoList> {
     checkCode(GPhoto2Driver.gp_port_info_list_get_info(this.pointer, index, portInfo.buffer), "gp_port_info_list_get_info");
 
     return portInfo;
+  }
+
+  /**
+   *
+   * @param {string} path
+   * @returns {PortInfo}
+   */
+  findByPath(path: string): PortInfo | undefined {
+    return this.map.get(path);
   }
 
   /**

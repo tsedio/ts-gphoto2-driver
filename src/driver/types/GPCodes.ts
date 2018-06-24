@@ -195,9 +195,9 @@ export enum GPVersionTypes {
 }
 
 export enum GPWidgetTypes {
-  GP_WIDGET_WINDOW = 0, // # Window widget This is the toplevel configuration widget. It should likely contain multiple GP_WIDGET_SECTION entries.
-  GP_WIDGET_SECTION = 1, // # Section widget (think Tab).
-  GP_WIDGET_TEXT = 2, // # Text widget.
+  GP_WIDGET_WINDOW = 0, // # WINDOW widget This is the toplevel configuration widget. It should likely contain multiple GP_WIDGET_SECTION entries.
+  GP_WIDGET_SECTION = 1, // # SECTION widget (think Tab).
+  GP_WIDGET_TEXT = 2, // # TEXT widget.
   GP_WIDGET_RANGE = 3, // # Slider widget.
   GP_WIDGET_TOGGLE = 4, // # Toggle widget (think check box).
   GP_WIDGET_RADIO = 5, // # Radio button widget.

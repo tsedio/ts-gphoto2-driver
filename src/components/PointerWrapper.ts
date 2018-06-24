@@ -4,7 +4,6 @@ import {PointerOf} from "../driver/types";
 import {ICloseable} from "../interfaces";
 
 export class PointerWrapper<P extends PointerOf<any>> implements ICloseable {
-
   readonly buffer: PointerOf<P>;
 
   constructor(private gpMethodType: string, refType: Type) {
@@ -24,6 +23,12 @@ export class PointerWrapper<P extends PointerOf<any>> implements ICloseable {
   }
 
   call(key: string, ...args: any[]) {
-    return checkCode(GPhoto2Driver[`${this.gpMethodType}_${key}`](this.pointer, ...args), `${this.gpMethodType}_${key}`);
+    const method = `${this.gpMethodType}_${key}`;
+
+    if (GPhoto2Driver[method]) {
+      return checkCode(GPhoto2Driver[method](this.pointer, ...args), method);
+    }
+
+    throw new Error(method + " on GPhoto2Driver doesn't exists");
   }
 }

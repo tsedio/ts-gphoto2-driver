@@ -1,11 +1,8 @@
-import {types} from "ref";
-import {checkCode, GPhoto2Driver, GPPointer} from "../driver";
+import {checkCode, GPhoto2Driver, GPPointerString} from "../driver";
 import {PointerList, RefList} from "../driver/modules";
-import {ICamera} from "../interfaces";
 import {PointerWrapper} from "./PointerWrapper";
 
 export class List<T> extends PointerWrapper<PointerList> {
-
   constructor() {
     super("gp_list", RefList);
   }
@@ -24,7 +21,7 @@ export class List<T> extends PointerWrapper<PointerList> {
    * @returns {any}
    */
   public getName(index: number): string {
-    const ref = GPPointer<string>(types.CString);
+    const ref = GPPointerString();
 
     GPhoto2Driver.gp_list_get_name(this.pointer, index, ref);
 
@@ -37,7 +34,7 @@ export class List<T> extends PointerWrapper<PointerList> {
    * @returns {any}
    */
   public getValue(index: number): string {
-    const ref = GPPointer<string>(types.CString);
+    const ref = GPPointerString();
 
     GPhoto2Driver.gp_list_get_value(this.pointer, index, ref);
 
@@ -48,6 +45,18 @@ export class List<T> extends PointerWrapper<PointerList> {
     checkCode(GPhoto2Driver.gp_list_append(this.pointer, name, value));
   }
 
+  public get(index: number): T | undefined {
+    if (index < this.size) {
+      return {
+        id: index,
+        model: this.getName(index),
+        port: this.getValue(index)
+      } as any;
+    }
+
+    return undefined;
+  }
+
   /**
    *
    * @returns {ICamera}
@@ -55,13 +64,9 @@ export class List<T> extends PointerWrapper<PointerList> {
   public toArray(): T[] {
     const list = [];
     const size = this.size;
+
     for (let i = 0; i < size; i++) {
-      const name = this.getName(i);
-      const value = this.getValue(i);
-      list.push({
-        name,
-        value
-      });
+      list.push(this.get(i));
     }
 
     return list as any[];

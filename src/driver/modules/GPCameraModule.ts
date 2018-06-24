@@ -1,12 +1,19 @@
 import {refType, types} from "ref";
 import * as ArrayType from "ref-array";
 import * as StructType from "ref-struct";
-import {GPCaptureTypes, GPCodes, PointerOf, Ref} from "../types";
+import {GPCaptureTypes, GPCodes, PointerOf} from "../types";
 import {PointerAbilityList, RefAbilitiesList} from "./GPAbilitiesListModule";
 import {PointerContext, RefContext} from "./GPContextModule";
 import {PointerList, RefList} from "./GPListModule";
 import {PointerPortInfo, RefPortInfo} from "./GPPortInfoModule";
 import {PointerCameraWidget, RefCameraWidget} from "./GPWidgetModule";
+
+export interface IStructBuffer {
+  buffer: {
+    readCString(offset: number): string;
+  };
+}
+
 /**
  *
  */
@@ -15,7 +22,8 @@ export type PointerCamera = PointerOf<void>;
 /**
  *
  */
-export const RefCamera = Ref;
+// tslint:disable-next-line: variable-name
+export const RefCamera = refType("void");
 
 /**
  *
@@ -25,16 +33,18 @@ export type PointerCameraFile = PointerOf<void>;
 /**
  *
  */
-export const RefCameraFile = Ref;
+// tslint:disable-next-line: variable-name
+export const RefCameraFile = refType("void");
 
 /**
  *
  */
-export type StructCameraText = StructType & { text: PointerOf<string> };
+export type StructCameraText = StructType & {text: PointerOf<string> & IStructBuffer};
 /**
  *
  * @type {StructType}
  */
+// tslint:disable-next-line: variable-name
 export const StructCameraText = StructType({
   text: ArrayType(types.char, 32 * 1024)
 });
@@ -43,13 +53,15 @@ export const StructCameraText = StructType({
  *
  */
 export type StructCameraFilePath = StructType & {
-  name: PointerOf<string>;
-  folder: PointerOf<string>
+  name: PointerOf<string> & IStructBuffer;
+  folder: PointerOf<string> & IStructBuffer;
+  ref(): PointerOf<StructCameraFilePath>;
 };
 /**
  *
  * @type {StructType}
  */
+// tslint:disable-next-line: variable-name
 export const StructCameraFilePath = StructType({
   name: ArrayType(types.uchar, 128),
   folder: ArrayType(types.uchar, 1024)
@@ -59,6 +71,7 @@ export const StructCameraFilePath = StructType({
  *
  * @type {any}
  */
+// tslint:disable-next-line: variable-name
 export const GPCameraModuleDescription = {
   gp_camera_autodetect: ["int", [RefList, RefContext]],
   gp_camera_new: ["int", [refType(RefCamera)]],
@@ -77,7 +90,7 @@ export const GPCameraModuleDescription = {
   gp_camera_get_about: ["int", [RefCamera, StructCameraText, RefContext]],
   gp_camera_get_storageinfo: ["int", [RefCamera, refType(refType("void")), refType("void"), RefContext]],
 
-  gp_camera_capture: ["int", [RefCamera, "int", StructCameraFilePath, RefContext]],
+  gp_camera_capture: ["int", [RefCamera, "int", refType(StructCameraFilePath), RefContext]],
   gp_camera_trigger_capture: ["int", [RefCamera, RefContext]],
   gp_camera_capture_preview: ["int", [RefCamera, RefCameraFile, RefContext]],
   gp_camera_file_get: ["int", [RefCameraFile, types.CString, types.CString, "int", RefCameraFile, RefContext]],
@@ -119,7 +132,7 @@ export interface IGPCameraModule {
    * @param {PointerCamera} camera
    * @param {PointerPortInfo} portInfo
    */
-  gp_camera_set_port_info(camera: PointerCamera, portInfo: PointerPortInfo): void
+  gp_camera_set_port_info(camera: PointerCamera, portInfo: PointerPortInfo): void;
 
   /**
    * Sets the camera abilities.
@@ -154,7 +167,6 @@ export interface IGPCameraModule {
    *
    */
   gp_camera_init(camera: PointerCamera, context: PointerContext): GPCodes;
-
 
   /**
    *
@@ -245,7 +257,6 @@ export interface IGPCameraModule {
    *
    **/
   gp_camera_set_config(camera: PointerCamera, window: PointerCameraWidget, context: PointerContext): GPCodes;
-
 
   /**
    * Set a single configuration widget for the camera.
@@ -338,12 +349,7 @@ export interface IGPCameraModule {
    * in path. The file can then be downloaded using #gp_camera_file_get.
    *
    */
-  gp_camera_capture(
-    camera: PointerCamera,
-    type: number,
-    path: StructCameraFilePath,
-    context: PointerContext
-  ): GPCodes;
+  gp_camera_capture(camera: PointerCamera, type: number, path: StructCameraFilePath, context: PointerContext): GPCodes;
 
   /**
    * Triggers capture of one or more images.
