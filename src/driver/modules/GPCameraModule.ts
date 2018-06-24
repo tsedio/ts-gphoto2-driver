@@ -67,6 +67,13 @@ export const StructCameraFilePath = StructType({
   folder: ArrayType(types.uchar, 1024)
 });
 
+export const GP_CAMERA_MODULE_ASYNC_KEYS: string[] = [
+  "gp_camera_capture",
+  "gp_camera_capture_preview",
+  "gp_camera_trigger_capture",
+  "gp_camera_file_get"
+];
+
 /**
  *
  * @type {any}
@@ -85,9 +92,9 @@ export const GPCameraModuleDescription = {
   gp_camera_get_single_config: ["int", [RefCamera, types.CString, refType(RefCameraWidget), RefContext]],
   gp_camera_set_config: ["int", [RefCamera, RefCameraWidget, RefContext]],
   gp_camera_set_single_config: ["int", [RefCamera, types.CString, RefCameraWidget, RefContext]],
-  gp_camera_get_summary: ["int", [RefCamera, StructCameraText, RefContext]],
-  gp_camera_get_manual: ["int", [RefCamera, StructCameraText, RefContext]],
-  gp_camera_get_about: ["int", [RefCamera, StructCameraText, RefContext]],
+  gp_camera_get_summary: ["int", [RefCamera, refType(StructCameraText), RefContext]],
+  gp_camera_get_manual: ["int", [RefCamera, refType(StructCameraText), RefContext]],
+  gp_camera_get_about: ["int", [RefCamera, refType(StructCameraText), RefContext]],
   gp_camera_get_storageinfo: ["int", [RefCamera, refType(refType("void")), refType("void"), RefContext]],
 
   gp_camera_capture: ["int", [RefCamera, "int", refType(StructCameraFilePath), RefContext]],
@@ -284,7 +291,7 @@ export interface IGPCameraModule {
    * taken, or generally information that is not configurable.
    *
    **/
-  gp_camera_get_summary(camera: PointerCamera, summary: StructCameraText, context: PointerContext): GPCodes;
+  gp_camera_get_summary(camera: PointerCamera, summary: PointerOf<StructCameraText>, context: PointerContext): GPCodes;
 
   /**
    * Retrieves the manual for given camera.
@@ -297,7 +304,7 @@ export interface IGPCameraModule {
    * This manual typically contains information about using the camera.
    *
    **/
-  gp_camera_get_manual(camera: PointerCamera, manual: StructCameraText, context: PointerContext): GPCodes;
+  gp_camera_get_manual(camera: PointerCamera, manual: PointerOf<StructCameraText>, context: PointerContext): GPCodes;
 
   /**
    * Retrieves information about the camera driver.
@@ -311,7 +318,7 @@ export interface IGPCameraModule {
    * acknowledgements, etc.
    *
    */
-  gp_camera_get_about(camera: PointerCamera, about: StructCameraText, context: PointerContext): GPCodes;
+  gp_camera_get_about(camera: PointerCamera, about: PointerOf<StructCameraText>, context: PointerContext): GPCodes;
 
   /**
    * Gets information on the camera attached storage.
@@ -349,7 +356,27 @@ export interface IGPCameraModule {
    * in path. The file can then be downloaded using #gp_camera_file_get.
    *
    */
-  gp_camera_capture(camera: PointerCamera, type: number, path: StructCameraFilePath, context: PointerContext): GPCodes;
+  gp_camera_capture(camera: PointerCamera, type: number, path: PointerOf<StructCameraFilePath>, context: PointerContext): GPCodes;
+
+  /**
+   * Captures an image, movie, or sound clip depending on the given type.
+   *
+   * @param camera a #Camera
+   * @param type a #CameraCaptureType
+   * @param path a #CameraFilePath
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
+   * The resulting file will be stored on the camera. The location gets stored
+   * in path. The file can then be downloaded using #gp_camera_file_get.
+   *
+   */
+  gp_camera_capture_async(
+    camera: PointerCamera,
+    type: number,
+    path: PointerOf<StructCameraFilePath>,
+    context: PointerContext
+  ): Promise<GPCodes>;
 
   /**
    * Triggers capture of one or more images.
@@ -361,8 +388,21 @@ export interface IGPCameraModule {
    * This functions just remotely causes the shutter release and returns
    * immediately. You will want to run #gp_camera_wait_event until a image
    * is added which can be downloaded using #gp_camera_file_get.
-   **/
+   */
   gp_camera_trigger_capture(camera: PointerCamera, context: PointerContext): GPCodes;
+
+  /**
+   * Triggers capture of one or more images.
+   *
+   * @param camera a #Camera
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
+   * This functions just remotely causes the shutter release and returns
+   * immediately. You will want to run #gp_camera_wait_event until a image
+   * is added which can be downloaded using #gp_camera_file_get.
+   */
+  gp_camera_trigger_capture_async(camera: PointerCamera, context: PointerContext): Promise<GPCodes>;
 
   /**
    * Captures a preview that won't be stored on the camera but returned in
@@ -376,8 +416,23 @@ export interface IGPCameraModule {
    * For example, you could use gp_capture_preview() for taking some sample
    * pictures before calling gp_capture().
    *
-   **/
+   */
   gp_camera_capture_preview(camera: PointerCamera, file: PointerCameraFile, context: PointerContext): GPCodes;
+
+  /**
+   * Captures a preview that won't be stored on the camera but returned in
+   * supplied file.
+   *
+   * @param camera a #Camera
+   * @param file a #CameraFile
+   * @param context a #GPContext
+   * @return a gphoto2 error code
+   *
+   * For example, you could use gp_capture_preview() for taking some sample
+   * pictures before calling gp_capture().
+   *
+   */
+  gp_camera_capture_preview_async(camera: PointerCamera, file: PointerCameraFile, context: PointerContext): Promise<GPCodes>;
 
   /**
    * Retrieves a file from the #Camera.
@@ -399,4 +454,23 @@ export interface IGPCameraModule {
     cameraFile: PointerCameraFile,
     context: PointerContext
   ): GPCodes;
+
+  /**
+   *
+   * @param {PointerCamera} camera
+   * @param {string} folder
+   * @param {string} file
+   * @param {GPCaptureTypes} type
+   * @param {PointerCameraFile} cameraFile
+   * @param {PointerContext} context
+   * @returns {Promise<GPCodes>}
+   */
+  gp_camera_file_get_async(
+    camera: PointerCamera,
+    folder: string,
+    file: string,
+    type: GPCaptureTypes,
+    cameraFile: PointerCameraFile,
+    context: PointerContext
+  ): Promise<GPCodes>;
 }

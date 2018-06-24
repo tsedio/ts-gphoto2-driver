@@ -10,14 +10,18 @@ console.log('Nb camera', cameraList.size);
 
 if (cameraList.size) {
   const camera = cameraList.getCamera(0);
-  console.log('Camera =>', camera);
 
-  const cameraFile = camera.captureImage();
 
-  cameraFile.save(path.join(__dirname, 'capture.jpeg'));
+  if (!camera.isClosed()) {
+    console.log('Camera =>', camera);
 
-  closeQuietly(cameraFile);
-  closeQuietly(camera);
+    const cameraFile = camera.captureImage();
+
+    cameraFile.save(path.join(__dirname, '../.tmp/capture.jpeg'));
+
+    closeQuietly(cameraFile);
+    closeQuietly(camera);
+  }
 }
 
 cameraList.close();

@@ -1,69 +1,89 @@
 const { Camera, closeQuietly, CameraWidgets } = require('../src');
 const path = require('path');
-const autoFocus = false;
-const preview = false;
-const capture = true;
+
 const camera = new Camera();
 
-
 try {
+  console.log('[GPDRIVER] Camera init');
   camera.initialize();
 
-  console.log('Camera Loaded');
-  console.log('=========');
-  if (autoFocus) {
-    console.log('Auto focus');
-    const cfg = new CameraWidgets(camera);
-
-
-    process.on('exit', () => {
-      closeQuietly(cfg);
-    });
-
-    try {
-      cfg.setValue('/actions/autofocusdrive', true);
-      cfg.apply();
-    } finally {
-      closeQuietly(cfg);
-    }
-  }
-  console.log('=========');
-  if (preview) {
-    console.log('Preview');
-    const cameraFile = camera.capturePreview();
-
-    if (cameraFile) {
-      console.log('PreviewFile');
-      try {
-        cameraFile.save(path.join(__dirname, 'preview.jpg'));
-      }
-      catch (er) {
-        console.error(er);
-      }
-      finally {
-        closeQuietly(cameraFile);
-      }
-    }
-
-
-    camera.deinitialize();
-    camera.initialize();
-  }
-  console.log('=========');
-
-  if (capture) {
-    console.log('Capture');
-    const cf2 = camera.captureImage();
-
-    try {
-      // console.log('==>', path.join(__dirname, 'capture.jpg'));
-      cf2.save(path.join(__dirname, 'capture.jpg'));
-    } finally {
-      closeQuietly(cf2);
-    }
-  }
-
-
+  runScenario({
+    autoFocus: true,
+    triggerCapture: true,
+    capture: true,
+    preview: true
+  });
+} catch (er) {
+  console.error(er.message);
 } finally {
   closeQuietly(camera);
+}
+
+
+function runScenario({ autoFocus = false, preview = false, capture = false, triggerCapture = false }) {
+  console.log('[GPDRIVER] Camera Loaded');
+
+  if (autoFocus) {
+    console.log('[GPDRIVER] Autofocus =============================');
+    runAutofocus();
+  }
+
+  if (preview) {
+    console.log('[GPDRIVER] Preview ===============================');
+    runPreview();
+  }
+
+  if (triggerCapture) {
+    console.log('[GPDRIVER] Trigger Capture =======================');
+    runTriggerCapture();
+  }
+
+  if (capture) {
+    console.log('[GPDRIVER] Capture ===============================');
+    runCapture();
+
+    runCapture();
+  }
+}
+
+/**
+ *
+ */
+function runAutofocus() {
+  const cfg = new CameraWidgets(camera);
+
+  try {
+    cfg.setValue('/actions/autofocusdrive', true);
+    cfg.apply();
+  } catch (er) {
+    console.warn(er);
+  } finally {
+    closeQuietly(cfg);
+  }
+}
+
+/**
+ *
+ */
+function runPreview() {
+  const filePath = path.join(__dirname, '../.tmp/preview.jpg');
+  camera.capturePreview(filePath);
+  console.log('File saved on', filePath);
+}
+
+/**
+ *
+ */
+function runTriggerCapture() {
+  camera.triggerCapture();
+}
+
+/**
+ *
+ */
+function runCapture() {
+  const filePath = path.join(__dirname, '../.tmp/capture.jpg');
+
+  camera.captureImage(filePath);
+  console.log('File saved on', filePath);
 }

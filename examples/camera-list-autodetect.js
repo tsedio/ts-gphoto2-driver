@@ -4,6 +4,7 @@ const { CameraList } = require('../src');
 SegfaultHandler.registerHandler('crash.log');
 
 const cameraList = new CameraList();
+const portList = new PortInfoList().load();
 
 // Auto-detect
 cameraList.autodetect();
@@ -14,10 +15,10 @@ cameraList.toArray().forEach((cameraInfo, index) => {
   console.log(`[Cam.${index}] model =>`, cameraInfo.model);
   console.log(`[Cam.${index}] port =>`, cameraInfo.port);
 
-  // cameraList.getPortInfo(index);
+  const portInfo = portList.findByPath(cameraInfo.port);
 
-  /* console.log(`[Cam.portInfo.${index}] name =>`, cameraInfo.portInfo.name);
-   console.log(`[Cam.portInfo.${index}] path =>`, cameraInfo.portInfo.path);*/
+  console.log(`[Cam.${index}] portInfo =>`, portInfo.name);
+  console.log(`[Cam.${index}] portInfo =>`, portInfo.path);
 });
 
 cameraList.close();

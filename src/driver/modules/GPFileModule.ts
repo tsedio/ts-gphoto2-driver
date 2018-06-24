@@ -2,6 +2,8 @@ import {refType, types} from "ref";
 import {GPCodes, PointerOf} from "../types";
 import {PointerCameraFile, RefCameraFile} from "./GPCameraModule";
 
+export const GP_FILE_MODULE_ASYNC_KEYS: string[] = ["gp_file_save"];
+
 // tslint:disable-next-line: variable-name
 export const GPFileModuleDescription = {
   gp_file_new: ["int", [refType(RefCameraFile)]],
@@ -27,6 +29,14 @@ export interface IGPFileModule {
    * @returns {GPCodes}
    */
   gp_file_save(cameraFile: PointerCameraFile, filename: string): GPCodes;
+
+  /**
+   *
+   * @param {PointerCameraFile} cameraFile
+   * @param {string} filename
+   * @returns {Promise<GPCodes>}
+   */
+  gp_file_save_async(cameraFile: PointerCameraFile, filename: string): Promise<GPCodes>;
 
   /**
    *

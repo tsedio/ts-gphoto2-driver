@@ -39,31 +39,58 @@ export class CameraFilePath implements ICloseable {
    * @return camera file.
    * @param pCamera
    */
-  public newFile(pCamera: PointerCamera) {
-    let returnedOk: boolean = false;
+  public newFile(pCamera: PointerCamera): CameraFile | undefined {
     const cameraFile = new CameraFile();
 
     try {
       const path = this.path;
       const filepath = this.filename;
 
-      checkCode(
-        GPhoto2Driver.gp_camera_file_get(
-          pCamera,
-          path,
-          filepath,
-          GPCaptureTypes.GP_FILE_TYPE_NORMAL,
-          cameraFile.pointer,
-          Context.get().pointer
-        )
+      const result = GPhoto2Driver.gp_camera_file_get(
+        pCamera,
+        path,
+        filepath,
+        GPCaptureTypes.GP_FILE_TYPE_NORMAL,
+        cameraFile.pointer,
+        Context.get().pointer
       );
-      returnedOk = true;
+
+      checkCode(result);
 
       return cameraFile;
-    } finally {
-      if (!returnedOk) {
-        closeQuietly(cameraFile);
-      }
+    } catch (er) {
+      closeQuietly(cameraFile);
+      throw er;
+    }
+  }
+
+  /**
+   *
+   * @param {PointerCamera} pCamera
+   * @returns {Promise<CameraFile | undefined>}
+   */
+  public async newFileAsync(pCamera: PointerCamera): Promise<CameraFile | undefined> {
+    const cameraFile = new CameraFile();
+
+    try {
+      const path = this.path;
+      const filepath = this.filename;
+
+      const result = await GPhoto2Driver.gp_camera_file_get_async(
+        pCamera,
+        path,
+        filepath,
+        GPCaptureTypes.GP_FILE_TYPE_NORMAL,
+        cameraFile.pointer,
+        Context.get().pointer
+      );
+
+      checkCode(result);
+
+      return cameraFile;
+    } catch (er) {
+      closeQuietly(cameraFile);
+      throw er;
     }
   }
 

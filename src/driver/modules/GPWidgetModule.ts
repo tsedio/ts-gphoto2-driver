@@ -1,5 +1,5 @@
 import {refType, types} from "ref";
-import {GPCodes, PointerOf, PointerRef} from "../types";
+import {GPCodes, PointerOf} from "../types";
 
 /**
  *
@@ -28,7 +28,7 @@ export const RefCameraWidgetType = refType("int");
  */
 // tslint:disable-next-line: variable-name
 export const GPWidgetModuleDescription: any = {
-  gp_widget_new: ["int", [RefCameraWidgetType, types.CString, refType(RefCameraWidget)]],
+  gp_widget_new: ["int", ["int", types.CString, refType(RefCameraWidget)]],
   gp_widget_free: ["int", [RefCameraWidget]],
   gp_widget_ref: ["int", [RefCameraWidget]],
   gp_widget_unref: ["int", [RefCameraWidget]],
@@ -79,7 +79,7 @@ export interface IGPWidgetModule {
    * @param {PointerOf<PointerCameraWidget>} widget
    * @returns {GPCodes} a gphoto2 error code.
    **/
-  gp_widget_new(type: PointerCameraWidgetType, label: string, widget: PointerOf<PointerCameraWidget>): GPCodes;
+  gp_widget_new(type: number, label: string, widget: PointerOf<PointerCameraWidget>): GPCodes;
 
   /**
    * Frees a CameraWidget
@@ -142,7 +142,7 @@ export interface IGPWidgetModule {
    * @returns a gphoto2 error code.
    *
    **/
-  gp_widget_set_value(widget: PointerCameraWidget, value: PointerOf<void>): GPCodes;
+  gp_widget_set_value(widget: PointerCameraWidget, value: PointerOf<any>): GPCodes;
 
   /**
    * Retrieves the value of the #CameraWidget
@@ -160,10 +160,10 @@ export interface IGPWidgetModule {
    * Gets the name of the widget
    *
    * @param {PointerCameraWidget} widget a #CameraWidget
-   * @param {PointerRef<string>} name Name of above widget
+   * @param {PointerOf<string>} name Name of above widget
    * @return a gphoto2 error code.
    **/
-  gp_widget_get_name(widget: PointerCameraWidget, name: PointerRef<string>): GPCodes;
+  gp_widget_get_name(widget: PointerCameraWidget, name: PointerOf<string>): GPCodes;
 
   /**
    * Sets the information about the widget
@@ -179,17 +179,17 @@ export interface IGPWidgetModule {
    * Retrieves the information about the widget
    *
    * @param {PointerCameraWidget} widget a #CameraWidget
-   * @param {PointerRef<string>} info
+   * @param {PointerOf<string>} info
    * @return {GPCodes} a gphoto2 error code.
    *
    **/
-  gp_widget_get_info(widget: PointerCameraWidget, info: PointerRef<string>): GPCodes;
+  gp_widget_get_info(widget: PointerCameraWidget, info: PointerOf<string>): GPCodes;
 
   /**
    * Retrieves the unique id of the #CameraWidget
    *
    * @param {PointerCameraWidget} widget a #CameraWidget
-   * @param {PointerRef<string>} id
+   * @param {PointerOf<string>} id
    * @return {GPCodes} a gphoto2 error code.
    *
    **/
@@ -199,13 +199,13 @@ export interface IGPWidgetModule {
    * Retrieves the type of the #CameraWidget
    *
    * @param {PointerCameraWidget} widget a #CameraWidget
-   * @param {PointerRef<number>} type
+   * @param {PointerOf<number>} type
    * @return {GPCodes} a gphoto2 error code.
    *
    **/
   gp_widget_get_type(widget: PointerCameraWidget, type: PointerOf<number>): GPCodes;
 
-  gp_widget_get_label(widget: PointerCameraWidget, label: PointerRef<string>): GPCodes;
+  gp_widget_get_label(widget: PointerCameraWidget, label: PointerOf<string>): GPCodes;
 
   gp_widget_set_range(widget: PointerCameraWidget, range1: number, range2: number, range3: number): GPCodes;
 
@@ -231,11 +231,11 @@ export interface IGPWidgetModule {
    *
    * @param {PointerCameraWidget} widget a #CameraWidget of type GP_WIDGET_RADIO or GP_WIDGET_MENU
    * @param {number} choiceNumber
-   * @param {PointerRef<string>} choice
+   * @param {PointerOf<string>} choice
    * @return a gphoto2 error code
    *
    **/
-  gp_widget_get_choice(widget: PointerCameraWidget, choiceNumber: number, choice: PointerRef<string>): GPCodes;
+  gp_widget_get_choice(widget: PointerCameraWidget, choiceNumber: number, choice: PointerOf<string>): GPCodes;
 
   gp_widget_set_changed(widget: PointerCameraWidget, changed: number): GPCodes;
 
