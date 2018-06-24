@@ -1,18 +1,29 @@
 {
-  "name": "ts-gphoto2-driver",
-  "version": "1.0.0",
+  "name": "@typedproject/gphoto2-driver",
+  "version": "0.0.0-development",
   "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
   "main": "lib/index.js",
   "typings": "lib/index.d.js",
-  "repository": "https://github.com/TypedProject/ts-gphoto2-driver.git",
   "author": "Romain Lenzotti",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TypedProject/ts-gphoto2-driver.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TypedProject/ts-gphoto2-driver/issues"
+  },
+  "homepage": "https://github.com/TypedProject/ts-gphoto2-driver",
   "scripts": {
     "precommit": "lint-staged",
     "postcommit": "git update-index --again",
+    "prepublishOnly": "gflow release post",
+    "gflow-release-pre": "",
+    "semantic-release": "semantic-release",
+    "travis-deploy-once": "travis-deploy-once",
+    "travis-coveralls": "nyc report --reporter=text-lcov | coveralls",
     "tslint": "tslint --project tsconfig.json",
-    "test": "npm run clean && npm run tsc && npm run tslint && cross-env NODE_ENV=test nyc --reporter=html --reporter=text _mocha --recursive",
-    "coveralls:travis": "nyc report --reporter=text-lcov | coveralls",
+    "test": "npm run tsc && npm run tslint && cross-env NODE_ENV=test nyc --reporter=html --reporter=text _mocha --recursive",
     "tsc": "tsc --project tsconfig.json",
     "build": "tsc --project tsconfig.compile.json",
     "prettier": "prettier '{src,test}/**/*.ts' --write"
@@ -27,6 +38,7 @@
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/chai-as-promised": "^7.1.0",
+    "@types/mocha": "^5.2.3",
     "@types/node": "^10.3.4",
     "@types/ref": "0.0.28",
     "@types/ref-array": "^0.0.28",
@@ -36,15 +48,23 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.1",
+    "cross-env": "^5.2.0",
+    "gflow": "^2.1.5",
     "husky": "^0.14.3",
     "lint-staged": "^7.2.0",
+    "mocha": "^5.2.0",
     "nyc": "^12.0.2",
     "prettier": "^1.13.5",
     "segfault-handler": "^1.0.1",
+    "semantic-release": "^15.6.0",
     "sinon": "^6.0.0",
     "sinon-chai": "^3.2.0",
+    "travis-deploy-once": "^5.0.0",
     "ts-node": "^6.1.1",
     "tslint": "^5.10.0",
     "typescript": "^2.9.2"
+  },
+  "release": {
+    "branch": "production"
   }
 }

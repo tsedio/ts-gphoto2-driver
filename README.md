@@ -1,29 +1,84 @@
-
 # ts-gphoto2-driver
 
+[![Build Status](https://travis-ci.org/TypedProject/ts-gphoto2-driver.svg?branch=master)](https://travis-ci.org/TypedProject/ts-gphoto2-driver)
+[![Coverage Status](https://coveralls.io/repos/github/TypedProject/ts-gphoto2-driver/badge.svg?branch=master)](https://coveralls.io/github/TypedProject/ts-gphoto2-driver?branch=master)
+![npm](https://img.shields.io/npm/dm/ts-gphoto2-driver.svg)
+[![Package Quality](http://npm.packagequality.com/shield/ts-gphoto2-driver.png)](http://packagequality.com/#?package=ts-gphoto2-driver)
+[![npm version](https://badge.fury.io/js/ts-gphoto2-driver.svg)](https://badge.fury.io/js/ts-gphoto2-driver)
+[![Dependencies](https://david-dm.org/romakita/ts-gphoto2-driver.svg)](https://david-dm.org/romakita/ts-gphoto2-driver#info=dependencies)
+[![img](https://david-dm.org/romakita/ts-gphoto2-driver/dev-status.svg)](https://david-dm.org/romakita/ts-gphoto2-driver/#info=devDependencies)
+[![img](https://david-dm.org/romakita/ts-gphoto2-driver/peer-status.svg)](https://david-dm.org/romakita/ts-gphoto2-driver/#info=peerDependenciess)
+[![Known Vulnerabilities](https://snyk.io/test/github/romakita/ts-gphoto2-driver/badge.svg)](https://snyk.io/test/github/romakita/ts-gphoto2-driver)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+
+> This project is under Alpha version.
+
+A Node.js wrapper for libgphoto2 writter in TypeScript. Useful for remote controlling of DSLRs and other digital cameras supported by gphoto2.
+
+## Prerequisite
+
+ - Node.js: any version supported by nodejs/nan
+ - NPM: ~5.6.0
+ - Nan: ~2.8.0
+ - libgphoto2: ~2.5.x - via `brew install libgphoto2`, `apt-get install libgphoto2-dev` or download and build from `http://www.gphoto.org/proj/libgphoto2/`,
+ - pkg-config | dpkg (used for dependency checking)
+ - clang compiler
+
+> Note: This package cannot be used in front-end context (like webpack, browserify, etc...). You have to develop your own web server and expose your API.
+
+## Installation
+
+After installing the dependencies, just install using:
+
+```bash
+npm install @typedproject/gphoto2-driver
+```
+
+## Usage
+
+Here an example with TypeScript (works also with pure javascript in Node.js):
+
 ```typescript
-import  {Camera, CameraList} from require('ts-gphoto2-driver');
+import * as Path from "path";
+import { CameraList, closeQuietly } from "@typedproject/gphoto2-driver";
 
-new CameraList().toString(); //
+const cameraList = new CameraList().load();
 
-// new Camera()
+console.log('Nb camera', cameraList.size);
 
+if (cameraList.size) {
+  const camera = cameraList.getCamera(0);
+  console.log('Camera =>', camera);
+
+  const cameraFile = camera.captureImage();
+
+  cameraFile.save(path.join(__dirname, 'capture.jpeg'));
+
+  closeQuietly(cameraFile);
+  closeQuietly(camera);
+}
+
+cameraList.close();
 ```
 
 
+## Contributors
+Please read [contributing guidelines here](./CONTRIBUTING.md).
 
+<a href="https://github.com/romakita/ts-express-decorators/graphs/contributors"><img src="https://opencollective.com/tsed/contributors.svg?width=890" /></a>
 
-const gp2 = require("gphoto2_ffi");
+## License
 
-var context = gp2.gp_context_new();
-var camera = gp2.NewInitCamera(context);
+The MIT License (MIT)
 
-var config = gp2.GetConfig(camera, context, name);
-var tree = gp2.getWidgetTree(config);
-console.log(name + ":");
-console.log(util.inspect(tree[name], {showHidden: false, depth: null}));
+Copyright (c) 2016 - 2018 Romain Lenzotti
 
-gp2.gp_widget_unref(config);
-gp2.gp_camera_exit(camera, context);
-gp2.gp_camera_unref(camera);
-gp2.gp_context_unref(context);
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[travis]: https://travis-ci.org/
+
