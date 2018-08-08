@@ -64,6 +64,11 @@
     "tslint": "^5.10.0",
     "typescript": "^2.9.2"
   },
+  "directories": {
+    "lib": "lib",
+    "src": "src",
+    "test": "test"
+  },
   "release": {
     "branch": "production"
   }
