@@ -19,7 +19,7 @@
     "postcommit": "git update-index --again",
     "prepublishOnly": "gflow release post",
     "gflow-release-pre": "",
-    "semantic-release": "semantic-release",
+    "semantic-release": "gflow release pre && semantic-release",
     "travis-deploy-once": "travis-deploy-once",
     "travis-coveralls": "nyc report --reporter=text-lcov | coveralls",
     "tslint": "tslint --project tsconfig.json",
