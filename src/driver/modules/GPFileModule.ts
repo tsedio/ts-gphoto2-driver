@@ -7,6 +7,8 @@ export const GP_FILE_MODULE_ASYNC_KEYS: string[] = ["gp_file_save"];
 // tslint:disable-next-line: variable-name
 export const GPFileModuleDescription = {
   gp_file_new: ["int", [refType(RefCameraFile)]],
+  gp_file_new_from_fd: ["int", [refType(RefCameraFile), "int"]],
+  gp_file_get_mime_type: ["int", [RefCameraFile, refType(types.CString)]],
   gp_file_ref: ["int", [RefCameraFile]],
   gp_file_clean: ["int", [RefCameraFile]],
   gp_file_save: ["int", [RefCameraFile, types.CString]],
@@ -21,6 +23,22 @@ export interface IGPFileModule {
    * @returns {GPCodes}
    */
   gp_file_new(buffer: PointerOf<PointerCameraFile>): GPCodes;
+
+  /**
+   * Create new {@link CameraFile} object from a UNIX filedescriptor.
+   * @param {PointerOf<PointerCameraFile>} buffer
+   * @param {number} fd
+   * @returns {GPCodes}
+   */
+  gp_file_new_from_fd(buffer: PointerOf<PointerCameraFile>, fd: number): GPCodes;
+
+  /**
+   *
+   * @param {PointerCameraFile} file
+   * @param {PointerOf<string>} mime
+   * @returns {GPCodes}
+   */
+  gp_file_get_mime_type(file: PointerCameraFile, mime: PointerOf<string>): GPCodes;
 
   /**
    *
