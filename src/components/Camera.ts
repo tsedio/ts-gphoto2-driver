@@ -6,6 +6,7 @@ import {CameraFile} from "./CameraFile";
 import {CameraFilePath} from "./CameraFilePath";
 import {CameraWidgets} from "./CameraWidgets";
 import {Context} from "./Context";
+import {Liveview} from "./Liveview";
 import {PointerWrapper} from "./PointerWrapper";
 import {PortInfo} from "./PortInfo";
 
@@ -92,6 +93,14 @@ export class Camera extends PointerWrapper<PointerCamera> {
     if (this.closed) {
       throw new Error("Invalid state: closed");
     }
+  }
+
+  public liveview(): Liveview {
+    this.checkNotClosed();
+
+    // this.ref();
+
+    return new Liveview(this.pointer);
   }
 
   /**
