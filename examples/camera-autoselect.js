@@ -1,4 +1,4 @@
-const { Camera, closeQuietly } = require('../src');
+const { Camera, closeQuietly } = require('../lib');
 const path = require('path');
 const camera = new Camera();
 

@@ -72,10 +72,13 @@ cameraList.close();
 
 ## Examples
 
-Some example
+Some example are available in the `examples` directory.
+
+Before run example, run `npm run build` then `node examples/camera.js`.
 
 ## Contributors
-Please read [contributing guidelines here](./CONTRIBUTING.md).
+
+Contributors and PR are welcome. Before, just read [contributing guidelines here](./CONTRIBUTING.md) ;)
 
 <a href="https://github.com/romakita/ts-express-decorators/graphs/contributors"><img src="https://opencollective.com/tsed/contributors.svg?width=890" /></a>
 

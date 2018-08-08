@@ -1,4 +1,4 @@
-import { checkCode } from '../src/driver';
+const { checkCode } = require('../lib/driver');
 
 const { AbilitiesList, PortInfoList, GPhoto2Driver } = require('../src');
 const ref = require('ref');

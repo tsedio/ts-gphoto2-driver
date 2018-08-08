@@ -63,3 +63,4 @@ test/spec/*.js.map
 
 /.nyc_output/
 /test/integration/app/spec/swagger.json
+/examples/*.jpeg
