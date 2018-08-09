@@ -70,3 +70,10 @@ tslint.json
 .gitignore
 .idea
 packages
+.gflowrc
+.lintstagedrc
+.nvmrc
+.nycrc
+.prettierignore
+.prettierrc
+examples
