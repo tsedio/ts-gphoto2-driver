@@ -230,6 +230,8 @@ export class CameraWidgets implements ICloseable {
     }
 
     checkCode(GPhoto2Driver.gp_widget_set_value(this.get(name), ptr as PointerOf<any>));
+
+    this.apply();
   }
 
   private checkType(name: string, ...types: WidgetTypes[]): void {
