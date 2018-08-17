@@ -30,7 +30,7 @@
     "prettier": "prettier '{src,test}/**/*.ts' --write"
   },
   "dependencies": {
-    "ffi-napi": "2.4.3",
+    "ffi-napi": "^2.4.3",
     "ref": "^1.3.3",
     "ref-array": "^1.2.0",
     "ref-struct": "^1.1.0",
