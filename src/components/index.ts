@@ -1,6 +1,7 @@
 export * from "./AbilitiesList";
 export * from "./Camera";
 export * from "./CameraFile";
+export * from "./CameraFileFromFd";
 export * from "./CameraFilePath";
 export * from "./CameraList";
 export * from "./CameraWidgets";

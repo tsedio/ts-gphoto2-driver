@@ -1,6 +1,6 @@
-import {checkCode, GPCameraCaptureType, GPhoto2Driver} from "../driver";
+import {GPCameraCaptureType, GPCodes} from "../driver";
 import {PointerCamera, RefCamera, StructCameraText} from "../driver/modules";
-import {GPCodes} from "../driver/types";
+import {ILiveviewOptions} from "../interfaces";
 import {CameraAbilities} from "./CameraAbilities";
 import {CameraFile} from "./CameraFile";
 import {CameraFilePath} from "./CameraFilePath";
@@ -16,7 +16,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
   private _widgets: CameraWidgets;
 
   constructor() {
-    super("gp_camera", RefCamera);
+    super({method: "gp_camera", refType: RefCamera});
   }
 
   get widgets(): CameraWidgets {
@@ -39,7 +39,8 @@ export class Camera extends PointerWrapper<PointerCamera> {
         this.setPortInfo(portInfo);
       }
 
-      checkCode(GPhoto2Driver.gp_camera_init(this.pointer, Context.get().pointer));
+      this.call("init", Context.get().pointer);
+
       this.initialized = true;
     }
   }
@@ -68,7 +69,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
     this.checkNotClosed();
     if (this.isInitialized()) {
       this.initialized = false;
-      checkCode(GPhoto2Driver.gp_camera_exit(this.pointer, Context.get().pointer));
+      this.call("exit", Context.get().pointer);
     }
   }
 
@@ -95,39 +96,35 @@ export class Camera extends PointerWrapper<PointerCamera> {
     }
   }
 
-  public liveview(): Liveview {
+  public liveview(options: ILiveviewOptions): Liveview {
     this.checkNotClosed();
 
-    // this.ref();
-
-    return new Liveview(this.pointer);
+    return new Liveview(this, options);
   }
 
   /**
    * Captures a quick preview image on the camera.
    * @return camera file, never null. Must be closed afterwards.
    */
-  public capturePreview(path?: string): CameraFile | undefined {
+  public capturePreview(path?: string, file: CameraFile = new CameraFile()): CameraFile | undefined {
     this.checkNotClosed();
-    const cFile = new CameraFile();
 
     try {
-      const result = GPhoto2Driver.gp_camera_capture_preview(this.pointer, cFile.pointer, Context.get().pointer);
-      checkCode(result, "gp_camera_capture_preview");
+      this.call("capture_preview", file.pointer, Context.get().pointer);
 
       if (path) {
         try {
-          cFile.save(path);
+          file.save(path);
         } finally {
           this.deinitialize();
           this.initialize();
-          cFile.closeQuietly();
+          file.closeQuietly();
         }
       }
 
-      return cFile;
+      return file;
     } catch (er) {
-      cFile.closeQuietly();
+      file.closeQuietly();
       throw er;
     }
   }
@@ -136,27 +133,25 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * Captures a quick preview image on the camera.
    * @return camera file, never null. Must be closed afterwards.
    */
-  public async capturePreviewAsync(path?: string): Promise<CameraFile | undefined> {
+  public async capturePreviewAsync(path?: string, file: CameraFile = new CameraFile()): Promise<CameraFile | undefined> {
     this.checkNotClosed();
-    const cFile = new CameraFile();
 
     try {
-      const result = await GPhoto2Driver.gp_camera_capture_preview_async(this.pointer, cFile.pointer, Context.get().pointer);
-      checkCode(result, "gp_camera_capture_preview_async");
+      await this.callAsync("capture_preview", file.pointer, Context.get().pointer);
 
       if (path) {
         try {
-          await cFile.saveAsync(path);
+          await file.saveAsync(path);
         } finally {
           this.deinitialize();
           this.initialize();
-          cFile.closeQuietly();
+          file.closeQuietly();
         }
       }
 
-      return cFile;
+      return file;
     } catch (er) {
-      cFile.closeQuietly();
+      file.closeQuietly();
       throw er;
     }
   }
@@ -222,9 +217,8 @@ export class Camera extends PointerWrapper<PointerCamera> {
   protected capture(type: GPCameraCaptureType, path?: string): CameraFile | undefined {
     this.checkNotClosed();
     const cFilePath = new CameraFilePath();
-    const result = GPhoto2Driver.gp_camera_capture(this.pointer, type, cFilePath.buffer, Context.get().pointer);
 
-    checkCode(result, "gp_camera_capture");
+    this.call("capture", type, cFilePath.buffer, Context.get().pointer);
 
     const cFile = cFilePath.newFile(this.pointer);
 
@@ -252,9 +246,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
     this.checkNotClosed();
     const cFilePath = new CameraFilePath();
 
-    const result = await GPhoto2Driver.gp_camera_capture_async(this.pointer, type, cFilePath.buffer, Context.get().pointer);
-
-    checkCode(result, "gp_camera_capture_async");
+    await this.callAsync("capture", type, cFilePath.buffer, Context.get().pointer);
 
     const cFile = await cFilePath.newFileAsync(this.pointer);
 
@@ -278,9 +270,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
   public triggerCapture(): GPCodes {
     this.checkNotClosed();
 
-    const result = GPhoto2Driver.gp_camera_trigger_capture(this.pointer, Context.get().pointer);
-
-    checkCode(result, "gp_camera_trigger_capture");
+    const result = this.call("trigger_capture", Context.get().pointer);
 
     this.deinitialize();
     this.initialize();
@@ -294,9 +284,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
   public async triggerCaptureAsync(): Promise<GPCodes> {
     this.checkNotClosed();
 
-    const result = await GPhoto2Driver.gp_camera_trigger_capture_async(this.pointer, Context.get().pointer);
-
-    checkCode(result, "gp_camera_trigger_capture_async");
+    const result = await this.callAsync("trigger_capture", Context.get().pointer);
 
     this.deinitialize();
     this.initialize();
@@ -310,7 +298,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
   public getAbilities() {
     const abilities = new CameraAbilities();
 
-    checkCode(GPhoto2Driver.gp_camera_get_abilities(this.pointer, abilities.buffer), "gp_camera_get_abilities");
+    this.call("get_abilities", abilities.buffer);
 
     return abilities;
   }
@@ -323,7 +311,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
     const struct = new StructCameraText();
     const buffer = struct.ref();
 
-    checkCode(GPhoto2Driver.gp_camera_get_summary(this.pointer, buffer, Context.get().pointer), "gp_camera_get_summary");
+    this.call("get_summary", buffer, Context.get().pointer);
 
     return struct.text.buffer.readCString(0);
   }
@@ -336,7 +324,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
     const struct = new StructCameraText();
     const buffer = struct.ref();
 
-    checkCode(GPhoto2Driver.gp_camera_get_about(this.pointer, buffer, Context.get().pointer), "gp_camera_get_about");
+    this.call("get_about", buffer, Context.get().pointer);
 
     return struct.text.buffer.readCString(0);
   }
@@ -349,7 +337,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
     const struct = new StructCameraText();
     const buffer = struct.ref();
 
-    checkCode(GPhoto2Driver.gp_camera_get_manual(this.pointer, buffer, Context.get().pointer), "gp_camera_get_manual");
+    this.call("get_manual", buffer, Context.get().pointer);
 
     return struct.text.buffer.readCString(0);
   }
@@ -357,26 +345,29 @@ export class Camera extends PointerWrapper<PointerCamera> {
   /**
    *
    */
-  public ref(): void {
+  public ref(): GPCodes {
     this.checkNotClosed();
-    checkCode(GPhoto2Driver.gp_camera_ref(this.pointer));
+
+    return this.call("ref");
   }
 
   /**
    *
    */
-  public unref(): void {
+  public unref(): GPCodes {
     this.checkNotClosed();
-    checkCode(GPhoto2Driver.gp_camera_unref(this.pointer));
+
+    return this.call("unref");
   }
 
   /**
    *
    * @param {PointerPortInfo} portInfo
    */
-  public setPortInfo(portInfo: PortInfo): void {
+  public setPortInfo(portInfo: PortInfo): GPCodes {
     this.checkNotClosed();
-    checkCode(GPhoto2Driver.gp_camera_set_port_info(this.pointer, portInfo.pointer));
+
+    return this.call("set_port_info", portInfo.pointer);
   }
 
   toString(): string {

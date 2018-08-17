@@ -4,7 +4,7 @@ import {PointerWrapper} from "./PointerWrapper";
 
 export class List<T> extends PointerWrapper<PointerList> {
   constructor() {
-    super("gp_list", RefList);
+    super({method: "gp_list", refType: RefList});
   }
 
   /**

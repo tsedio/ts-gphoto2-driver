@@ -5,7 +5,7 @@ import {PointerWrapper} from "./PointerWrapper";
 
 export class PortInfo extends PointerWrapper<PointerPortInfo> {
   constructor() {
-    super("gp_port_info", RefPortInfo);
+    super({method: "gp_port_info", refType: RefPortInfo});
   }
 
   get name() {

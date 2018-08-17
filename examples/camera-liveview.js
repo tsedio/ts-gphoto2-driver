@@ -8,7 +8,7 @@ if (!camera.isClosed()) {
   const liveview = camera.liveview();
 
   liveview.on('data', (chunk) => {
-    process.stdout.write(chunk);
+    console.log(chunk);
   });
 
   liveview.start();

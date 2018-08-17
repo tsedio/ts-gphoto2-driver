@@ -7,7 +7,7 @@ export class PortInfoList extends PointerWrapper<PointerPortInfoList> {
   private map: Map<string, PortInfo> = new Map();
 
   constructor() {
-    super("gp_port_info_list", RefPortInfoList);
+    super({method: "gp_port_info_list", refType: RefPortInfoList});
   }
 
   get size(): number {

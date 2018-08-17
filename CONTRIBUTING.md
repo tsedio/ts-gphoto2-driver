@@ -36,8 +36,14 @@ If you have any questions, create an [issue](https://github.com/Romakita/tsed/bl
 Clone your fork of the repository
 
 ```bash
-$ git clone https://github.com/YOUR_USERNAME/ts-express-decorators.git
+$ git clone https://github.com/YOUR_USERNAME/ts-gphoto2-driver.git
 ```
+
+Or if you have access to this repository:
+
+```bash
+ $ git checkout https://github.com/TypedProject/ts-gphoto2-driver.git
+ ```
 
 Install npm dependencies
 
