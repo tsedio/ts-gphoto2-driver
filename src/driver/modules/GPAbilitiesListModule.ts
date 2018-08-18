@@ -1,6 +1,17 @@
-import {refType} from "ref";
-import {PointerOf} from "../types";
+import {refType, types} from "ref";
+import * as ArrayType from "ref-array";
+import * as StructType from "ref-struct";
+import {
+  GPCameraDriverStatus,
+  GPCameraFileOperation,
+  GPCameraFolderOperation,
+  GPCameraOperation,
+  GPDeviceType,
+  GPPortType,
+  PointerOf
+} from "../types";
 import {GPCodes} from "../types/GPCodes";
+import {IStructBuffer} from "../types/IStructBuffer";
 import {PointerContext, RefContext} from "./GPContextModule";
 import {PointerList, RefList} from "./GPListModule";
 import {PointerPortInfoList, RefPortInfoList} from "./GPPortInfoModule";
@@ -8,17 +19,76 @@ import {PointerPortInfoList, RefPortInfoList} from "./GPPortInfoModule";
 /**
  *
  */
-export type PointerAbilityList = PointerOf<void>;
+export type PointerAbilitiesList = PointerOf<void>;
 /**
  *
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const RefAbilitiesList = refType("void");
+
+/**
+ *
+ */
+export type StructCameraAbilities = StructType & {
+  model: PointerOf<string> & IStructBuffer;
+  speed: PointerOf<number[]>;
+  port: GPPortType;
+  status: GPCameraDriverStatus;
+  id: PointerOf<string> & IStructBuffer;
+  library: PointerOf<string> & IStructBuffer;
+  operation: GPCameraOperation;
+  file_operations: GPCameraFileOperation;
+  folder_operations: GPCameraFolderOperation;
+  usb_vendor: number;
+  usb_product: number;
+  usb_class: number;
+  usb_subclass: number;
+  usb_protocol: number;
+  device_type: GPDeviceType /**< \brief Device type. */;
+  reserved2: number /**< reserved space \internal */;
+  reserved3: number /**< reserved space \internal */;
+  reserved4: number /**< reserved space \internal */;
+  reserved5: number /**< reserved space \internal */;
+  reserved6: number /**< reserved space \internal */;
+  reserved7: number /**< reserved space \internal */;
+  reserved8: number /**< reserved space \internal */;
+  ref(): PointerOf<StructCameraAbilities>;
+};
+/**
+ *
+ * @type {StructType}
+ */
+// tslint:disable-next-line
+export const StructCameraAbilities = StructType({
+  model: ArrayType(types.uchar, 128),
+  speed: ArrayType(types.uint, 128),
+  port: types.uint,
+  status: types.uint,
+  id: ArrayType(types.uchar, 1024),
+  library: ArrayType(types.uchar, 1024),
+  operations: types.uint /**< \brief Camera operation funcs */,
+  file_operations: types.uint /**< \brief Camera file op funcs */,
+  folder_operations: types.uint /**< \brief Camera folder op funcs */,
+  usb_vendor: types.uint,
+  usb_product: types.uint,
+  usb_class: types.uint,
+  usb_subclass: types.uint,
+  usb_protocol: types.uint,
+  device_type: types.uint /**< \brief Device type. */,
+  reserved2: types.uint /**< reserved space \internal */,
+  reserved3: types.uint /**< reserved space \internal */,
+  reserved4: types.uint /**< reserved space \internal */,
+  reserved5: types.uint /**< reserved space \internal */,
+  reserved6: types.uint /**< reserved space \internal */,
+  reserved7: types.uint /**< reserved space \internal */,
+  reserved8: types.uint /**< reserved space \internal */
+});
+
 /**
  *
  * @type {any}
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const GPAbilitiesListModuleDescription = {
   gp_abilities_list_new: ["void", [refType(RefAbilitiesList)]],
   gp_abilities_list_load: ["int", [RefAbilitiesList, RefContext]],
@@ -45,7 +115,7 @@ export interface IGPAbilitiesListModule {
    *
 
    */
-  gp_abilities_list_new(abilitiesList: PointerOf<PointerAbilityList>): void;
+  gp_abilities_list_new(abilitiesList: PointerOf<PointerAbilitiesList>): void;
 
   /**
    * Scans the system for camera drivers.
@@ -56,16 +126,16 @@ export interface IGPAbilitiesListModule {
    * @params context a GPContext
    * @returns a gphoto2 error code
    */
-  gp_abilities_list_load(abilitiesList: PointerAbilityList, context: PointerContext): GPCodes;
+  gp_abilities_list_load(abilitiesList: PointerAbilitiesList, context: PointerContext): GPCodes;
 
   /**
    *
-   * @param {PointerAbilityList} abilitiesList
+   * @param {PointerAbilitiesList} abilitiesList
    * @param {string} dir
    * @param {PointerContext} context
    * @returns {GPCodes}
    */
-  gp_abilities_list_load_dir(abilitiesList: PointerAbilityList, dir: string, context: PointerContext): GPCodes;
+  gp_abilities_list_load_dir(abilitiesList: PointerAbilitiesList, dir: string, context: PointerContext): GPCodes;
 
   /**
    * Tries to detect any camera connected to the computer using the supplied
@@ -78,7 +148,7 @@ export interface IGPAbilitiesListModule {
    * @param context a #GPContext
    */
   gp_abilities_list_detect(
-    abilitiesList: PointerAbilityList,
+    abilitiesList: PointerAbilitiesList,
     infoList: PointerPortInfoList,
     cameraList: PointerList,
     context: PointerContext
@@ -90,12 +160,12 @@ export interface IGPAbilitiesListModule {
    * @param abilitiesList a CameraAbilitiesList
    * @return a gphoto2 error code
    */
-  gp_abilities_list_free(abilitiesList: PointerAbilityList): GPCodes;
+  gp_abilities_list_free(abilitiesList: PointerAbilitiesList): GPCodes;
 
   /**
    * Count the entries in the supplied list.
    * @param abilitiesList a #CameraAbilitiesList
    * @returns The number of entries or a gphoto2 error code
    */
-  gp_abilities_list_count(abilitiesList: PointerAbilityList): GPCodes;
+  gp_abilities_list_count(abilitiesList: PointerAbilitiesList): GPCodes;
 }

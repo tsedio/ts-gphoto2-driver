@@ -25,6 +25,7 @@
     "tslint": "tslint --project tsconfig.json",
     "test": "npm run tsc && npm run tslint && cross-env NODE_ENV=test nyc --reporter=html --reporter=text _mocha --recursive",
     "tsc": "tsc --project tsconfig.json",
+    "develop": "tsc --project tsconfig.json -w",
     "build": "tsc --project tsconfig.compile.json",
     "prettier": "prettier '{src,test}/**/*.ts' --write"
   },

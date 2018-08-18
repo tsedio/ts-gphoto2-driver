@@ -9,10 +9,10 @@ export type PointerList = PointerOf<void>;
 /**
  *
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const RefList = refType("void");
 
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const GPListModuleDescription = {
   gp_list_new: ["int", [refType(RefList)]],
   gp_list_ref: ["int", [RefList]],
@@ -87,10 +87,10 @@ export interface IGPListModule {
    */
   gp_list_sort(cameraList: PointerList): GPCodes; // , [cameraList]],
   /**
-   * Retrieves the index of an arbitrary entry with name.
+   * Retrieves the index of an arbitrary entry with path.
    * @param cameraList
    * @param index pointer to the result index (may be NULL, only set if found)
-   * @param name name of the entry
+   * @param name path of the entry
    * @returns {GPCodes} a gphoto2 error code: GP_OK if found.
    */
   gp_list_find_by_name(cameraList: PointerList, index: number, name: string): GPCodes; // , [cameraList, "int*", "string"]],

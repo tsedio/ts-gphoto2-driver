@@ -1,6 +1,7 @@
 import {GPhoto2Driver} from "../driver/GPhoto2Driver";
 import {PointerContext} from "../driver/modules";
 import {ICloseable} from "../interfaces/ICloseable";
+import {addInstance, removeInstance} from "./Garbarge";
 
 export class Context implements ICloseable {
   /**
@@ -14,31 +15,15 @@ export class Context implements ICloseable {
   private static instance: Context;
 
   constructor() {
-    // GPhoto2Driver.gp_context_set_error_func(this.pointer, this.onError, null);
-    // GPhoto2Driver.gp_context_set_status_func(this.pointer, this.onStatus, null);
+    addInstance(this);
   }
 
   public close(): this {
     GPhoto2Driver.gp_context_unref(this.pointer);
+    removeInstance(this);
 
     return this;
   }
-
-  /**
-   *
-   * @param {PointerContext} context
-   * @param {string} str
-   * @param data
-   */
-  // private onError(context: PointerContext, str: string, data: any) {
-  // fprintf(stderr, "### %s\n", str);
-  //  console.error(str);
-  // }
-
-  // private onStatus(context: PointerContext, str: string, data: any) {
-  // fprintf(stderr, "### %s\n", str);
-  // console.error(str);
-  // }
 
   static get() {
     if (!Context.instance) {

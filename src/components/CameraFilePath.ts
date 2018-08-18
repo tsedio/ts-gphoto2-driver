@@ -1,4 +1,4 @@
-import {GPCaptureTypes, GPhoto2Driver} from "..";
+import {GPCameraFileType, GPhoto2Driver} from "../driver";
 import {PointerCamera, StructCameraFilePath} from "../driver/modules";
 import {PointerOf} from "../driver/types";
 import {checkCode, closeQuietly} from "../driver/utils/GPUtils";
@@ -50,7 +50,7 @@ export class CameraFilePath implements ICloseable {
         pCamera,
         path,
         filepath,
-        GPCaptureTypes.GP_FILE_TYPE_NORMAL,
+        GPCameraFileType.GP_FILE_TYPE_NORMAL,
         cameraFile.pointer,
         Context.get().pointer
       );
@@ -80,7 +80,7 @@ export class CameraFilePath implements ICloseable {
         pCamera,
         path,
         filepath,
-        GPCaptureTypes.GP_FILE_TYPE_NORMAL,
+        GPCameraFileType.GP_FILE_TYPE_NORMAL,
         cameraFile.pointer,
         Context.get().pointer
       );

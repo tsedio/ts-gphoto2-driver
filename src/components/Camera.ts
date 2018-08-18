@@ -1,8 +1,10 @@
-import {checkCode, GPhoto2Driver} from "../driver";
+import {checkCode, GPCameraCaptureType, GPhoto2Driver} from "../driver";
 import {PointerCamera, RefCamera, StructCameraText} from "../driver/modules";
-import {GPCaptureTypes, GPCodes} from "../driver/types";
+import {GPCodes} from "../driver/types";
+import {CameraAbilities} from "./CameraAbilities";
 import {CameraFile} from "./CameraFile";
 import {CameraFilePath} from "./CameraFilePath";
+import {CameraWidgets} from "./CameraWidgets";
 import {Context} from "./Context";
 import {PointerWrapper} from "./PointerWrapper";
 import {PortInfo} from "./PortInfo";
@@ -10,9 +12,20 @@ import {PortInfo} from "./PortInfo";
 export class Camera extends PointerWrapper<PointerCamera> {
   private initialized: boolean = false;
   private closed: boolean = false;
+  private _widgets: CameraWidgets;
 
   constructor() {
     super("gp_camera", RefCamera);
+  }
+
+  get widgets(): CameraWidgets {
+    this.checkNotClosed();
+
+    if (!this._widgets) {
+      this._widgets = new CameraWidgets(this);
+    }
+
+    return this._widgets;
   }
 
   /**
@@ -146,7 +159,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * @return camera file, never null. Must be closed afterwards.
    */
   public captureImage(path?: string): CameraFile | undefined {
-    return this.capture(GPCaptureTypes.GP_CAPTURE_IMAGE, path);
+    return this.capture(GPCameraCaptureType.GP_CAPTURE_IMAGE, path);
   }
 
   /**
@@ -156,7 +169,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * @return camera file, never null. Must be closed afterwards.
    */
   public captureImageAsync(path?: string): Promise<CameraFile | undefined> {
-    return this.captureAsync(GPCaptureTypes.GP_CAPTURE_IMAGE, path);
+    return this.captureAsync(GPCameraCaptureType.GP_CAPTURE_IMAGE, path);
   }
 
   /**
@@ -164,7 +177,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * @returns {CameraFile | undefined}
    */
   public captureVideo(): CameraFile | undefined {
-    return this.capture(GPCaptureTypes.GP_CAPTURE_MOVIE);
+    return this.capture(GPCameraCaptureType.GP_CAPTURE_MOVIE);
   }
 
   /**
@@ -172,7 +185,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * @returns {CameraFile | undefined}
    */
   public captureVideoAsync(): Promise<CameraFile | undefined> {
-    return this.captureAsync(GPCaptureTypes.GP_CAPTURE_MOVIE);
+    return this.captureAsync(GPCameraCaptureType.GP_CAPTURE_MOVIE);
   }
 
   /**
@@ -180,7 +193,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * @returns {CameraFile | undefined}
    */
   public captureSound(): CameraFile | undefined {
-    return this.capture(GPCaptureTypes.GP_CAPTURE_SOUND);
+    return this.capture(GPCameraCaptureType.GP_CAPTURE_SOUND);
   }
 
   /**
@@ -188,16 +201,16 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * @returns {CameraFile | undefined}
    */
   public captureSoundAsync(): Promise<CameraFile | undefined> {
-    return this.captureAsync(GPCaptureTypes.GP_CAPTURE_SOUND);
+    return this.captureAsync(GPCameraCaptureType.GP_CAPTURE_SOUND);
   }
 
   /**
    *
-   * @param {GPCaptureTypes} type
+   * @param {GPCameraCaptureType} type
    * @param path
    * @returns {CameraFile | undefined}
    */
-  protected capture(type: GPCaptureTypes, path?: string): CameraFile | undefined {
+  protected capture(type: GPCameraCaptureType, path?: string): CameraFile | undefined {
     this.checkNotClosed();
     const cFilePath = new CameraFilePath();
     const result = GPhoto2Driver.gp_camera_capture(this.pointer, type, cFilePath.buffer, Context.get().pointer);
@@ -222,11 +235,11 @@ export class Camera extends PointerWrapper<PointerCamera> {
 
   /**
    *
-   * @param {GPCaptureTypes} type
+   * @param {GPCameraOperation} type
    * @param path
    * @returns {CameraFile | undefined}
    */
-  protected async captureAsync(type: GPCaptureTypes, path?: string): Promise<CameraFile | undefined> {
+  protected async captureAsync(type: GPCameraCaptureType, path?: string): Promise<CameraFile | undefined> {
     this.checkNotClosed();
     const cFilePath = new CameraFilePath();
 
@@ -280,6 +293,17 @@ export class Camera extends PointerWrapper<PointerCamera> {
     this.initialize();
 
     return result;
+  }
+
+  /**
+   *
+   */
+  public getAbilities() {
+    const abilities = new CameraAbilities();
+
+    checkCode(GPhoto2Driver.gp_camera_get_abilities(this.pointer, abilities.buffer), "gp_camera_get_abilities");
+
+    return abilities;
   }
 
   /**
@@ -344,5 +368,9 @@ export class Camera extends PointerWrapper<PointerCamera> {
   public setPortInfo(portInfo: PortInfo): void {
     this.checkNotClosed();
     checkCode(GPhoto2Driver.gp_camera_set_port_info(this.pointer, portInfo.pointer));
+  }
+
+  toString(): string {
+    return "Camera: " + this.getAbilities().model;
   }
 }

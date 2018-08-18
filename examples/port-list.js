@@ -1,4 +1,4 @@
-const { PortInfoList } = require('../lib');
+const { PortInfoList } = require('../src');
 
 const portList = new PortInfoList();
 

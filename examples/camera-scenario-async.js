@@ -1,4 +1,4 @@
-const { Camera, closeQuietly, CameraWidgets } = require('../lib');
+const { Camera, closeQuietly, CameraWidgets } = require('../src');
 const path = require('path');
 
 const camera = new Camera();
@@ -8,9 +8,9 @@ camera.initialize();
 
 runScenario({
   autoFocus: true,
-  triggerCapture: true,
+  triggerCapture: false,
   capture: true,
-  preview: true
+  preview: false
 })
   .catch((er) => {
     console.error(er.message);
@@ -56,15 +56,10 @@ function runScenario({ autoFocus = false, preview = false, capture = false, trig
  *
  */
 function runAutofocus() {
-  const cfg = new CameraWidgets(camera);
-
   try {
-    cfg.setValue('/actions/autofocusdrive', true);
-    cfg.apply();
+    camera.widgets.get('/actions/autofocusdrive').value = true;
   } catch (er) {
     console.warn(er);
-  } finally {
-    closeQuietly(cfg);
   }
 }
 
@@ -72,7 +67,7 @@ function runAutofocus() {
  *
  */
 function runPreview() {
-  const filePath = path.join(__dirname, '../.tmp/capture.jpg');
+  const filePath = path.join(__dirname, '../.tmp/preview.jpg');
 
   return camera
     .capturePreviewAsync(filePath)
@@ -85,7 +80,7 @@ function runPreview() {
  *
  */
 function runTriggerCapture() {
-  return camera.triggerCaptureAsync()
+  return camera.triggerCaptureAsync();
 }
 
 /**

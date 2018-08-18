@@ -1,18 +1,13 @@
 import {refType, types} from "ref";
 import * as ArrayType from "ref-array";
 import * as StructType from "ref-struct";
-import {GPCaptureTypes, GPCodes, PointerOf} from "../types";
-import {PointerAbilityList, RefAbilitiesList} from "./GPAbilitiesListModule";
+import {GPCameraCaptureType, GPCameraFileType, GPCodes, PointerOf} from "../types";
+import {IStructBuffer} from "../types/IStructBuffer";
+import {StructCameraAbilities} from "./GPAbilitiesListModule";
 import {PointerContext, RefContext} from "./GPContextModule";
 import {PointerList, RefList} from "./GPListModule";
 import {PointerPortInfo, RefPortInfo} from "./GPPortInfoModule";
 import {PointerCameraWidget, RefCameraWidget} from "./GPWidgetModule";
-
-export interface IStructBuffer {
-  buffer: {
-    readCString(offset: number): string;
-  };
-}
 
 /**
  *
@@ -22,7 +17,7 @@ export type PointerCamera = PointerOf<void>;
 /**
  *
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const RefCamera = refType("void");
 
 /**
@@ -33,7 +28,7 @@ export type PointerCameraFile = PointerOf<void>;
 /**
  *
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const RefCameraFile = refType("void");
 
 /**
@@ -44,7 +39,7 @@ export type StructCameraText = StructType & {text: PointerOf<string> & IStructBu
  *
  * @type {StructType}
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const StructCameraText = StructType({
   text: ArrayType(types.char, 32 * 1024)
 });
@@ -61,7 +56,7 @@ export type StructCameraFilePath = StructType & {
  *
  * @type {StructType}
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const StructCameraFilePath = StructType({
   name: ArrayType(types.uchar, 128),
   folder: ArrayType(types.uchar, 1024)
@@ -78,7 +73,7 @@ export const GP_CAMERA_MODULE_ASYNC_KEYS: string[] = [
  *
  * @type {any}
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const GPCameraModuleDescription = {
   gp_camera_autodetect: ["int", [RefList, RefContext]],
   gp_camera_new: ["int", [refType(RefCamera)]],
@@ -102,8 +97,10 @@ export const GPCameraModuleDescription = {
   gp_camera_capture_preview: ["int", [RefCamera, RefCameraFile, RefContext]],
   gp_camera_file_get: ["int", [RefCameraFile, types.CString, types.CString, "int", RefCameraFile, RefContext]],
 
-  gp_camera_set_abilities: ["int", [RefCamera, RefAbilitiesList]],
-  gp_camera_set_port_info: ["int", [RefCamera, RefPortInfo]]
+  gp_camera_set_abilities: ["int", [RefCamera, refType(StructCameraAbilities)]],
+  gp_camera_get_abilities: ["int", [RefCamera, refType(StructCameraAbilities)]],
+  gp_camera_set_port_info: ["int", [RefCamera, RefPortInfo]],
+  gp_camera_get_port_info: ["int", [RefCamera, RefPortInfo]]
 };
 
 export interface IGPCameraModule {
@@ -142,6 +139,13 @@ export interface IGPCameraModule {
   gp_camera_set_port_info(camera: PointerCamera, portInfo: PointerPortInfo): void;
 
   /**
+   *
+   * @param camera
+   * @param portInfo
+   */
+  gp_camera_get_port_info(camera: PointerCamera, portInfo: PointerPortInfo): void;
+
+  /**
    * Sets the camera abilities.
    *
    * @param camera a #Camera
@@ -156,7 +160,16 @@ export interface IGPCameraModule {
    * #gp_abilities_list_get_abilities.
    *
    */
-  gp_camera_set_abilities(camera: PointerCamera, abilities: PointerAbilityList): GPCodes;
+  gp_camera_set_abilities(camera: PointerCamera, abilities: PointerOf<StructCameraAbilities>): GPCodes;
+
+  /**
+   * Gets the camera abilities.
+   *
+   * @param camera a #Camera
+   * @param abilities
+   * @return a gphoto2 error code
+   */
+  gp_camera_get_abilities(camera: PointerCamera, abilities: PointerOf<StructCameraAbilities>): GPCodes;
 
   /**
    * Initiate a connection to the camera.
@@ -239,7 +252,7 @@ export interface IGPCameraModule {
    * This widget will then contain the current and the possible values and the type.
    *
    * @param camera a Camera
-   * @param {string} name the name of a configuration widget
+   * @param {string} name the path of a configuration widget
    * @param {Buffer} buffer
    * @param context
    * @returns {GPCodes} gphoto2 error code
@@ -269,7 +282,7 @@ export interface IGPCameraModule {
    * Set a single configuration widget for the camera.
    *
    * @param camera a #Camera
-   * @param name the name of a configuration widget
+   * @param name the path of a configuration widget
    * @param widget a #CameraWidget
    * @param context a #GPContext
    * @return gphoto2 error code
@@ -314,7 +327,7 @@ export interface IGPCameraModule {
    * @param context a #GPContext
    * @return a gphoto2 error code
    *
-   * Typically, this information contains name and address of the author,
+   * Typically, this information contains path and address of the author,
    * acknowledgements, etc.
    *
    */
@@ -356,7 +369,12 @@ export interface IGPCameraModule {
    * in path. The file can then be downloaded using #gp_camera_file_get.
    *
    */
-  gp_camera_capture(camera: PointerCamera, type: number, path: PointerOf<StructCameraFilePath>, context: PointerContext): GPCodes;
+  gp_camera_capture(
+    camera: PointerCamera,
+    type: GPCameraCaptureType,
+    path: PointerOf<StructCameraFilePath>,
+    context: PointerContext
+  ): GPCodes;
 
   /**
    * Captures an image, movie, or sound clip depending on the given type.
@@ -373,7 +391,7 @@ export interface IGPCameraModule {
    */
   gp_camera_capture_async(
     camera: PointerCamera,
-    type: number,
+    type: GPCameraCaptureType,
     path: PointerOf<StructCameraFilePath>,
     context: PointerContext
   ): Promise<GPCodes>;
@@ -439,7 +457,7 @@ export interface IGPCameraModule {
    *
    * @param camera a #Camera
    * @param folder a folder
-   * @param file the name of a file
+   * @param file the path of a file
    * @param type the #CameraFileType
    * @param cameraFile a #CameraFile
    * @param context a #GPContext
@@ -450,7 +468,7 @@ export interface IGPCameraModule {
     camera: PointerCamera,
     folder: string,
     file: string,
-    type: GPCaptureTypes,
+    type: GPCameraFileType,
     cameraFile: PointerCameraFile,
     context: PointerContext
   ): GPCodes;
@@ -460,7 +478,7 @@ export interface IGPCameraModule {
    * @param {PointerCamera} camera
    * @param {string} folder
    * @param {string} file
-   * @param {GPCaptureTypes} type
+   * @param {GPCameraFileType} type
    * @param {PointerCameraFile} cameraFile
    * @param {PointerContext} context
    * @returns {Promise<GPCodes>}
@@ -469,7 +487,7 @@ export interface IGPCameraModule {
     camera: PointerCamera,
     folder: string,
     file: string,
-    type: GPCaptureTypes,
+    type: GPCameraFileType,
     cameraFile: PointerCameraFile,
     context: PointerContext
   ): Promise<GPCodes>;

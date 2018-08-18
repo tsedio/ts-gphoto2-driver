@@ -2,6 +2,7 @@ import {alloc, Type} from "ref";
 import {checkCode, closeQuietly, GPhoto2Driver} from "../driver";
 import {PointerOf} from "../driver/types";
 import {ICloseable} from "../interfaces";
+import {addInstance, removeInstance} from "./Garbarge";
 
 export class PointerWrapper<P extends PointerOf<any>> implements ICloseable {
   readonly buffer: PointerOf<P>;
@@ -10,6 +11,8 @@ export class PointerWrapper<P extends PointerOf<any>> implements ICloseable {
     this.buffer = alloc(refType) as any;
 
     checkCode((GPhoto2Driver as any)[`${gpMethodType}_new`](this.buffer), `${gpMethodType}_new`);
+
+    addInstance(this);
   }
 
   get pointer(): P {
@@ -18,6 +21,7 @@ export class PointerWrapper<P extends PointerOf<any>> implements ICloseable {
 
   close(): this {
     this.call("free");
+    removeInstance(this);
 
     return this;
   }

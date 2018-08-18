@@ -1,5 +1,5 @@
-import {GPWidgetTypes} from "../driver/types";
-import {isPrimitiveOrPrimitiveClass, primitiveOf} from "../driver/utils/ObjectUtils";
+import {GPWidgetType} from "../driver/types";
+import {isPrimitiveOrPrimitiveClass, nameOf, primitiveOf} from "../driver/utils/ObjectUtils";
 
 const enums: WidgetTypes[] = [];
 
@@ -7,39 +7,39 @@ export class WidgetTypes {
   /**
    * WINDOW widget This is the toplevel configuration widget. It should likely contain multiple GP_WIDGET_SECTION entries.
    */
-  static WINDOW = new WidgetTypes(GPWidgetTypes.GP_WIDGET_WINDOW, false, false, false, null);
+  static WINDOW = new WidgetTypes(GPWidgetType.GP_WIDGET_WINDOW, false, false, false, null);
   /**
    * SECTION widget (think Tab).
    */
-  static SECTION = new WidgetTypes(GPWidgetTypes.GP_WIDGET_SECTION, false, false, false, null);
+  static SECTION = new WidgetTypes(GPWidgetType.GP_WIDGET_SECTION, false, false, false, null);
   /**
    * TEXT widget.
    */
-  static TEXT = new WidgetTypes(GPWidgetTypes.GP_WIDGET_TEXT, true, false, true, String);
+  static TEXT = new WidgetTypes(GPWidgetType.GP_WIDGET_TEXT, true, false, true, String);
   /**
    * Slider widget.
    */
-  static RANGE = new WidgetTypes(GPWidgetTypes.GP_WIDGET_RANGE, true, false, false, Number);
+  static RANGE = new WidgetTypes(GPWidgetType.GP_WIDGET_RANGE, true, false, false, Number);
   /**
    * Toggle widget (think check box).
    */
-  static TOGGLE = new WidgetTypes(GPWidgetTypes.GP_WIDGET_TOGGLE, true, false, true, Boolean);
+  static TOGGLE = new WidgetTypes(GPWidgetType.GP_WIDGET_TOGGLE, true, false, true, Boolean);
   /**
    * Radio button widget.
    */
-  static RADIO = new WidgetTypes(GPWidgetTypes.GP_WIDGET_RADIO, true, true, true, String);
+  static RADIO = new WidgetTypes(GPWidgetType.GP_WIDGET_RADIO, true, true, true, String);
   /**
    * Menu widget (same as {@link #RADIO}).
    */
-  static MENU = new WidgetTypes(GPWidgetTypes.GP_WIDGET_MENU, true, true, true, String);
+  static MENU = new WidgetTypes(GPWidgetType.GP_WIDGET_MENU, true, true, true, String);
   /**
    * Button press widget.
    */
-  static BUTTON = new WidgetTypes(GPWidgetTypes.GP_WIDGET_BUTTON, true, false, true, undefined);
+  static BUTTON = new WidgetTypes(GPWidgetType.GP_WIDGET_BUTTON, true, false, true, undefined);
   /**
    * Date entering widget.
    */
-  static DATE = new WidgetTypes(GPWidgetTypes.GP_WIDGET_DATE, true, false, false, Date);
+  static DATE = new WidgetTypes(GPWidgetType.GP_WIDGET_DATE, true, false, false, Date);
 
   constructor(
     private _cval: number,
@@ -49,6 +49,10 @@ export class WidgetTypes {
     private _valueType: any
   ) {
     enums.push(this);
+  }
+
+  get label() {
+    return GPWidgetType[this.cval];
   }
 
   get cval(): number {
@@ -94,5 +98,13 @@ export class WidgetTypes {
     }
 
     return value instanceof this.valueType;
+  }
+
+  toString() {
+    return nameOf(this.label).replace("GP_WIDGET_", "");
+  }
+
+  toJSON() {
+    return this.toString();
   }
 }

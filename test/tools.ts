@@ -10,7 +10,7 @@ Chai.use(ChaiAsPromised);
 
 const expect = Chai.expect;
 const assert = Chai.assert;
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 const Sinon = SinonLib;
 const stub = (t: any): SinonStub => t;
 const restore = (t: any) => t.restore();

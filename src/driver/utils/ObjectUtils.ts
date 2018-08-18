@@ -201,7 +201,7 @@ export function ancestorsOf(target: any) {
 }
 
 /**
- * Get object name
+ * Get object path
  */
 export function nameOf(obj: any): string {
   switch (typeof obj) {
@@ -215,7 +215,7 @@ export function nameOf(obj: any): string {
 }
 
 /**
- * Get the provide name.
+ * Get the provide path.
  * @param targetClass
  */
 export function nameOfClass(targetClass: any): string {
@@ -223,7 +223,7 @@ export function nameOfClass(targetClass: any): string {
 }
 
 /**
- * Get symbol name.
+ * Get symbol path.
  * @param sym
  */
 export const nameOfSymbol = (sym: symbol): string =>

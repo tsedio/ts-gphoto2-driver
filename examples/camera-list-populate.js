@@ -1,5 +1,5 @@
 const SegfaultHandler = require('segfault-handler');
-const { CameraList, PortInfoList } = require('../lib');
+const { CameraList, PortInfoList } = require('../src');
 
 SegfaultHandler.registerHandler('crash.log');
 
