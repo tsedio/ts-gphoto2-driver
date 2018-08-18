@@ -1,11 +1,11 @@
-const { Camera, closeQuietly } = require('../lib');
+const { Camera, closeQuietly } = require('../src');
 const path = require('path');
 const camera = new Camera();
 
 camera.initialize();
 
 if (!camera.isClosed()) {
-  console.log('Camera =>', camera);
+  console.log('Camera =>', camera.toString());
 
   const cameraFile = camera.captureImage();
 

@@ -1,6 +1,6 @@
 const SegfaultHandler = require('segfault-handler');
 const path = require('path');
-const { CameraList, closeQuietly } = require('../lib');
+const { CameraList, closeQuietly } = require('../src');
 
 SegfaultHandler.registerHandler('crash.log');
 

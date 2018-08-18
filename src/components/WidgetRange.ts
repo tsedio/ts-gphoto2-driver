@@ -1,7 +1,7 @@
 import {checkCode, GPhoto2Driver, GPPointerFloat} from "../driver";
 import {PointerCameraWidget} from "../driver/modules";
 
-export class CameraWidgetRange {
+export class WidgetRange {
   /**
    * The minimum accepted value.
    */

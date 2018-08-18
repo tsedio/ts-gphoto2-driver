@@ -4,7 +4,7 @@ import {PointerCameraFile, RefCameraFile} from "./GPCameraModule";
 
 export const GP_FILE_MODULE_ASYNC_KEYS: string[] = ["gp_file_save"];
 
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const GPFileModuleDescription = {
   gp_file_new: ["int", [refType(RefCameraFile)]],
   gp_file_new_from_fd: ["int", [refType(RefCameraFile), "int"]],

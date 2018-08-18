@@ -1,11 +1,11 @@
 import {checkCode, GPhoto2Driver} from "../driver";
-import {PointerAbilityList, RefAbilitiesList} from "../driver/modules";
+import {PointerAbilitiesList, RefAbilitiesList} from "../driver/modules";
 import {Context} from "./Context";
 import {List} from "./List";
 import {PointerWrapper} from "./PointerWrapper";
 import {PortInfoList} from "./PortInfoList";
 
-export class AbilitiesList extends PointerWrapper<PointerAbilityList> {
+export class AbilitiesList extends PointerWrapper<PointerAbilitiesList> {
   constructor() {
     super("gp_abilities_list", RefAbilitiesList);
   }

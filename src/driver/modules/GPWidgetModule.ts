@@ -8,25 +8,25 @@ export type PointerCameraWidget = PointerOf<void>;
 /**
  *
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const RefCameraWidget = refType("void");
 
 /**
  *
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export type PointerCameraWidgetType = PointerOf<number>;
 /**
  *
  * @type {Type}
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const RefCameraWidgetType = refType("int");
 /**
  *
  * @type {}
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const GPWidgetModuleDescription: any = {
   gp_widget_new: ["int", ["int", types.CString, refType(RefCameraWidget)]],
   gp_widget_free: ["int", [RefCameraWidget]],
@@ -157,7 +157,7 @@ export interface IGPWidgetModule {
   gp_widget_set_name(widget: PointerCameraWidget, name: string): GPCodes;
 
   /**
-   * Gets the name of the widget
+   * Gets the path of the widget
    *
    * @param {PointerCameraWidget} widget a #CameraWidget
    * @param {PointerOf<string>} name Name of above widget

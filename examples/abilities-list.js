@@ -1,4 +1,4 @@
-const { checkCode } = require('../lib/driver');
+const { checkCode } = require('../src/driver');
 
 const { AbilitiesList, PortInfoList, GPhoto2Driver } = require('../src');
 const ref = require('ref');
@@ -22,7 +22,7 @@ for (let i = 0; i < size; i++) {
   checkCode(GPhoto2Driver.gp_list_get_name(list.pointer, i, name));
   checkCode(GPhoto2Driver.gp_list_get_value(list.pointer, i, value));
 
-  console.log('name=>', name.deref());
+  console.log('path=>', name.deref());
   console.log('value=>', value.deref());
 }
 

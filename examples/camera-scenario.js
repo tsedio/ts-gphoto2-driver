@@ -1,4 +1,4 @@
-const { Camera, closeQuietly, CameraWidgets } = require('../lib');
+const { Camera, closeQuietly, CameraWidgets } = require('../src');
 const path = require('path');
 
 const camera = new Camera();
@@ -19,46 +19,55 @@ try {
   closeQuietly(camera);
 }
 
-
 function runScenario({ autoFocus = false, preview = false, capture = false, triggerCapture = false }) {
   console.log('[GPDRIVER] Camera Loaded');
 
-  if (autoFocus) {
-    console.log('[GPDRIVER] Autofocus =============================');
-    runAutofocus();
+  try {
+    if (autoFocus) {
+      console.log('[GPDRIVER] Autofocus =============================');
+      runAutofocus();
+    }
+  } catch (er) {
+    console.warn('Autofocus fail', er.message);
   }
 
-  if (preview) {
-    console.log('[GPDRIVER] Preview ===============================');
-    runPreview();
+  try {
+    if (preview) {
+      console.log('[GPDRIVER] Preview ===============================');
+      runPreview();
+    }
+  } catch (er) {
+    console.warn('Preview fail', er.message);
   }
 
-  if (triggerCapture) {
-    console.log('[GPDRIVER] Trigger Capture =======================');
-    runTriggerCapture();
+  try {
+    if (triggerCapture) {
+      console.log('[GPDRIVER] Trigger Capture =======================');
+      runTriggerCapture();
+    }
+  } catch (er) {
+    console.warn('triggerCapture fail', er.message);
   }
 
-  if (capture) {
-    console.log('[GPDRIVER] Capture ===============================');
-    runCapture();
-
-    runCapture();
+  try {
+    if (capture) {
+      console.log('[GPDRIVER] Capture ===============================');
+      runCapture();
+    }
+  } catch (er) {
+    console.warn('capture fail', er.message);
   }
+
 }
 
 /**
  *
  */
 function runAutofocus() {
-  const cfg = new CameraWidgets(camera);
-
   try {
-    cfg.setValue('/actions/autofocusdrive', true);
-    cfg.apply();
+    camera.widgets.get('/actions/autofocusdrive').value = true;
   } catch (er) {
     console.warn(er);
-  } finally {
-    closeQuietly(cfg);
   }
 }
 

@@ -8,7 +8,7 @@ export type PointerContext = PointerOf<void>;
 /**
  *
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const RefContext = refType("void");
 /**
  *
@@ -18,13 +18,13 @@ export type PointerCB = PointerOf<void>;
  *
  * @type {Type}
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const RefCB = refType("void");
 /**
  *
  * @type {}
  */
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const GPContextModuleDescription = {
   gp_context_new: [RefContext, []],
   gp_context_unref: ["void", [RefContext]],

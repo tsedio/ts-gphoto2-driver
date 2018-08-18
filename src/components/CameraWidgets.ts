@@ -1,18 +1,20 @@
-import {checkCode, GPhoto2Driver, GPPointer, GPPointerFloat, GPPointerInt, GPPointerRef, GPPointerString, PointerToString} from "../driver";
-import {PointerCameraWidget} from "../driver/modules";
-import {PointerOf} from "../driver/types";
-import {classOf} from "../driver/utils/ObjectUtils";
-import {ICloseable} from "../interfaces";
-import {Camera} from "./Camera";
-import {CameraWidgetRange} from "./CameraWidgetRange";
+import {checkCode, GPhoto2Driver, GPPointer, GPPointerRef, GPPointerString} from "../driver";
+import {PointerCamera, PointerCameraWidget} from "../driver/modules";
+import {nameOf} from "../driver/utils/ObjectUtils";
+import {ICloseable, IWidget} from "../interfaces";
 import {Context} from "./Context";
+import {Widget} from "./Widget";
+import {WidgetRange} from "./WidgetRange";
 import {WidgetTypes} from "./WidgetTypes";
 
-export class CameraWidgets implements ICloseable {
+export class CameraWidgets extends Map<string, Widget> implements ICloseable {
   rootWidget: PointerCameraWidget;
-  widgets: Map<string, PointerCameraWidget> = new Map();
 
-  constructor(private camera: Camera) {
+  // private _widgets: Map<string, IWidget> = new Map();
+
+  constructor(private camera: {pointer: PointerCamera; isClosed(): boolean}) {
+    super();
+
     const buffer = GPPointerRef<PointerCameraWidget>();
     checkCode(GPhoto2Driver.gp_widget_new(WidgetTypes.WINDOW.cval, "", buffer));
     checkCode(GPhoto2Driver.gp_camera_get_config(camera.pointer, buffer, Context.get().pointer));
@@ -27,16 +29,12 @@ export class CameraWidgets implements ICloseable {
     }
   }
 
-  private checkNotClosed() {
-    if (this.rootWidget == null) {
-      throw new Error("Invalid state: closed");
-    }
-    if (this.camera.isClosed()) {
-      throw new Error("Invalid state: camera is closed");
-    }
-  }
-
-  private enumWidgets(widget: PointerCameraWidget, name: string) {
+  /**
+   * Enumerate all widgets
+   * @param widget
+   * @param path
+   */
+  private enumWidgets(widget: PointerCameraWidget, path: string) {
     this.checkNotClosed();
     const type = GPPointer<number>("int");
 
@@ -45,7 +43,7 @@ export class CameraWidgets implements ICloseable {
     const widgetType = WidgetTypes.fromCVal(type.deref());
 
     if (widgetType.hasValue) {
-      this.widgets.set(name, widget);
+      super.set(path, new Widget(path, widget, this));
     }
 
     const childcount: number = checkCode(GPhoto2Driver.gp_widget_count_children(widget));
@@ -54,18 +52,8 @@ export class CameraWidgets implements ICloseable {
       const buffer = GPPointerRef<PointerCameraWidget>();
       checkCode(GPhoto2Driver.gp_widget_get_child(widget, i, buffer));
 
-      this.enumWidgets(buffer.deref(), name + "/" + this.getBasename(buffer.deref()));
+      this.enumWidgets(buffer.deref(), `${path}/${this.getBasename(buffer.deref())}`);
     }
-  }
-
-  /**
-   *
-   * @returns {string[]}
-   */
-  public getNames(): string[] {
-    this.checkNotClosed();
-
-    return Array.from(this.widgets.keys()).sort();
   }
 
   /**
@@ -83,274 +71,160 @@ export class CameraWidgets implements ICloseable {
   }
 
   /**
-   * Returns the label of the widget.
-   * @param name the widget name
-   * @return widget label.
-   */
-  public getLabel(name: string): string {
-    this.checkNotClosed();
-    const ref = GPPointerString();
-
-    checkCode(GPhoto2Driver.gp_widget_get_label(this.get(name), ref));
-
-    return ref.deref();
-  }
-
-  /**
-   * Returns the info for the widget.
-   * @param name the widget name
-   * @return widget info.
-   */
-  public getInfo(name: string): string {
-    this.checkNotClosed();
-    const ref = GPPointerString();
-
-    checkCode(GPhoto2Driver.gp_widget_get_info(this.get(name), ref));
-
-    return ref.deref();
-  }
-
-  /**
-   * Returns the data type of the widget.
-   * @param name the widget name
-   * @return widget type, never null.
-   */
-  public getType(name: string): WidgetTypes {
-    this.checkNotClosed();
-    const ref = GPPointerInt();
-
-    checkCode(GPhoto2Driver.gp_widget_get_type(this.get(name), ref));
-
-    return WidgetTypes.fromCVal(ref.deref());
-  }
-
-  /**
-   * Returns the value of the configuration option.
-   * @param {string} name the widget name
-   * @returns the value.
-   */
-  public getValue(name: string): any {
-    this.checkNotClosed();
-
-    const type = this.getType(name);
-
-    switch (type) {
-      case WidgetTypes.TEXT:
-      case WidgetTypes.RADIO:
-      case WidgetTypes.MENU: {
-        const pref = GPPointerRef<void>();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this.get(name), pref));
-        const p = pref.deref();
-
-        return p == null ? null : PointerToString(p as PointerOf<string>);
-      }
-
-      case WidgetTypes.RANGE: {
-        const pref = GPPointerFloat();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this.get(name), pref));
-
-        return pref.deref();
-      }
-
-      case WidgetTypes.TOGGLE: {
-        const pref = GPPointerInt();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this.get(name), pref));
-
-        return pref.deref() === 2 ? null : pref.deref() === 1;
-      }
-
-      case WidgetTypes.DATE: {
-        const pref = GPPointerInt();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this.get(name), pref));
-
-        return new Date(pref.deref() * 1000.0);
-      }
-
-      case WidgetTypes.BUTTON:
-        return null;
-
-      default:
-        throw new Error("Parameter name: invalid value " + name + ": unsupported type: " + type);
-    }
-  }
-
-  /**
-   * Sets the value of given property. The value must be of correct class.
-   * <p></p>
-   * Important: after the changes are made, the {@link #apply()} method must be called, to apply the new values.
-   * @param name the property name, not null
-   * @param value the value, may be null.
-   */
-  public setValue(name: string, value: any): void {
-    this.checkNotClosed();
-
-    if (this.isReadOnly(name)) {
-      throw new Error(`Parameter name: invalid value ${name}: read-only`);
-    }
-
-    const type = this.getType(name);
-    if (!type.acceptsValue(value)) {
-      throw new Error(
-        `Parameter value: invalid value ${value}: expected ${type.valueType} but got ${value == null ? "null" : classOf(value)}`
-      );
-    }
-
-    let ptr;
-    switch (type) {
-      case WidgetTypes.TEXT:
-      case WidgetTypes.RADIO:
-      case WidgetTypes.MENU:
-        if (value == null) {
-          ptr = null;
-        } else {
-          ptr = GPPointerString(value);
-        }
-        break;
-
-      case WidgetTypes.RANGE:
-        ptr = GPPointerFloat(value);
-        break;
-
-      case WidgetTypes.TOGGLE:
-        const val = value == null ? 2 : !!value ? 1 : 0;
-        ptr = GPPointerInt(val);
-        break;
-
-      case WidgetTypes.DATE:
-        ptr = GPPointerInt(Math.ceil(new Date(value).getTime() / 1000));
-        break;
-
-      case WidgetTypes.BUTTON:
-        this.setChanged(name, true);
-
-        return;
-
-      default:
-        throw new Error("Parameter type: invalid value " + type + ": unsupported");
-    }
-
-    checkCode(GPhoto2Driver.gp_widget_set_value(this.get(name), ptr as PointerOf<any>));
-
-    this.apply();
-  }
-
-  private checkType(name: string, ...types: WidgetTypes[]): void {
-    const type = this.getType(name);
-    if (types.indexOf(type) === -1) {
-      throw new Error("Parameter name: invalid value " + name + ": expected " + types.join(",") + " but got " + type);
-    }
-  }
-
-  /**
-   * Returns allowed range for {@link WidgetTypes#RANGE} options.
-   * @param name the widget name.
-   * @return the range.
-   */
-  public getRange(name: string): CameraWidgetRange {
-    this.checkType(name, WidgetTypes.RANGE);
-
-    return new CameraWidgetRange(this.get(name));
-  }
-
-  /**
    *
-   * @param {string} name
-   * @param {boolean} changed
    */
-  public setChanged(name: string, changed: boolean): void {
+  checkNotClosed() {
+    if (this.rootWidget == null) {
+      throw new Error("Invalid state: closed");
+    }
+    if (this.camera.isClosed()) {
+      throw new Error("Invalid state: camera is closed");
+    }
+  }
+
+  /**
+   * @deprecated
+   * @returns {string[]}
+   */
+  getNames(): string[] {
+    return this.getPaths();
+  }
+
+  getPaths(): string[] {
     this.checkNotClosed();
-    checkCode(GPhoto2Driver.gp_widget_set_changed(this.get(name), changed ? 1 : 0));
+
+    return Array.from(this.keys()).sort();
   }
 
   /**
-   *
-   * @param {string} name
-   * @returns {boolean}
+   * If the settings are altered, they need to be applied to take effect.
    */
-  public isChanged(name: string): boolean {
-    return checkCode(GPhoto2Driver.gp_widget_changed(this.get(name))) === 1;
+  apply() {
+    this.checkNotClosed();
+    checkCode(GPhoto2Driver.gp_camera_set_config(this.camera.pointer, this.rootWidget, Context.get().pointer), "gp_camera_set_config");
+  }
+
+  close(): this {
+    return this;
+  }
+
+  [Symbol.iterator](): IterableIterator<[string, Widget]> {
+    this.checkNotClosed();
+
+    return super[Symbol.iterator]();
   }
 
   /**
-   *
-   * @param {string} name
+   * Return a widget from his path.
+   * @param {string} path
    * @returns {PointerCameraWidget}
    */
-  private get(name: string): PointerCameraWidget {
-    // requireNotNull(name, "name");
+  get(path: string): Widget {
     this.checkNotClosed();
-    const ptr = this.widgets.get(name);
-    if (ptr == null) {
-      throw new Error("Parameter name: invalid value " + name + ": the name is not known");
+
+    const widget = super.get(path);
+
+    if (!widget || widget.pointer == null) {
+      throw new Error("Parameter path: invalid value " + path + ": the path is not known");
     }
 
-    return ptr;
+    return widget;
   }
 
   /**
-   * Lists choices for given widget. Only applicable to {@link WidgetTypes#RADIO} and {@link WidgetTypes#MENU} types.
-   * @param name widget name.
-   * @return list of possible choices captions.
+   *
+   * @param key
    */
-  public listChoices(name: string): string[] {
-    const type = this.getType(name);
-    if (!type.hasChoices) {
-      throw new Error(`Parameter name: invalid value ${name}: is of type ${type} which does not have any choices.`);
-    }
-    const widget = this.get(name);
-    const choiceCount: number = checkCode(GPhoto2Driver.gp_widget_count_choices(widget), "gp_widget_count_choices");
-    const result: string[] = [];
-
-    for (let i = 0; i < choiceCount; i++) {
-      const ref = GPPointerString();
-      checkCode(GPhoto2Driver.gp_widget_get_choice(widget, i, ref), "gp_widget_get_choice");
-
-      result.push(ref.deref());
-    }
-
-    return result;
-  }
-
-  public isReadOnly(name: string): boolean {
+  has(key: string): boolean {
     this.checkNotClosed();
-    const result = GPPointerInt();
-    checkCode(GPhoto2Driver.gp_widget_get_readonly(this.get(name), result), "gp_widget_get_readonly");
 
-    return result.deref() === 1;
+    return super.has(key);
   }
 
-  public toString(): string {
-    return "Widgets: " + this.getNames();
+  /**
+   *
+   * @param key
+   * @param value
+   */
+  set(key: string, value: IWidget): this {
+    return this;
+  }
+
+  keys(): IterableIterator<string> {
+    this.checkNotClosed();
+
+    return super.keys();
+  }
+
+  entries(): IterableIterator<[string, Widget]> {
+    this.checkNotClosed();
+
+    return super.entries();
+  }
+
+  values(): IterableIterator<Widget> {
+    this.checkNotClosed();
+
+    return super.values();
+  }
+
+  clear(): void {}
+
+  forEach(callbackfn: (value: Widget, key: string, map: Map<string, Widget>) => void, thisArg?: any): void {
+    this.checkNotClosed();
+
+    super.forEach(callbackfn, thisArg);
+  }
+
+  toJSON() {
+    this.checkNotClosed();
+
+    const obj: any = {};
+
+    this.forEach((item, key) => {
+      obj[key] = item.toJSON();
+    });
+
+    return obj;
+  }
+
+  /**
+   *
+   */
+  toArray(): Widget[] {
+    this.checkNotClosed();
+
+    const list: Widget[] = [];
+
+    this.forEach(item => list.push(item));
+
+    return list;
   }
 
   /**
    * Returns a debug description of all options, their types, descriptions, allowed values etc.
    * @return a formatted string of all options.
    */
-  public inspect(): string {
-    this.checkNotClosed();
+  inspect(): string {
+    return this.toArray()
+      .map(widget => {
+        const {type, value, info, path, label} = widget;
 
-    return this.getNames()
-      .map(name => {
-        const type = this.getType(name);
-        const value = this.getValue(name);
-        const info = this.getInfo(name);
-
-        let row = `${name}: ${type} = ${type.valueType.getName()}: ${value}` + "\n" + `    ${this.getLabel(name)}`;
+        let row = `${path}: ${type} = ${nameOf(type.valueType)}: ${value}` + "\n" + `    ${label}`;
 
         if (info !== null && info.trim() !== "") {
           row += " - " + info;
         }
 
         if (type.hasChoices) {
-          row += ": " + this.listChoices(name);
+          row += ": " + widget.choices;
         }
 
         if (type === WidgetTypes.RANGE) {
-          row += ": " + this.getRange(name);
+          row += ": " + widget.range;
         }
 
-        if (this.isReadOnly(name)) {
+        if (widget.readonly) {
           row += ": READ_ONLY";
         }
 
@@ -359,15 +233,114 @@ export class CameraWidgets implements ICloseable {
       .join("");
   }
 
-  /**
-   * If the settings are altered, they need to be applied to take effect.
-   */
-  public apply() {
-    this.checkNotClosed();
-    checkCode(GPhoto2Driver.gp_camera_set_config(this.camera.pointer, this.rootWidget, Context.get().pointer), "gp_camera_set_config");
+  toString(): string {
+    return "CameraWidgets: " + this.getPaths().join(", ");
   }
 
-  close(): this {
-    return this;
+  // DEPRECATED
+  /**
+   * Returns the label of the widget.
+   * @param path the widget path
+   * @return widget label.
+   * @deprecated
+   */
+  getLabel(path: string): string {
+    return this.get(path).label;
+  }
+
+  /**
+   * Returns the info for the widget.
+   * @param path the widget path
+   * @return widget info.
+   * @deprecated
+   */
+  getInfo(path: string): string {
+    return this.get(path).info;
+  }
+
+  /**
+   * Returns the data type of the widget.
+   * @param path the widget path
+   * @return widget type, never null.
+   * @deprecated
+   */
+  getType(path: string): WidgetTypes {
+    return this.get(path).type;
+  }
+
+  /**
+   * Returns the value of the configuration option.
+   * @param {string} path the widget path
+   * @returns the value.
+   * @deprecated
+   */
+  getValue(path: string): any {
+    return this.get(path).value;
+  }
+
+  /**
+   * Sets the value of given property. The value must be of correct class.
+   * <p></p>
+   * Important: after the changes are made, the {@link #apply()} method must be called, to apply the new values.
+   * @param path the property path, not null
+   * @param value the value, may be null.
+   * @deprecated
+   */
+  setValue(path: string, value: any): void {
+    this.get(path).value = value;
+  }
+
+  /**
+   * Returns allowed range for {@link WidgetTypes#RANGE} options.
+   * @param path the widget path.
+   * @deprecated
+   * @return the range.
+   */
+  getRange(path: string): WidgetRange | undefined {
+    return this.get(path).range;
+  }
+
+  /**
+   *
+   * @param {string} path
+   * @param {boolean} changed
+   * @deprecated
+   */
+  setChanged(path: string, changed: boolean): void {
+    this.get(path).changed = changed;
+  }
+
+  /**
+   *
+   * @param {string} path
+   * @returns {boolean}
+   * @deprecated
+   */
+  isChanged(path: string): boolean {
+    return this.get(path).changed;
+  }
+
+  /**
+   * Lists choices for given widget. Only applicable to {@link WidgetTypes#RADIO} and {@link WidgetTypes#MENU} types.
+   * @param path widget path.
+   * @return list of possible choices captions.
+   * @deprecated
+   */
+  listChoices(path: string): string[] {
+    const widget = this.get(path);
+
+    if (!widget.type.hasChoices) {
+      throw new Error(`Parameter path: invalid value ${path}: is of type ${widget.type} which does not have any choices.`);
+    }
+
+    return widget.choices!;
+  }
+
+  /**
+   * @deprecated
+   * @param path
+   */
+  isReadOnly(path: string): boolean {
+    return this.get(path).readonly;
   }
 }

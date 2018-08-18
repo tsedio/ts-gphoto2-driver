@@ -31,7 +31,7 @@ export interface GPhoto2Driver
     IGPAbilitiesListModule,
     IGPPortInfoModule {}
 
-// tslint:disable-next-line: variable-name
+// tslint:disable-next-line
 export const GPhoto2Driver: GPhoto2Driver = ffi.Library("libgphoto2", {
   // CONTEXT
   ...GPContextModuleDescription,

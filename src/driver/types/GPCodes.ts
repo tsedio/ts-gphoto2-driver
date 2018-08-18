@@ -181,27 +181,3 @@ export enum GPCodes {
    */
   GP_ERROR_OS_FAILURE = -114
 }
-
-export enum GPCaptureTypes {
-  GP_CAPTURE_IMAGE = 0,
-  GP_CAPTURE_MOVIE = 1,
-  GP_CAPTURE_SOUND = 2,
-  GP_FILE_TYPE_NORMAL = 1
-}
-
-export enum GPVersionTypes {
-  GP_VERSION_SHORT = 0,
-  GP_VERSION_VERBOSE = 1
-}
-
-export enum GPWidgetTypes {
-  GP_WIDGET_WINDOW = 0, // # WINDOW widget This is the toplevel configuration widget. It should likely contain multiple GP_WIDGET_SECTION entries.
-  GP_WIDGET_SECTION = 1, // # SECTION widget (think Tab).
-  GP_WIDGET_TEXT = 2, // # TEXT widget.
-  GP_WIDGET_RANGE = 3, // # Slider widget.
-  GP_WIDGET_TOGGLE = 4, // # Toggle widget (think check box).
-  GP_WIDGET_RADIO = 5, // # Radio button widget.
-  GP_WIDGET_MENU = 6, // # Menu widget (same as RADIO).
-  GP_WIDGET_BUTTON = 7, // # Button press widget.
-  GP_WIDGET_DATE = 8 // # Date entering widget.
-}

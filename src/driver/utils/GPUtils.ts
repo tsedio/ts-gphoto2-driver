@@ -12,7 +12,7 @@ import {GPCodes, PointerOf} from "../types";
 export function checkCode(returnValue: any, method: string = "") {
   if (returnValue < GPCodes.GP_OK) {
     const errorStr = GPhoto2Driver.gp_port_result_as_string(returnValue);
-    throw new Error(`${method} returned ${returnValue}: ${errorStr}`);
+    throw new Error(`${method} returned ${returnValue}: ${GPCodes[returnValue] || "Unsupported code"} > ${errorStr}`);
   }
 
   return returnValue;
