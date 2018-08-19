@@ -72,7 +72,7 @@ cameraList.close();
 
 ## Examples
 
-Some example are available in the `examples` directory.
+Some example are available in the examples directory, when you have cloned or downloaded the complete project from github.
 
 Checkout this project then run `npm run develop` and run `node examples/camera.js`.
 
