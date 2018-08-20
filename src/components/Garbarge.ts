@@ -32,6 +32,3 @@ process.on("SIGINT", closeAll);
 // catches "kill pid" (for example: nodemon restart)
 process.on("SIGUSR1", closeAll);
 process.on("SIGUSR2", closeAll);
-
-// catches uncaught exceptions
-process.on("uncaughtException", closeAll);
