@@ -1,6 +1,8 @@
 const SegfaultHandler = require('segfault-handler');
 const path = require('path');
 const { CameraList, closeQuietly } = require('../src');
+// If you launch this example not from library folder, change the previous line to:
+// const { CameraList, closeQuietly  } = require('@typedproject/gphoto2-driver');
 
 SegfaultHandler.registerHandler('crash.log');
 
