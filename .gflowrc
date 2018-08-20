@@ -13,5 +13,7 @@
     "chore": "chore",
     "docs": "docs"
   },
-  "refs": {}
+  "refs": {
+    "feat_#6_change_require": "master"
+  }
 }
