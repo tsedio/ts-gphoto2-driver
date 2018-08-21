@@ -1,14 +1,10 @@
 import * as EventEmitter from "events";
-import * as fs from "fs";
-import * as path from "path";
 import {PointerCamera} from "../driver/modules";
 import {ICloseable, ILiveviewOptions} from "../interfaces";
-import {CameraFileFromFd} from "./CameraFileFromFd";
+import {CameraFile} from "./CameraFile";
 import {Context} from "./Context";
 import {addInstance} from "./Garbarge";
 import {PointerWrapper} from "./PointerWrapper";
-
-const TMP_PATH = path.join(__dirname, "../../.tmp/liveview.jpg");
 
 export class Liveview extends EventEmitter implements ICloseable {
   /**
@@ -18,14 +14,15 @@ export class Liveview extends EventEmitter implements ICloseable {
   /**
    *
    */
-  private file: CameraFileFromFd;
+  private file: CameraFile;
   /**
    *
    */
-  private fd: number;
+  private options: ILiveviewOptions;
 
-  constructor(private camera: PointerWrapper<PointerCamera>, private options: Partial<ILiveviewOptions> = {fps: 100}) {
+  constructor(private camera: PointerWrapper<PointerCamera>, options: Partial<ILiveviewOptions>) {
     super();
+    this.options = {fps: 24, output: "binary", ...options};
     addInstance(this);
   }
 
@@ -33,15 +30,9 @@ export class Liveview extends EventEmitter implements ICloseable {
    *
    */
   public start() {
-    if (this.options.stdout) {
-      this.fd = (process.stdout as any).fd;
-    } else {
-      this.fd = fs.openSync(TMP_PATH, "w+", 0o666);
-    }
+    this.file = new CameraFile();
 
-    this.file = new CameraFileFromFd(this.fd);
-
-    this.timer = setInterval(() => this.onTick(), this.options.fps);
+    this.timer = setInterval(() => this.onTick(), 1000 / this.options.fps);
   }
 
   /**
@@ -50,8 +41,20 @@ export class Liveview extends EventEmitter implements ICloseable {
   public stop() {
     if (this.timer) {
       clearInterval(this.timer);
-      this.file.unref();
     }
+    if (this.options.output === "file") {
+      if (!this.options.filePath) {
+        throw new Error("You should specify filePath option, if you choose output: file");
+      }
+      // TODO if output === "file", it will save only the lase frame, because CamerFile overwrites each time
+      // we fire capture_preview.
+      // Maybe it is a good idea, to just use CameraFileFromFd to save it directly from C library
+      this.file.save(this.options.filePath);
+    }
+    this.file.closeQuietly();
+    // TODO after stop() I always see an error in the console like
+    // malloc: *** error for object 0x102609d00: pointer being freed was not allocated
+    // *** set a breakpoint in malloc_error_break to debug
   }
 
   public close() {
@@ -62,9 +65,9 @@ export class Liveview extends EventEmitter implements ICloseable {
 
   private async onTick() {
     await this.camera.callAsync("capture_preview", this.file.pointer, Context.get().pointer);
-
-    fs.readFile(TMP_PATH, {encoding: "binary"}, (err, data) => {
-      this.emit("data", data);
-    });
+    if (this.options.output === "binary" || this.options.output === "base64") {
+      const {data, size} = await this.file.getDataAndSize(this.options.output);
+      this.emit("data", data, size);
+    }
   }
 }
