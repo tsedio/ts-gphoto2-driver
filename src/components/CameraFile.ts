@@ -1,5 +1,6 @@
 import {PointerCameraFile, RefCameraFile} from "../driver/modules";
 import {GPCodes, PointerOf} from "../driver/types";
+import {GPPointer, GPPointerString, checkCode} from "../driver";
 import {IPointerWrapperOptions, PointerWrapper} from "./PointerWrapper";
 
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
@@ -58,8 +59,12 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
    * @param {PointerOf<string>} mime
    * @returns {GPCodes}
    */
-  public getMimeType(mime: PointerOf<string>): GPCodes {
-    return this.call("get_mime_type", mime);
+  public async getMimeType(mime: PointerOf<string>): Promise<string> {
+    const mimePointer = GPPointerString();
+    const code = await this.call("get_mime_type", mime);
+    checkCode(code);
+
+    return mimePointer.deref();
   }
 
   /**
@@ -79,7 +84,34 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
    * memory leaks.
    *
    **/
-  public getDataAndSize(data: PointerOf<string>, size: PointerOf<number>): GPCodes {
-    return this.call("get_data_and_size", data, size);
+
+  public async getDataAndSize(
+    encoding: "binary" | "base64" = "binary"
+  ): Promise<{
+    data: Buffer | string;
+    size: Number;
+  }> {
+    const dataPointer = GPPointerString();
+    const sizePointer: PointerOf<number> = GPPointer("int");
+    const code = await this.callAsync("get_data_and_size", dataPointer, sizePointer);
+    const size = sizePointer.deref();
+    const binary = Buffer.from(dataPointer.deref(), "binary");
+    checkCode(code);
+    let data: Buffer | string = "";
+    switch (encoding) {
+      case "binary":
+        data = binary;
+
+        break;
+      case "base64":
+        data = binary.toString("base64");
+
+        break;
+    }
+
+    return {
+      data,
+      size
+    };
   }
 }

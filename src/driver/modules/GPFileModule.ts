@@ -13,7 +13,8 @@ export const GPFileModuleDescription = {
   gp_file_clean: ["int", [RefCameraFile]],
   gp_file_save: ["int", [RefCameraFile, types.CString]],
   gp_file_unref: ["int", [RefCameraFile]],
-  gp_file_free: ["int", [RefCameraFile]]
+  gp_file_free: ["int", [RefCameraFile]],
+  gp_file_get_data_and_size: ["int", [RefCameraFile, refType(types.CString), refType(types.int)]]
 };
 
 export interface IGPFileModule {
