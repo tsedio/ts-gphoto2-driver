@@ -1,4 +1,5 @@
 export interface ILiveviewOptions {
   fps: number;
-  stdout: boolean;
+  output: "binary" | "base64" | "file";
+  filePath?: string;
 }

@@ -89,7 +89,7 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
     encoding: "binary" | "base64" = "binary"
   ): Promise<{
     data: Buffer | string;
-    size: Number;
+    size: number;
   }> {
     const dataPointer = GPPointerString();
     const sizePointer: PointerOf<number> = GPPointer("int");
@@ -108,6 +108,7 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
 
         break;
     }
+    // TODO now it does not work. I just see �� in the console for binary or /f39/Q== for Base64
 
     return {
       data,
