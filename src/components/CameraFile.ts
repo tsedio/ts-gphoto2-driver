@@ -1,6 +1,6 @@
+import {checkCode, GPPointer, GPPointerString} from "../driver";
 import {PointerCameraFile, RefCameraFile} from "../driver/modules";
 import {GPCodes, PointerOf} from "../driver/types";
-import {GPPointer, GPPointerString, checkCode} from "../driver";
 import {IPointerWrapperOptions, PointerWrapper} from "./PointerWrapper";
 
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
@@ -70,8 +70,6 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
   /**
    * Get a pointer to the data and the file's size.
    *
-   * @param data
-   * @param size
    * @return a gphoto2 error code.
    *
    * Both data and size can be NULL and will then be ignored.
@@ -83,6 +81,7 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
    * data pointer is owned by the caller and needs to be free()d to avoid
    * memory leaks.
    *
+   * @param encoding
    **/
 
   public async getDataAndSize(
@@ -93,11 +92,15 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
   }> {
     const dataPointer = GPPointerString();
     const sizePointer: PointerOf<number> = GPPointer("int");
-    const code = await this.callAsync("get_data_and_size", dataPointer, sizePointer);
+
+    await this.callAsync("set_mime_type", "image/jpeg");
+    await this.callAsync("get_data_and_size", dataPointer, sizePointer);
+
     const size = sizePointer.deref();
     const binary = Buffer.from(dataPointer.deref(), "binary");
-    checkCode(code);
+
     let data: Buffer | string = "";
+
     switch (encoding) {
       case "binary":
         data = binary;
