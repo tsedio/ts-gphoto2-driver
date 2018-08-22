@@ -14,6 +14,19 @@ if (cameraList.size) {
   console.log(camera.toString());
   console.log(camera.widgets.toString());
 
+  // change value
+  camera.widgets.get('/actions/autofocusdrive').value = true;
+  camera.widgets.get('/settings/autofocus').value = 'on';
+
+  // OR apply
+  camera.widgets.apply({
+    '/actions/autofocusdrive': true,
+    '/settings/autofocus': 'on'
+  });
+
+  console.log('/actions/autofocusdrive', camera.widgets.get('/actions/autofocusdrive').value);
+  console.log('/settings/autofocus', camera.widgets.get('/settings/autofocus').value);
+
   // camera.widgets => Widget which inherit from Map class
   const widgets = JSON.stringify(camera.widgets, null, 2);
   fs.writeFileSync('../.tmp/widgets.json', widgets, { encoding: 'utf8' });
