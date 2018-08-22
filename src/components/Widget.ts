@@ -7,9 +7,24 @@ import {WidgetRange} from "./WidgetRange";
 import {WidgetTypes} from "./WidgetTypes";
 
 export class Widget implements IWidget {
-  cachedValue: any;
+  [key: string]: any;
 
-  constructor(readonly path: string, readonly pointer: PointerCameraWidget, private cameraWidgets: any) {}
+  constructor(readonly path: string, private _pointer: PointerCameraWidget, private cameraWidgets: any) {}
+
+  /**
+   *
+   * @param pointer
+   */
+  set pointer(pointer: PointerCameraWidget) {
+    this.pointer = pointer;
+  }
+
+  /**
+   *
+   */
+  get pointer(): PointerCameraWidget {
+    return this._pointer;
+  }
 
   /**
    * Returns the label of the widget.
@@ -21,7 +36,7 @@ export class Widget implements IWidget {
 
     const ref = GPPointerString();
 
-    checkCode(GPhoto2Driver.gp_widget_get_label(this.pointer, ref));
+    checkCode(GPhoto2Driver.gp_widget_get_label(this._pointer, ref));
 
     return ref.deref();
   }
@@ -35,7 +50,7 @@ export class Widget implements IWidget {
 
     const ref = GPPointerInt();
 
-    checkCode(GPhoto2Driver.gp_widget_get_type(this.pointer, ref));
+    checkCode(GPhoto2Driver.gp_widget_get_type(this._pointer, ref));
 
     return WidgetTypes.fromCVal(ref.deref());
   }
@@ -50,7 +65,7 @@ export class Widget implements IWidget {
 
     const ref = GPPointerString();
 
-    checkCode(GPhoto2Driver.gp_widget_get_info(this.pointer, ref));
+    checkCode(GPhoto2Driver.gp_widget_get_info(this._pointer, ref));
 
     return ref.deref();
   }
@@ -66,12 +81,12 @@ export class Widget implements IWidget {
       return undefined;
     }
 
-    const choiceCount: number = checkCode(GPhoto2Driver.gp_widget_count_choices(this.pointer), "gp_widget_count_choices");
+    const choiceCount: number = checkCode(GPhoto2Driver.gp_widget_count_choices(this._pointer), "gp_widget_count_choices");
     const result: string[] = [];
 
     for (let i = 0; i < choiceCount; i++) {
       const ref = GPPointerString();
-      checkCode(GPhoto2Driver.gp_widget_get_choice(this.pointer, i, ref), "gp_widget_get_choice");
+      checkCode(GPhoto2Driver.gp_widget_get_choice(this._pointer, i, ref), "gp_widget_get_choice");
 
       result.push(ref.deref());
     }
@@ -88,16 +103,12 @@ export class Widget implements IWidget {
 
     const type = this.type;
 
-    if (this.cachedValue) {
-      return this.cachedValue;
-    }
-
     switch (type) {
       case WidgetTypes.TEXT:
       case WidgetTypes.RADIO:
       case WidgetTypes.MENU: {
         const pref = GPPointerRef<void>();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this.pointer, pref));
+        checkCode(GPhoto2Driver.gp_widget_get_value(this._pointer, pref));
         const p = pref.deref();
 
         return p == null ? null : PointerToString(p as PointerOf<string>);
@@ -105,21 +116,21 @@ export class Widget implements IWidget {
 
       case WidgetTypes.RANGE: {
         const pref = GPPointerFloat();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this.pointer, pref));
+        checkCode(GPhoto2Driver.gp_widget_get_value(this._pointer, pref));
 
         return pref.deref();
       }
 
       case WidgetTypes.TOGGLE: {
         const pref = GPPointerInt();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this.pointer, pref));
+        checkCode(GPhoto2Driver.gp_widget_get_value(this._pointer, pref));
 
         return pref.deref() === 2 ? null : pref.deref() === 1;
       }
 
       case WidgetTypes.DATE: {
         const pref = GPPointerInt();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this.pointer, pref));
+        checkCode(GPhoto2Driver.gp_widget_get_value(this._pointer, pref));
 
         return new Date(pref.deref() * 1000.0);
       }
@@ -139,6 +150,45 @@ export class Widget implements IWidget {
    * @param value the value, may be null.
    */
   set value(value: any) {
+    this.applyValue(value, true);
+  }
+
+  get changed(): boolean {
+    return checkCode(GPhoto2Driver.gp_widget_changed(this._pointer)) === 1;
+  }
+
+  set changed(changed: boolean) {
+    this.cameraWidgets.checkNotClosed();
+    checkCode(GPhoto2Driver.gp_widget_set_changed(this._pointer, changed ? 1 : 0));
+  }
+
+  get readonly() {
+    this.cameraWidgets.checkNotClosed();
+
+    const result = GPPointerInt();
+    checkCode(GPhoto2Driver.gp_widget_get_readonly(this._pointer, result), "gp_widget_get_readonly");
+
+    return result.deref() === 1;
+  }
+
+  /**
+   * Returns allowed range for {@link WidgetTypes#RANGE} options.
+   * @return the range.
+   */
+  get range(): WidgetRange | undefined {
+    if (this.typeOf(WidgetTypes.RANGE)) {
+      return new WidgetRange(this._pointer);
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Change value. Set refresh to false if you don't want to refresh CameraWidget.
+   * @param value
+   * @param refresh
+   */
+  setValue(value: any, refresh: boolean = true) {
     this.cameraWidgets.checkNotClosed();
 
     if (this.readonly) {
@@ -187,44 +237,15 @@ export class Widget implements IWidget {
         throw new Error("Parameter type: invalid value " + type + ": unsupported");
     }
 
-    checkCode(GPhoto2Driver.gp_widget_set_value(this.pointer, ptr as PointerOf<any>));
+    checkCode(GPhoto2Driver.gp_widget_set_value(this._pointer, ptr as PointerOf<any>));
 
-    try {
-      this.apply();
-      this.cachedValue = value;
-    } catch (er) {
-      throw new Error(`Parameter value: failed to apply value ${value} on ${this.path}. \nError: ` + er.message);
+    if (refresh) {
+      try {
+        this.apply();
+      } catch (er) {
+        throw new Error(`Parameter value: failed to apply value ${value} on ${this.path}. \nError: ` + er.message);
+      }
     }
-  }
-
-  get changed(): boolean {
-    return checkCode(GPhoto2Driver.gp_widget_changed(this.pointer)) === 1;
-  }
-
-  set changed(changed: boolean) {
-    this.cameraWidgets.checkNotClosed();
-    checkCode(GPhoto2Driver.gp_widget_set_changed(this.pointer, changed ? 1 : 0));
-  }
-
-  get readonly() {
-    this.cameraWidgets.checkNotClosed();
-
-    const result = GPPointerInt();
-    checkCode(GPhoto2Driver.gp_widget_get_readonly(this.pointer, result), "gp_widget_get_readonly");
-
-    return result.deref() === 1;
-  }
-
-  /**
-   * Returns allowed range for {@link WidgetTypes#RANGE} options.
-   * @return the range.
-   */
-  get range(): WidgetRange | undefined {
-    if (this.typeOf(WidgetTypes.RANGE)) {
-      return new WidgetRange(this.pointer);
-    }
-
-    return undefined;
   }
 
   checkType(...types: WidgetTypes[]): void {
@@ -247,17 +268,12 @@ export class Widget implements IWidget {
   }
 
   toJSON(): IWidget {
-    const {path, label, type, info, value, choices, changed, range} = this;
+    return ["path", "label", "type", "info", "value", "choices", "changed", "range", "readonly"].reduce((acc: any, key: string) => {
+      if (!(this[key] === "" || this[key] === undefined || this[key] === null)) {
+        acc[key] = this[key];
+      }
 
-    return {
-      path,
-      label,
-      type,
-      info,
-      value,
-      choices,
-      changed,
-      range
-    } as any;
+      return acc;
+    }, {}) as IWidget;
   }
 }

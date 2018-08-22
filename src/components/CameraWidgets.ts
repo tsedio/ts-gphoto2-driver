@@ -10,14 +10,16 @@ import {WidgetTypes} from "./WidgetTypes";
 export class CameraWidgets extends Map<string, Widget> implements ICloseable {
   rootWidget: PointerCameraWidget;
 
-  // private _widgets: Map<string, IWidget> = new Map();
-
   constructor(private camera: {pointer: PointerCamera; isClosed(): boolean}) {
     super();
 
+    this.refresh();
+  }
+
+  public refresh() {
     const buffer = GPPointerRef<PointerCameraWidget>();
     checkCode(GPhoto2Driver.gp_widget_new(WidgetTypes.WINDOW.cval, "", buffer));
-    checkCode(GPhoto2Driver.gp_camera_get_config(camera.pointer, buffer, Context.get().pointer));
+    checkCode(GPhoto2Driver.gp_camera_get_config(this.camera.pointer, buffer, Context.get().pointer));
 
     this.rootWidget = buffer.deref();
 
@@ -43,7 +45,11 @@ export class CameraWidgets extends Map<string, Widget> implements ICloseable {
     const widgetType = WidgetTypes.fromCVal(type.deref());
 
     if (widgetType.hasValue) {
-      super.set(path, new Widget(path, widget, this));
+      if (super.has(path)) {
+        super.get(path)!.pointer = widget;
+      } else {
+        super.set(path, new Widget(path, widget, this));
+      }
     }
 
     const childcount: number = checkCode(GPhoto2Driver.gp_widget_count_children(widget));
@@ -106,11 +112,13 @@ export class CameraWidgets extends Map<string, Widget> implements ICloseable {
 
     if (obj) {
       Object.keys(obj).forEach(key => {
-        this.get(key).value = obj[key];
+        this.get(key).applyValue(obj[key], false);
       });
-    } else {
-      checkCode(GPhoto2Driver.gp_camera_set_config(this.camera.pointer, this.rootWidget, Context.get().pointer), "gp_camera_set_config");
     }
+
+    checkCode(GPhoto2Driver.gp_camera_set_config(this.camera.pointer, this.rootWidget, Context.get().pointer), "gp_camera_set_config");
+
+    this.refresh();
   }
 
   close(): this {
