@@ -1,12 +1,14 @@
 import {checkCode, GPhoto2Driver, GPPointerFloat, GPPointerInt, GPPointerRef, GPPointerString, PointerToString} from "../driver";
 import {PointerCameraWidget} from "../driver/modules";
 import {PointerOf} from "../driver/types";
-import {classOf} from "../driver/utils/ObjectUtils";
+import {nameOf} from "../driver/utils/ObjectUtils";
 import {IWidget} from "../interfaces";
 import {WidgetRange} from "./WidgetRange";
 import {WidgetTypes} from "./WidgetTypes";
 
 export class Widget implements IWidget {
+  cachedValue: any;
+
   constructor(readonly path: string, readonly pointer: PointerCameraWidget, private cameraWidgets: any) {}
 
   /**
@@ -86,6 +88,10 @@ export class Widget implements IWidget {
 
     const type = this.type;
 
+    if (this.cachedValue) {
+      return this.cachedValue;
+    }
+
     switch (type) {
       case WidgetTypes.TEXT:
       case WidgetTypes.RADIO:
@@ -122,7 +128,7 @@ export class Widget implements IWidget {
         return null;
 
       default:
-        throw new Error("Parameter path: invalid value " + name + ": unsupported type: " + type);
+        throw new Error("Parameter path: invalid value " + this.path + ": unsupported type: " + type);
     }
   }
 
@@ -136,14 +142,14 @@ export class Widget implements IWidget {
     this.cameraWidgets.checkNotClosed();
 
     if (this.readonly) {
-      throw new Error(`Parameter name: invalid value ${name}: read-only`);
+      throw new Error(`Parameter name: invalid value ${this.path} [read-only]`);
     }
 
     const type = this.type;
 
     if (!type.acceptsValue(value)) {
       throw new Error(
-        `Parameter value: invalid value ${value}: expected ${type.valueType} but got ${value == null ? "null" : classOf(value)}`
+        `Parameter value: invalid value ${value}: expected ${nameOf(type.valueType)} but got ${value == null ? "null" : nameOf(value)}`
       );
     }
 
@@ -183,7 +189,12 @@ export class Widget implements IWidget {
 
     checkCode(GPhoto2Driver.gp_widget_set_value(this.pointer, ptr as PointerOf<any>));
 
-    this.apply();
+    try {
+      this.apply();
+      this.cachedValue = value;
+    } catch (er) {
+      throw new Error(`Parameter value: failed to apply value ${value} on ${this.path}. \nError: ` + er.message);
+    }
   }
 
   get changed(): boolean {

@@ -98,10 +98,19 @@ export class CameraWidgets extends Map<string, Widget> implements ICloseable {
 
   /**
    * If the settings are altered, they need to be applied to take effect.
+   *
+   * @param obj An object to define a group of configuration
    */
-  apply() {
+  apply(obj?: any) {
     this.checkNotClosed();
-    checkCode(GPhoto2Driver.gp_camera_set_config(this.camera.pointer, this.rootWidget, Context.get().pointer), "gp_camera_set_config");
+
+    if (obj) {
+      Object.keys(obj).forEach(key => {
+        this.get(key).value = obj[key];
+      });
+    } else {
+      checkCode(GPhoto2Driver.gp_camera_set_config(this.camera.pointer, this.rootWidget, Context.get().pointer), "gp_camera_set_config");
+    }
   }
 
   close(): this {
