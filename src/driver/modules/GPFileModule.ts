@@ -15,7 +15,7 @@ export const GPFileModuleDescription = {
   gp_file_save: ["int", [RefCameraFile, types.CString]],
   gp_file_unref: ["int", [RefCameraFile]],
   gp_file_free: ["int", [RefCameraFile]],
-  gp_file_get_data_and_size: ["int", [RefCameraFile, refType(refType(types.CString)), refType(types.int)]]
+  gp_file_get_data_and_size: ["int", [RefCameraFile, refType(refType(types.char)), refType(types.int)]]
 };
 
 export interface IGPFileModule {
@@ -107,5 +107,5 @@ export interface IGPFileModule {
    * memory leaks.
    *
    **/
-  gp_file_get_data_and_size(file: PointerCameraFile, data: PointerOf<PointerOf<string>>, size: PointerOf<number>): GPCodes;
+  gp_file_get_data_and_size(file: PointerCameraFile, data: PointerOf<PointerOf<Buffer>>, size: PointerOf<number>): GPCodes;
 }
