@@ -2,7 +2,7 @@ import {checkCode, GPPointer, GPPointerString} from "../driver";
 import {PointerCameraFile, RefCameraFile} from "../driver/modules";
 import {GPCodes, PointerOf} from "../driver/types";
 import {IPointerWrapperOptions, PointerWrapper} from "./PointerWrapper";
-
+import {reinterpret} from "ref";
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
   constructor(options: Partial<IPointerWrapperOptions> = {}, ...args: any[]) {
     super(
@@ -90,14 +90,11 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
     data: Buffer | string;
     size: number;
   }> {
-    const dataPointer: PointerOf<PointerOf<string>> = GPPointer(GPPointer("char"));
+    const dataPointer: PointerOf<Buffer> = GPPointer("char *");
     const sizePointer: PointerOf<number> = GPPointer("int");
-
-    await this.callAsync("set_mime_type", "image/jpeg");
     await this.callAsync("get_data_and_size", dataPointer, sizePointer);
-
     const size = sizePointer.deref();
-    const binary = Buffer.from(dataPointer.deref().deref(), "binary");
+    const binary = reinterpret(dataPointer.deref(), sizePointer.deref());
 
     let data: Buffer | string = "";
 
@@ -111,7 +108,6 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
 
         break;
     }
-    // TODO now it does not work. I just see �� in the console for binary or /f39/Q== for Base64
 
     return {
       data,
