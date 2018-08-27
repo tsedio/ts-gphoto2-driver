@@ -90,14 +90,14 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
     data: Buffer | string;
     size: number;
   }> {
-    const dataPointer = GPPointerString();
+    const dataPointer: PointerOf<PointerOf<string>> = GPPointer(GPPointer("char"));
     const sizePointer: PointerOf<number> = GPPointer("int");
 
     await this.callAsync("set_mime_type", "image/jpeg");
     await this.callAsync("get_data_and_size", dataPointer, sizePointer);
 
     const size = sizePointer.deref();
-    const binary = Buffer.from(dataPointer.deref(), "binary");
+    const binary = Buffer.from(dataPointer.deref().deref(), "binary");
 
     let data: Buffer | string = "";
 
