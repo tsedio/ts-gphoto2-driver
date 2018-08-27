@@ -16,7 +16,7 @@ export class Widget implements IWidget {
    * @param pointer
    */
   set pointer(pointer: PointerCameraWidget) {
-    this.pointer = pointer;
+    this._pointer = pointer;
   }
 
   /**
@@ -150,7 +150,7 @@ export class Widget implements IWidget {
    * @param value the value, may be null.
    */
   set value(value: any) {
-    this.applyValue(value, true);
+    this.setValue(value, true);
   }
 
   get changed(): boolean {
@@ -263,14 +263,13 @@ export class Widget implements IWidget {
    * If the settings are altered, they need to be applied to take effect.
    */
   apply() {
-    this.cameraWidgets.checkNotClosed();
     this.cameraWidgets.apply();
   }
 
   toJSON(): IWidget {
     return ["path", "label", "type", "info", "value", "choices", "changed", "range", "readonly"].reduce((acc: any, key: string) => {
       if (!(this[key] === "" || this[key] === undefined || this[key] === null)) {
-        acc[key] = this[key];
+        acc[key] = this[key] && this[key].toJSON ? this[key].toJSON() : this[key];
       }
 
       return acc;

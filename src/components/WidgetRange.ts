@@ -25,6 +25,14 @@ export class WidgetRange {
     this.step = step.deref();
   }
 
+  public toJSON() {
+    return {
+      min: this.min,
+      max: this.max,
+      step: this.step
+    };
+  }
+
   public toString() {
     return "Range{" + this.min + ".." + this.max + ", step=" + this.step + "}";
   }
