@@ -112,7 +112,7 @@ export class CameraWidgets extends Map<string, Widget> implements ICloseable {
 
     if (obj) {
       Object.keys(obj).forEach(key => {
-        this.get(key).applyValue(obj[key], false);
+        this.get(key).setValue(obj[key], false);
       });
     }
 
