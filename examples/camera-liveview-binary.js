@@ -24,7 +24,7 @@ if (!camera.isClosed()) {
 
   setTimeout(() => {
 
-    liveview.stop();
+    liveview.close();
 
     camera.closeQuietly();
   }, NUMBER_OF_SECONDS_TO_LISTEN * 1000);

@@ -14,7 +14,7 @@ export class Liveview extends EventEmitter implements ICloseable {
   /**
    *
    */
-  private file: CameraFile;
+  private file?: CameraFile;
   /**
    *
    */
@@ -35,35 +35,29 @@ export class Liveview extends EventEmitter implements ICloseable {
     this.timer = setInterval(() => this.onTick(), 1000 / this.options.fps);
   }
 
-  /**
-   *
-   */
-  public stop() {
+  public close() {
     if (this.timer) {
       clearInterval(this.timer);
     }
-    if (this.options.output === "file") {
+    if (this.file && this.options.output === "file") {
       if (!this.options.filePath) {
         throw new Error("You should specify filePath option, if you choose output: file");
       }
-      // TODO if output === "file", it will save only the lase frame, because CamerFile overwrites each time
+      // TODO if output === "file", it will save only the lase frame, because CameraFile overwrites each time
       // we fire capture_preview.
       // Maybe it is a good idea, to just use CameraFileFromFd to save it directly from C library
       this.file.save(this.options.filePath);
     }
-    this.file.closeQuietly();
-    // TODO after stop() I always see an error in the console like
-    // malloc: *** error for object 0x102609d00: pointer being freed was not allocated
-    // *** set a breakpoint in malloc_error_break to debug
-  }
-
-  public close() {
-    this.stop();
+    this.file && this.file.closeQuietly();
+    this.file = undefined;
 
     return this;
   }
 
   private async onTick() {
+    if (!this.file) {
+      throw new Error("LiveView was closed");
+    }
     await this.camera.callAsync("capture_preview", this.file.pointer, Context.get().pointer);
     if (this.options.output === "binary" || this.options.output === "base64") {
       const {data, size} = await this.file.getDataAndSize(this.options.output);
