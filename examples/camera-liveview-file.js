@@ -23,7 +23,7 @@ if (!camera.isClosed()) {
 
   setTimeout(() => {
 
-    liveview.stop();
+    liveview.close();
 
     camera.closeQuietly();
   }, NUMBER_OF_SECONDS_TO_WRITE * 1000);
