@@ -1,5 +1,5 @@
 // This example illustrates the usecase, where you need to capture liveview from the camera
-// and then save it to .mjpg file
+// and then save it to .mjpg file. The file will be updated in live mode.
 
 const { Camera } = require('../src');
 // If you launch this example not from library folder, change the previous two lines to:
