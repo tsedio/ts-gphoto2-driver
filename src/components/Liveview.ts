@@ -1,16 +1,17 @@
 import * as EventEmitter from "events";
-import {PointerCamera} from "../driver/modules";
+import * as fs from "fs";
+import {Camera} from "./Camera";
 import {ICloseable, ILiveviewOptions} from "../interfaces";
 import {CameraFile} from "./CameraFile";
+import {CameraFileFromFd} from "./CameraFileFromFd";
 import {Context} from "./Context";
 import {addInstance} from "./Garbarge";
-import {PointerWrapper} from "./PointerWrapper";
 
 export class Liveview extends EventEmitter implements ICloseable {
   /**
    *
    */
-  private timer: any;
+  private timer?: NodeJS.Timer;
   /**
    *
    */
@@ -19,8 +20,12 @@ export class Liveview extends EventEmitter implements ICloseable {
    *
    */
   private options: ILiveviewOptions;
+  /**
+   *
+   */
+  private fd?: number; // File descriptor of the the file to write to
 
-  constructor(private camera: PointerWrapper<PointerCamera>, options: Partial<ILiveviewOptions>) {
+  constructor(private camera: Camera, options: Partial<ILiveviewOptions>) {
     super();
     this.options = {fps: 24, output: "binary", ...options};
     addInstance(this);
@@ -30,26 +35,29 @@ export class Liveview extends EventEmitter implements ICloseable {
    *
    */
   public start() {
-    this.file = new CameraFile();
-
+    switch (this.options.output) {
+      case "file":
+        if (!this.options.filePath) {
+          throw new Error("You should specify filePath option, if you choose output: file");
+        }
+        this.fd = fs.openSync(this.options.filePath, "w", 0o777);
+        this.file = new CameraFileFromFd(this.fd);
+        break;
+      default:
+        this.file = new CameraFile();
+    }
     this.timer = setInterval(() => this.onTick(), 1000 / this.options.fps);
   }
 
-  public close() {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
-    if (this.file && this.options.output === "file") {
-      if (!this.options.filePath) {
-        throw new Error("You should specify filePath option, if you choose output: file");
-      }
-      // TODO if output === "file", it will save only the lase frame, because CameraFile overwrites each time
-      // we fire capture_preview.
-      // Maybe it is a good idea, to just use CameraFileFromFd to save it directly from C library
-      this.file.save(this.options.filePath);
-    }
+  public stop() {
+    this.timer && clearInterval(this.timer);
+    this.fd && fs.closeSync(this.fd);
     this.file && this.file.closeQuietly();
-    this.file = undefined;
+    this.file, this.timer, (this.fd = undefined);
+  }
+
+  public close() {
+    this.stop();
 
     return this;
   }
@@ -59,6 +67,7 @@ export class Liveview extends EventEmitter implements ICloseable {
       throw new Error("LiveView was closed");
     }
     await this.camera.callAsync("capture_preview", this.file.pointer, Context.get().pointer);
+
     if (this.options.output === "binary" || this.options.output === "base64") {
       const {data, size} = await this.file.getDataAndSize(this.options.output);
       this.emit("data", data, size);

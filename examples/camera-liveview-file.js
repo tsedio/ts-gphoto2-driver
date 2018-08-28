@@ -12,19 +12,17 @@ const PATH_TO_SAVE = path.join(__dirname, '../.tmp/live.mjpg'); // Make sure tha
 
 camera.initialize();
 
-if (!camera.isClosed()) {
-  const liveview = camera.liveview({
-    output: "file",
-    fps: 24, // Number of frames per second. Default is 24.
-    filePath: PATH_TO_SAVE,
-  });
+const liveview = camera.liveview({
+  output: "file",
+  fps: 24, // Number of frames per second. Default is 24.
+  filePath: PATH_TO_SAVE,
+});
 
-  liveview.start();
+liveview.start();
 
-  setTimeout(() => {
+setTimeout(() => {
 
-    liveview.close();
+  liveview.stop();
 
-    camera.closeQuietly();
-  }, NUMBER_OF_SECONDS_TO_WRITE * 1000);
-}
+  camera.closeQuietly();
+}, NUMBER_OF_SECONDS_TO_WRITE * 1000);

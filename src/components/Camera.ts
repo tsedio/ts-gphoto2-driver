@@ -96,8 +96,18 @@ export class Camera extends PointerWrapper<PointerCamera> {
     }
   }
 
+  /**
+   *
+   */
+  private checkIsInitialized() {
+    if (!this.initialized) {
+      throw new Error("Invalid state: not initialized");
+    }
+  }
+
   public liveview(options: ILiveviewOptions): Liveview {
     this.checkNotClosed();
+    this.checkIsInitialized();
 
     return new Liveview(this, options);
   }

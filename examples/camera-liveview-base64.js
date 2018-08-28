@@ -10,23 +10,21 @@ const NUMBER_OF_SECONDS_TO_LISTEN = 10;
 
 camera.initialize();
 
-if (!camera.isClosed()) {
-  const liveview = camera.liveview({
-    output: "base64",
-    fps: 24, // Number of frames per second. Default is 24.
-  });
+const liveview = camera.liveview({
+  output: "base64",
+  fps: 24, // Number of frames per second. Default is 24.
+});
 
-  liveview.start();
+liveview.start();
 
-  liveview.on("data", (data, size) => {
-    console.log("base64 of the frame", data);
-    console.log("Size of the frame", size);
-  });
+liveview.on("data", (data, size) => {
+  console.log("base64 of the frame", data);
+  console.log("Size of the frame", size);
+});
 
-  setTimeout(() => {
+setTimeout(() => {
 
-    liveview.close();
+  liveview.stop();
 
-    camera.closeQuietly();
-  }, NUMBER_OF_SECONDS_TO_LISTEN * 1000);
-}
+  camera.closeQuietly();
+}, NUMBER_OF_SECONDS_TO_LISTEN * 1000);
