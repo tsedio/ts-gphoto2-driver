@@ -19,9 +19,10 @@ A Node.js wrapper for libgphoto2 written in TypeScript. Useful for remote contro
 
  - Camera autodetection,
  - Take a picture/movie capture,
- - Take a preview (not a live preview mode),
+ - Take a preview,
  - Retrieve camera list,
  - Select camera,
+ - Take a liveview from camera and get binary or base64 of each frame, or write it to file,
  - Display info about your camera (summary, about, manual).
 
 ## Prerequisite
