@@ -1,6 +1,10 @@
 // This example illustrates the usecase, where you need to capture liveview from the camera
 // and get live output of each frame as binary (Buffer) or base64
 
+// To check if liveview works with your camera, you can just use
+// node examples/camera-liveview.js | xxd | grep ffd9
+// if you see a lot of ffd9 (not in the first column) - then it works
+
 const { Camera } = require('../src');
 // If you launch this example not from library folder, change the previous two lines to:
 // const { Camera } = require('@typedproject/gphoto2-driver');
