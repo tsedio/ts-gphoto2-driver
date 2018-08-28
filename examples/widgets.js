@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { CameraList, closeQuietly } = require('../src');
+const { CameraList, CameraWidgets, closeQuietly } = require('../src');
 // If you launch this example not from library folder, change the previous line to:
 // const { CameraList, closeQuietly } = require('@typedproject/gphoto2-driver');
 
@@ -27,11 +27,19 @@ if (cameraList.size) {
   console.log('/actions/autofocusdrive', camera.widgets.get('/actions/autofocusdrive').value);
   console.log('/settings/autofocus', camera.widgets.get('/settings/autofocus').value);
 
+  const lightmeter = camera.widgets.get('/status/flashopen');
+
+  setInterval(() => {
+    camera.widgets.refresh();
+    console.log('/status/flashopen (1) =>', new CameraWidgets(camera).get('/status/flashopen').value);
+    console.log('/status/flashopen (2) =>', lightmeter.value);
+  }, 1000);
+
   // camera.widgets => Widget which inherit from Map class
   const widgets = JSON.stringify(camera.widgets, null, 2);
   fs.writeFileSync('../.tmp/widgets.json', widgets, { encoding: 'utf8' });
 
-  closeQuietly(camera);
+  // closeQuietly(camera);
 }
 
-cameraList.close();
+// cameraList.close();
