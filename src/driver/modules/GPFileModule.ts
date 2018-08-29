@@ -9,11 +9,13 @@ export const GPFileModuleDescription = {
   gp_file_new: ["int", [refType(RefCameraFile)]],
   gp_file_new_from_fd: ["int", [refType(RefCameraFile), "int"]],
   gp_file_get_mime_type: ["int", [RefCameraFile, refType(types.CString)]],
+  gp_file_set_mime_type: ["int", [RefCameraFile, types.CString]],
   gp_file_ref: ["int", [RefCameraFile]],
   gp_file_clean: ["int", [RefCameraFile]],
   gp_file_save: ["int", [RefCameraFile, types.CString]],
   gp_file_unref: ["int", [RefCameraFile]],
-  gp_file_free: ["int", [RefCameraFile]]
+  gp_file_free: ["int", [RefCameraFile]],
+  gp_file_get_data_and_size: ["int", [RefCameraFile, refType(refType(types.char)), refType(types.int)]]
 };
 
 export interface IGPFileModule {
@@ -40,6 +42,7 @@ export interface IGPFileModule {
    */
   gp_file_get_mime_type(file: PointerCameraFile, mime: PointerOf<string>): GPCodes;
 
+  gp_file_set_mime_type(file: PointerCameraFile, mime: string): GPCodes;
   /**
    *
    * @param {PointerCameraFile} cameraFile
@@ -86,6 +89,8 @@ export interface IGPFileModule {
 
   /**
    * Get a pointer to the data and the file's size.
+   * http://www.gphoto.org/doc/api/gphoto2-file_8c.html#afe4a2c1685df174f61f20b2986edd93b
+   * int gp_file_get_data_and_size ( CameraFile * file, const char ** data, unsigned long int * size)
    *
    * @param file a #CameraFile
    * @param data
@@ -102,5 +107,5 @@ export interface IGPFileModule {
    * memory leaks.
    *
    **/
-  gp_file_get_data_and_size(file: PointerCameraFile, data: PointerOf<string>, size: PointerOf<number>): GPCodes;
+  gp_file_get_data_and_size(file: PointerCameraFile, data: PointerOf<PointerOf<Buffer>>, size: PointerOf<number>): GPCodes;
 }

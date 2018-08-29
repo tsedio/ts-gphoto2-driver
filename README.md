@@ -19,9 +19,10 @@ A Node.js wrapper for libgphoto2 written in TypeScript. Useful for remote contro
 
  - Camera autodetection,
  - Take a picture/movie capture,
- - Take a preview (not a live preview mode),
+ - Take a preview,
  - Retrieve camera list,
  - Select camera,
+ - Take a liveview from camera and get binary or base64 of each frame, or write it to file,
  - Display info about your camera (summary, about, manual).
 
 ## Prerequisite
@@ -68,6 +69,24 @@ if (cameraList.size) {
 }
 
 cameraList.close();
+```
+
+## CameraFile
+
+A lot of different API's of this library returns a CameraFile object.
+
+This object does not contain the image, it is just a pointer to the file in camera's RAM.
+
+You have several options to get your image:
+
+1) Use `.save(filename)` of `.saveAsync(filename)` methods, that will save the image to your filesystem.
+2) Use `.getDataAndSizeAsync('binary' | 'base64')` method, which returns following object:
+
+```typescript
+{
+  data: data, // Buffer for binary format and string for base64.
+  size: size
+}
 ```
 
 ## Examples

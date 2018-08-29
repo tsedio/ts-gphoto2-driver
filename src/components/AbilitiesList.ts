@@ -7,7 +7,7 @@ import {PortInfoList} from "./PortInfoList";
 
 export class AbilitiesList extends PointerWrapper<PointerAbilitiesList> {
   constructor() {
-    super("gp_abilities_list", RefAbilitiesList);
+    super({method: "gp_abilities_list", refType: RefAbilitiesList});
   }
 
   get size(): number {

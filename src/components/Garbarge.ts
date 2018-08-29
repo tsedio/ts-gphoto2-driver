@@ -18,7 +18,9 @@ export function closeAll() {
       console.debug("Close " + garbage.size + " references unclosed");
     }
     garbage.forEach((item: ICloseable) => {
-      item.close();
+      try {
+        item.close();
+      } catch (er) {}
     });
   }
 }
@@ -32,3 +34,4 @@ process.on("SIGINT", closeAll);
 // catches "kill pid" (for example: nodemon restart)
 process.on("SIGUSR1", closeAll);
 process.on("SIGUSR2", closeAll);
+process.on("SIGSEGV", closeAll);
