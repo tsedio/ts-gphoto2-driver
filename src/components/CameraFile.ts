@@ -60,7 +60,7 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
    * @param {PointerOf<string>} mime
    * @returns {GPCodes}
    */
-  public async getMimeType(mime: PointerOf<string>): Promise<string> {
+  public async getMimeTypeAsync(mime: PointerOf<string>): Promise<string> {
     const mimePointer = GPPointerString();
     const code = await this.call("get_mime_type", mime);
     checkCode(code);
@@ -85,7 +85,7 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
    * @param encoding
    **/
 
-  public async getDataAndSize(
+  public async getDataAndSizeAsync(
     encoding: "binary" | "base64" = "binary"
   ): Promise<{
     data: Buffer | string;

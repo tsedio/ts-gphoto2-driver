@@ -71,6 +71,24 @@ if (cameraList.size) {
 cameraList.close();
 ```
 
+## CameraFile
+
+A lot of different API's of this library returns a CameraFile object.
+
+This object does not contain the image, it is just a pointer to the file in camera's RAM.
+
+You have several options to get your image:
+
+1) Use `.save(filename)` of `.saveAsync(filename)` methods, that will save the image to your filesystem.
+2) Use `.getDataAndSizeAsync('binary' | 'base64')` method, which returns following object:
+
+```typescript
+{
+  data: data, // Buffer for binary format and string for base64.
+  size: size
+}
+```
+
 ## Examples
 
 Some example are available in the examples directory, when you have cloned or downloaded the complete project from github.

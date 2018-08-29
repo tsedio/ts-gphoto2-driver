@@ -53,7 +53,9 @@ export class Liveview extends EventEmitter implements ICloseable {
     this.timer && clearInterval(this.timer);
     this.fd && fs.closeSync(this.fd);
     this.file && this.file.closeQuietly();
-    this.file, this.timer, (this.fd = undefined);
+    this.file = undefined;
+    this.timer = undefined;
+    this.fd = undefined;
   }
 
   public close() {
@@ -69,7 +71,7 @@ export class Liveview extends EventEmitter implements ICloseable {
     await this.camera.callAsync("capture_preview", this.file.pointer, Context.get().pointer);
 
     if (this.options.output === "binary" || this.options.output === "base64") {
-      const {data, size} = await this.file.getDataAndSize(this.options.output);
+      const {data, size} = await this.file.getDataAndSizeAsync(this.options.output);
       this.emit("data", data, size);
     }
   }
