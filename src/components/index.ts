@@ -10,5 +10,6 @@ export * from "./WidgetTypes";
 export * from "./WidgetRange";
 export * from "./Context";
 export * from "./List";
+export * from "./Liveview";
 export * from "./PortInfo";
 export * from "./PortInfoList";
