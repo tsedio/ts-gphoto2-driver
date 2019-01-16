@@ -2,7 +2,7 @@ import {alloc, Type} from "ref";
 import {checkCode, closeQuietly, GPCodes, GPhoto2Driver} from "../driver";
 import {PointerOf} from "../driver/types";
 import {ICloseable} from "../interfaces";
-import {addInstance, removeInstance} from "./Garbarge";
+import {addInstance, removeInstance} from "./Garbage";
 
 export interface IPointerWrapperOptions {
   method: string;

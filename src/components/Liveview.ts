@@ -5,7 +5,7 @@ import {ICloseable, ILiveviewOptions} from "../interfaces";
 import {CameraFile} from "./CameraFile";
 import {CameraFileFromFd} from "./CameraFileFromFd";
 import {Context} from "./Context";
-import {addInstance} from "./Garbarge";
+import {addInstance} from "./Garbage";
 
 export class Liveview extends EventEmitter implements ICloseable {
   /**

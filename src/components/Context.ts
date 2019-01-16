@@ -1,7 +1,7 @@
 import {GPhoto2Driver} from "../driver/GPhoto2Driver";
 import {PointerContext} from "../driver/modules";
 import {ICloseable} from "../interfaces/ICloseable";
-import {addInstance, removeInstance} from "./Garbarge";
+import {addInstance, removeInstance} from "./Garbage";
 
 export class Context implements ICloseable {
   /**
