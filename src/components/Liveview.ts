@@ -1,4 +1,4 @@
-import * as EventEmitter from "events";
+import {EventEmitter} from "events";
 import * as fs from "fs";
 import {Camera} from "./Camera";
 import {ICloseable, ILiveviewOptions} from "../interfaces";
