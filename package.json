@@ -1,6 +1,6 @@
 {
   "name": "@typedproject/gphoto2-driver",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
   "main": "lib/index.js",
   "typings": "lib/index.d.js",
