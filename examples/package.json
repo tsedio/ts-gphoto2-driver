@@ -1,0 +1,10 @@
+{
+  "name": "@typedproject/gphoto2-driver-integration",
+  "version": "1.0.0",
+  "dependencies": {
+    "@typedproject/gphoto2-driver": "2.2.3"
+  },
+  "scripts": {
+    "bootstrap": "npm link ../"
+  }
+}

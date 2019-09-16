@@ -82,7 +82,7 @@ You have several options to get your image:
 1) Use `.save(filename)` of `.saveAsync(filename)` methods, that will save the image to your filesystem.
 2) Use `.getDataAndSizeAsync('binary' | 'base64')` method, which returns following object:
 
-```typescript
+```
 {
   data: data, // Buffer for binary format and string for base64.
   size: size

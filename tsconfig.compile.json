@@ -7,19 +7,16 @@
     "declarationDir": "lib/",
     "sourceMap": true,
     "noResolve": false,
-    "preserveConstEnums": true
+    "preserveConstEnums": true,
+    "noEmit": false
   },
   "include": [
     "src/**/*"
   ],
   "exclude": [
+    "**/*.spec.ts",
     "node_modules",
     "test",
-    "multipartfiles",
-    "swagger",
-    "servestatic",
-    "ajv",
-    "socketio",
     "lib",
     "dist"
   ]

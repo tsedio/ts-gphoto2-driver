@@ -5,7 +5,7 @@
 // node examples/camera-liveview.js | xxd | grep ffd9
 // if you see a lot of ffd9 (not in the first column) - then it works
 
-const { Camera } = require('../src');
+const { Camera } = require('@typedproject/gphoto2-driver');
 // If you launch this example not from library folder, change the previous two lines to:
 // const { Camera } = require('@typedproject/gphoto2-driver');
 const camera = new Camera();

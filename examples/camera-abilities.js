@@ -1,4 +1,4 @@
-const { Camera, closeQuietly, GPPortType, GPCameraDriverStatus, GPCameraFileOperation, GPCameraFolderOperation, GPDeviceType } = require('../src');
+const { Camera, closeQuietly, GPPortType, GPCameraDriverStatus, GPCameraFileOperation, GPCameraFolderOperation, GPDeviceType } = require('@typedproject/gphoto2-driver');
 // If you launch this example not from library folder, change the previous line to:
 // const { Camera, closeQuietly, GPPortType, GPCameraDriverStatus, GPCameraFileOperation, GPCameraFolderOperation, GPDeviceType } = require('@typedproject/gphoto2-driver');
 const camera = new Camera();

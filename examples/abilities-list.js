@@ -1,5 +1,4 @@
-const { checkCode } = require('../src/driver');
-const { AbilitiesList, PortInfoList, GPhoto2Driver } = require('../src');
+const { AbilitiesList, PortInfoList, GPhoto2Driver, checkCode } = require('@typedproject/gphoto2-driver');
 // If you launch this example not from library folder, change the previous two lines to:
 // const { checkCode } = require('@typedproject/gphoto2-driver/driver');
 // const { AbilitiesList, PortInfoList, GPhoto2Driver } = require('@typedproject/gphoto2-driver');

@@ -1,13 +1,13 @@
-const { Camera, closeQuietly, CameraWidgets } = require('../src');
+const {Camera, closeQuietly, CameraWidgets} = require("@typedproject/gphoto2-driver");
 // If you launch this example not from library folder, change the previous line to:
 // const { Camera, closeQuietly, CameraWidgets } = require('@typedproject/gphoto2-driver');
 
-const path = require('path');
+const path = require("path");
 
 const camera = new Camera();
 
 try {
-  console.log('[GPDRIVER] Camera init');
+  console.log("[GPDRIVER] Camera init");
   camera.initialize();
 
   runScenario({
@@ -22,43 +22,43 @@ try {
   closeQuietly(camera);
 }
 
-function runScenario({ autoFocus = false, preview = false, capture = false, triggerCapture = false }) {
-  console.log('[GPDRIVER] Camera Loaded');
+function runScenario ({autoFocus = false, preview = false, capture = false, triggerCapture = false}) {
+  console.log("[GPDRIVER] Camera Loaded");
 
   try {
     if (autoFocus) {
-      console.log('[GPDRIVER] Autofocus =============================');
+      console.log("[GPDRIVER] Autofocus =============================");
       runAutofocus();
     }
   } catch (er) {
-    console.warn('Autofocus fail', er.message);
+    console.warn("Autofocus fail", er.message);
   }
 
   try {
     if (preview) {
-      console.log('[GPDRIVER] Preview ===============================');
+      console.log("[GPDRIVER] Preview ===============================");
       runPreview();
     }
   } catch (er) {
-    console.warn('Preview fail', er.message);
+    console.warn("Preview fail", er.message);
   }
 
   try {
     if (triggerCapture) {
-      console.log('[GPDRIVER] Trigger Capture =======================');
+      console.log("[GPDRIVER] Trigger Capture =======================");
       runTriggerCapture();
     }
   } catch (er) {
-    console.warn('triggerCapture fail', er.message);
+    console.warn("triggerCapture fail", er.message);
   }
 
   try {
     if (capture) {
-      console.log('[GPDRIVER] Capture ===============================');
+      console.log("[GPDRIVER] Capture ===============================");
       runCapture();
     }
   } catch (er) {
-    console.warn('capture fail', er.message);
+    console.warn("capture fail", er.message);
   }
 
 }
@@ -66,9 +66,9 @@ function runScenario({ autoFocus = false, preview = false, capture = false, trig
 /**
  *
  */
-function runAutofocus() {
+function runAutofocus () {
   try {
-    camera.widgets.get('/actions/autofocusdrive').value = true;
+    camera.widgets.get("/actions/autofocusdrive").value = true;
   } catch (er) {
     console.warn(er);
   }
@@ -77,25 +77,25 @@ function runAutofocus() {
 /**
  *
  */
-function runPreview() {
-  const filePath = path.join(__dirname, '../.tmp/preview.jpg');
+function runPreview () {
+  const filePath = path.join(__dirname, "../.tmp/preview.jpg");
   camera.capturePreview(filePath);
-  console.log('File saved on', filePath);
+  console.log("File saved on", filePath);
 }
 
 /**
  *
  */
-function runTriggerCapture() {
+function runTriggerCapture () {
   camera.triggerCapture();
 }
 
 /**
  *
  */
-function runCapture() {
-  const filePath = path.join(__dirname, '../.tmp/capture.jpg');
+function runCapture () {
+  const filePath = path.join(__dirname, "../.tmp/capture.jpg");
 
   camera.captureImage(filePath);
-  console.log('File saved on', filePath);
+  console.log("File saved on", filePath);
 }

@@ -1,7 +1,7 @@
 // This example illustrates the usecase, where you need to capture liveview from the camera
 // and then save it to .mjpg file. The file will be updated in live mode.
 
-const { Camera } = require('../src');
+const { Camera } = require('@typedproject/gphoto2-driver');
 // If you launch this example not from library folder, change the previous two lines to:
 // const { Camera } = require('@typedproject/gphoto2-driver');
 const path = require('path');

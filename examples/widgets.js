@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { CameraList, CameraWidgets, closeQuietly } = require('../src');
+const { CameraList, CameraWidgets, closeQuietly } = require('@typedproject/gphoto2-driver');
 // If you launch this example not from library folder, change the previous line to:
 // const { CameraList, closeQuietly } = require('@typedproject/gphoto2-driver');
 
