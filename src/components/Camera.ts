@@ -1,5 +1,4 @@
-import {GPCameraCaptureType, GPCodes} from "../driver";
-import {PointerCamera, RefCamera, StructCameraText} from "../driver/modules";
+import {GPCameraCaptureType, GPCodes, PointerCamera, RefCamera, StructCameraText} from "../driver";
 import {ILiveviewOptions} from "../interfaces";
 import {CameraAbilities} from "./CameraAbilities";
 import {CameraFile} from "./CameraFile";
@@ -13,11 +12,12 @@ import {PortInfo} from "./PortInfo";
 export class Camera extends PointerWrapper<PointerCamera> {
   private initialized: boolean = false;
   private closed: boolean = false;
-  private _widgets: CameraWidgets;
 
   constructor() {
     super({method: "gp_camera", refType: RefCamera});
   }
+
+  private _widgets: CameraWidgets;
 
   get widgets(): CameraWidgets {
     this.checkNotClosed();
@@ -85,24 +85,6 @@ export class Camera extends PointerWrapper<PointerCamera> {
     }
 
     return this;
-  }
-
-  /**
-   *
-   */
-  private checkNotClosed() {
-    if (this.closed) {
-      throw new Error("Invalid state: closed");
-    }
-  }
-
-  /**
-   *
-   */
-  private checkIsInitialized() {
-    if (!this.initialized) {
-      throw new Error("Invalid state: not initialized");
-    }
   }
 
   public liveview(options: ILiveviewOptions): Liveview {
@@ -220,62 +202,6 @@ export class Camera extends PointerWrapper<PointerCamera> {
 
   /**
    *
-   * @param {GPCameraCaptureType} type
-   * @param path
-   * @returns {CameraFile | undefined}
-   */
-  protected capture(type: GPCameraCaptureType, path?: string): CameraFile | undefined {
-    this.checkNotClosed();
-    const cFilePath = new CameraFilePath();
-
-    this.call("capture", type, cFilePath.buffer, Context.get().pointer);
-
-    const cFile = cFilePath.newFile(this.pointer);
-
-    if (path && cFile) {
-      try {
-        cFile.save(path);
-      } finally {
-        this.deinitialize();
-        this.initialize();
-        cFile.closeQuietly();
-        cFilePath.close();
-      }
-    }
-
-    return cFile;
-  }
-
-  /**
-   *
-   * @param {GPCameraOperation} type
-   * @param path
-   * @returns {CameraFile | undefined}
-   */
-  protected async captureAsync(type: GPCameraCaptureType, path?: string): Promise<CameraFile | undefined> {
-    this.checkNotClosed();
-    const cFilePath = new CameraFilePath();
-
-    await this.callAsync("capture", type, cFilePath.buffer, Context.get().pointer);
-
-    const cFile = await cFilePath.newFileAsync(this.pointer);
-
-    if (path && cFile) {
-      try {
-        await cFile.saveAsync(path);
-      } finally {
-        this.deinitialize();
-        this.initialize();
-        cFile.closeQuietly();
-        cFilePath.close();
-      }
-    }
-
-    return cFile;
-  }
-
-  /**
-   *
    */
   public triggerCapture(): GPCodes {
     this.checkNotClosed();
@@ -382,5 +308,79 @@ export class Camera extends PointerWrapper<PointerCamera> {
 
   toString(): string {
     return "Camera: " + this.getAbilities().model;
+  }
+
+  /**
+   *
+   * @param {GPCameraCaptureType} type
+   * @param path
+   * @returns {CameraFile | undefined}
+   */
+  protected capture(type: GPCameraCaptureType, path?: string): CameraFile | undefined {
+    this.checkNotClosed();
+    const cFilePath = new CameraFilePath();
+
+    this.call("capture", type, cFilePath.buffer, Context.get().pointer);
+
+    const cFile = cFilePath.newFile(this.pointer);
+
+    if (path && cFile) {
+      try {
+        cFile.save(path);
+      } finally {
+        this.deinitialize();
+        this.initialize();
+        cFile.closeQuietly();
+        cFilePath.close();
+      }
+    }
+
+    return cFile;
+  }
+
+  /**
+   *
+   * @param {GPCameraOperation} type
+   * @param path
+   * @returns {CameraFile | undefined}
+   */
+  protected async captureAsync(type: GPCameraCaptureType, path?: string): Promise<CameraFile | undefined> {
+    this.checkNotClosed();
+    const cFilePath = new CameraFilePath();
+
+    await this.callAsync("capture", type, cFilePath.buffer, Context.get().pointer);
+
+    const cFile = await cFilePath.newFileAsync(this.pointer);
+
+    if (path && cFile) {
+      try {
+        await cFile.saveAsync(path);
+      } finally {
+        this.deinitialize();
+        this.initialize();
+        cFile.closeQuietly();
+        cFilePath.close();
+      }
+    }
+
+    return cFile;
+  }
+
+  /**
+   *
+   */
+  private checkNotClosed() {
+    if (this.closed) {
+      throw new Error("Invalid state: closed");
+    }
+  }
+
+  /**
+   *
+   */
+  private checkIsInitialized() {
+    if (!this.initialized) {
+      throw new Error("Invalid state: not initialized");
+    }
   }
 }
