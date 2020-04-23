@@ -1,4 +1,4 @@
-import {deref} from "ref";
+import {deref} from "ref-napi";
 import {checkCode, GPhoto2Driver, GPPointerString} from "../driver";
 import {ICamera} from "../interfaces";
 import {AbilitiesList} from "./AbilitiesList";

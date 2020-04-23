@@ -1,4 +1,4 @@
-import {alloc, refType} from "ref";
+import {alloc, refType} from "ref-napi";
 import {GPhoto2Driver} from "../GPhoto2Driver";
 import {PointerRef} from "../types";
 import {checkCode} from "./GPUtils";

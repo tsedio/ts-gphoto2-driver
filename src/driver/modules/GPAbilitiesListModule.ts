@@ -1,6 +1,6 @@
-import {refType, types} from "ref";
-import * as ArrayType from "ref-array";
-import * as StructType from "ref-struct";
+import {refType, types} from "ref-napi";
+import * as ArrayType from "ref-array-napi";
+import * as StructType from "ref-struct-napi";
 import {
   GPCameraDriverStatus,
   GPCameraFileOperation,
