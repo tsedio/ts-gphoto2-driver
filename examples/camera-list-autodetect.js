@@ -1,7 +1,5 @@
 const SegfaultHandler = require('segfault-handler');
 const { CameraList, PortInfoList } = require('@typedproject/gphoto2-driver');
-// If you launch this example not from library folder, change the previous line to:
-// const { CameraList, PortInfoList  } = require('@typedproject/gphoto2-driver');
 
 SegfaultHandler.registerHandler('crash.log');
 

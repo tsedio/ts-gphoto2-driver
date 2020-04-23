@@ -2,8 +2,6 @@
 // and then save it to .mjpg file. The file will be updated in live mode.
 
 const { Camera } = require('@typedproject/gphoto2-driver');
-// If you launch this example not from library folder, change the previous two lines to:
-// const { Camera } = require('@typedproject/gphoto2-driver');
 const path = require('path');
 const camera = new Camera();
 
