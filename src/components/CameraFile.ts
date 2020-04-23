@@ -2,7 +2,7 @@ import {checkCode, GPPointer, GPPointerString} from "../driver";
 import {PointerCameraFile, RefCameraFile} from "../driver/modules";
 import {GPCodes, PointerOf} from "../driver/types";
 import {IPointerWrapperOptions, PointerWrapper} from "./PointerWrapper";
-import {reinterpret} from "ref";
+import {reinterpret} from "ref-napi";
 
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
   constructor(options: Partial<IPointerWrapperOptions> = {}, ...args: any[]) {

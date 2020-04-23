@@ -1,4 +1,4 @@
-import {readCString} from "ref";
+import {readCString} from "ref-napi";
 import {ICloseable} from "../../interfaces";
 import {GPhoto2Driver} from "../GPhoto2Driver";
 import {GPCodes, PointerOf} from "../types";
