@@ -1,6 +1,4 @@
 const { Camera, closeQuietly, CameraWidgets } = require('@typedproject/gphoto2-driver');
-// If you launch this example not from library folder, change the previous line to:
-// const { Camera, closeQuietly, CameraWidgets } = require('@typedproject/gphoto2-driver');
 
 const path = require('path');
 

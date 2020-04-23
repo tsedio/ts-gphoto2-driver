@@ -1,6 +1,4 @@
 const { PortInfoList } = require('@typedproject/gphoto2-driver');
-// If you launch this example not from library folder, change the previous line to:
-// const { PortInfoList } = require('@typedproject/gphoto2-driver');
 
 const portList = new PortInfoList();
 
