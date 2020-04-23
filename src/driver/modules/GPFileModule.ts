@@ -1,4 +1,4 @@
-import {refType, types} from "ref";
+import {refType, types} from "ref-napi";
 import {GPCodes, PointerOf} from "../types";
 import {PointerCameraFile, RefCameraFile} from "./GPCameraModule";
 

@@ -1,4 +1,4 @@
-import {alloc, allocCString} from "ref";
+import {alloc, allocCString} from "ref-napi";
 import {PointerOf} from "../types";
 
 /**

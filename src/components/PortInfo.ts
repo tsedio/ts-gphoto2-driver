@@ -1,4 +1,4 @@
-import {types} from "ref";
+import {types} from "ref-napi";
 import {GPPointer} from "../driver";
 import {PointerPortInfo, RefPortInfo} from "../driver/modules";
 import {PointerWrapper} from "./PointerWrapper";

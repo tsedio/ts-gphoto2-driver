@@ -1,4 +1,4 @@
-import {alloc, Type} from "ref";
+import {alloc, Type} from "ref-napi";
 import {checkCode, closeQuietly, GPCodes, GPhoto2Driver} from "../driver";
 import {PointerOf} from "../driver/types";
 import {ICloseable} from "../interfaces";
