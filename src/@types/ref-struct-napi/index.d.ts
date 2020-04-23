@@ -5,7 +5,7 @@
 // TypeScript Version: 3.7
 
 declare module "ref-struct-napi" {
-  import ref = require('ref-napi');
+  import ref = require("ref-napi");
 
   /**
    * This is the `constructor` of the Struct type that gets returned.
@@ -25,7 +25,7 @@ declare module "ref-struct-napi" {
     (arg: Buffer, data?: {}): any;
     (data?: {}): any;
 
-    fields: { [key: string]: { type: ref.Type } };
+    fields: {[key: string]: {type: ref.Type}};
 
     /**
      * Adds a new field to the struct instance with the given name and type.
@@ -56,7 +56,7 @@ declare module "ref-struct-napi" {
     new (fields?: any[]): StructType;
     (fields?: object, opt?: object): StructType;
     (fields?: any[]): StructType;
-  }
+  };
 
   export = StructType;
 }
