@@ -15,7 +15,6 @@
   },
   "homepage": "https://github.com/TypedProject/ts-gphoto2-driver",
   "scripts": {
-    "postinstall": "npm run build && cd examples && npm i",
     "precommit": "lint-staged",
     "postcommit": "git update-index --again",
     "prepublishOnly": "gflow release post",
@@ -28,6 +27,7 @@
     "tsc": "tsc --project tsconfig.json",
     "develop": "npm run bootstrap && tsc --project tsconfig.json -w",
     "build": "tsc --project tsconfig.compile.json",
+    "install:examples": "npm run build && cd examples && npm i",
     "prettier": "prettier '{src,test}/**/*.ts' --write",
     "bootstrap": "cd examples && npm run bootstrap"
   },

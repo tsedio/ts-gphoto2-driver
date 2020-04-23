@@ -93,7 +93,8 @@ You have several options to get your image:
 
 Some example are available in the examples directory, when you have cloned or downloaded the complete project from github.
 
-Checkout this project then run `npm run develop` and run `node examples/camera.js`.
+
+Checkout this project then run `npm run install:examples && npm run develop` and run `node examples/camera.js`.
 
 ## Contribute
 
