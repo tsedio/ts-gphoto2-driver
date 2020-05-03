@@ -34,8 +34,8 @@
   "dependencies": {
     "ffi-napi": "2.4.5",
     "ref-napi": "1.5.2",
-    "ref-array-napi": "1.2.0",
-    "ref-struct-napi": "1.1.0",
+    "ref-array-napi": "1.2.1",
+    "ref-struct-napi": "1.1.1",
     "source-map-support": "0.5.13",
     "tslib": "1.10.0"
   },
