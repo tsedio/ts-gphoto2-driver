@@ -5,6 +5,9 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.js",
   "author": "Romain Lenzotti",
+  "contributors": [
+    "Alexander Gusez (https://github.com/goooseman)"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
