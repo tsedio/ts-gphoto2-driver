@@ -1,6 +1,6 @@
 {
   "name": "@tsed/root",
-  "version": "2.4.2",
+  "version": "3.0.0",
   "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
   "author": "Romain Lenzotti",
   "private": true,

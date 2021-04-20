@@ -1,6 +1,6 @@
 {
   "name": "@tsed/gphoto2-core",
-  "version": "2.4.2",
+  "version": "3.0.0",
   "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
   "main": "lib/index.js",
   "typings": "lib/index.d.js",
@@ -31,8 +31,8 @@
   "dependencies": {
     "@tsed/core": "6.43.4",
     "@tsed/logger": "5.13.2",
-    "ref-napi": "^3.0.2",
     "ref-array-napi": "1.2.2",
+    "ref-napi": "^3.0.2",
     "ref-struct-napi": "1.1.1",
     "tslib": "2.2.0"
   },
