@@ -1,6 +1,7 @@
 {
-    "src/**/*.ts": [
-      "prettier --parser typescript --write",
-      "git add"
-    ]
+  "packages/*/src/**/*.ts": [
+     "prettier --write",
+     "eslint --fix",
+     "git add"
+   ]
 }

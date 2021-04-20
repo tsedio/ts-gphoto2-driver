@@ -1,10 +1,9 @@
 {
-  "name": "@typedproject/gphoto2-driver",
-  "version": "2.4.3",
+  "name": "@tsed/root",
+  "version": "2.4.2",
   "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.js",
   "author": "Romain Lenzotti",
+  "private": true,
   "contributors": [
     "Alexander Gusez (https://github.com/goooseman)"
   ],
@@ -18,66 +17,55 @@
   },
   "homepage": "https://github.com/TypedProject/ts-gphoto2-driver",
   "scripts": {
-    "precommit": "lint-staged",
-    "postcommit": "git update-index --again",
-    "prepublishOnly": "gflow release post",
-    "gflow-release-pre": "",
-    "semantic-release": "gflow release pre && semantic-release",
-    "travis-deploy-once": "travis-deploy-once",
-    "travis-coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "tslint": "tslint --project tsconfig.json",
-    "test": "npm run tsc && npm run tslint && cross-env NODE_ENV=test nyc --reporter=html --reporter=text _mocha --recursive",
-    "tsc": "tsc --project tsconfig.json",
-    "develop": "npm run bootstrap && tsc --project tsconfig.json -w",
-    "build": "tsc --project tsconfig.compile.json",
-    "install:examples": "npm run build && cd examples && npm i",
-    "prettier": "prettier '{src,test}/**/*.ts' --write",
-    "bootstrap": "cd examples && npm run bootstrap"
+    "configure": "monorepo ci configure",
+    "test": "yarn test:lint && yarn test:coverage",
+    "test:unit": "cross-env NODE_ENV=test jest",
+    "test:coverage": "yarn test:unit",
+    "test:lint": "eslint packages --ext .ts",
+    "test:lint:fix": "eslint packages --ext .ts --fix",
+    "build": "monorepo build",
+    "prettier": "prettier '{packages,test}/**/*.ts' --write",
+    "release": "semantic-release",
+    "release:dryRun": "semantic-release --dry-run"
   },
   "dependencies": {
-    "ffi-napi": "4.0.3",
-    "ref-napi": "1.5.2",
-    "ref-array-napi": "1.2.1",
-    "ref-struct-napi": "1.1.1",
-    "source-map-support": "0.5.13",
-    "tslib": "1.10.0"
-  },
-  "devDependencies": {
-    "@types/chai": "4.2.2",
-    "@types/chai-as-promised": "7.1.2",
-    "@types/mocha": "5.2.7",
-    "@types/node": "12.7.5",
-    "@types/ref-napi": "^1.4.0",
-    "@types/sinon": "7.0.13",
-    "@types/sinon-chai": "3.2.3",
-    "chai": "4.2.0",
-    "chai-as-promised": "7.1.1",
-    "coveralls": "3.0.6",
-    "cross-env": "5.2.1",
-    "gflow": "^2.1.5",
-    "gulp": "4.0.2",
-    "gulp-clean": "0.4.0",
-    "husky": "3.0.5",
-    "lint-staged": "9.2.5",
-    "mocha": "6.2.0",
-    "nyc": "14.1.1",
-    "prettier": "1.18.2",
-    "require-dir": "1.2.0",
+    "lerna": "4.0.0",
+    "@tsed/monorepo-utils": "1.17.0",
+    "@types/jest": "26.0.20",
+    "@types/node": "14.14.41",
+    "@typescript-eslint/eslint-plugin": "^4.3.0",
+    "@typescript-eslint/parser": "^4.3.0",
+    "cross-env": "7.0.3",
+    "eslint": "^7.10.0",
+    "eslint-config-prettier": "6.12.0",
+    "eslint-plugin-mocha": "8.0.0",
+    "eslint-plugin-prettier": "3.1.4",
+    "gflow": "5.1.2",
+    "husky": "5.2.0",
+    "jest": "26.6.3",
+    "lint-staged": "10.4.0",
+    "prettier": "2.2.1",
     "segfault-handler": "1.3.0",
-    "semantic-release": "15.6.0",
-    "sinon": "7.4.2",
-    "sinon-chai": "3.3.0",
-    "travis-deploy-once": "5.0.11",
-    "ts-node": "8.4.1",
-    "tslint": "5.20.0",
-    "typescript": "3.6.3"
+    "semantic-release": "17.4.2",
+    "ts-node": "9.1.1",
+    "ts-jest": "26.5.5",
+    "typescript": "4.2.4"
   },
-  "directories": {
-    "lib": "lib",
-    "src": "src",
-    "test": "test"
+  "devDependencies": {},
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
   },
-  "release": {
-    "branch": "production"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "post-commit": "git update-index --again"
+    }
+  },
+  "monorepo": {
+    "productionBranch": "production",
+    "developBranch": "production",
+    "npmAccess": "public"
   }
 }
