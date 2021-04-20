@@ -1,0 +1,45 @@
+{
+  "name": "@tsed/gphoto2-driver",
+  "version": "2.4.2",
+  "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.js",
+  "author": "Romain Lenzotti",
+  "contributors": [
+    "Alexander Gusez (https://github.com/goooseman)"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TypedProject/ts-gphoto2-driver.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TypedProject/ts-gphoto2-driver/issues"
+  },
+  "homepage": "https://github.com/TypedProject/ts-gphoto2-driver",
+  "keywords": [
+    "gphoto-driver",
+    "typescript",
+    "driver",
+    "apn",
+    "reflex"
+  ],
+  "scripts": {
+    "build": "tsc --build tsconfig.compile.json",
+    "build:doc": "tsc --build tsconfig.doc.json"
+  },
+  "dependencies": {
+    "@tsed/core": "6.43.4",
+    "@tsed/logger": "5.13.2",
+    "@tsed/gphoto2-core": "2.4.2",
+    "source-map-support": "0.5.19",
+    "tslib": "2.2.0"
+  },
+  "devDependencies": {},
+  "directories": {
+    "lib": "lib",
+    "src": "src",
+    "test": "test"
+  },
+  "peerDependencies": {}
+}

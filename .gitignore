@@ -1,5 +1,5 @@
 ### Node template
-.DS_Store
+.tmp
 # Logs
 logs
 *.log
@@ -35,33 +35,22 @@ node_modules
 typings/
 
 # Typescript
-index.js
-index.js.map
-!testing/index.js
-!swagger/index.js
-!multipartfiles/index.js
-!servestatic/index.js
-!ajv/index.js
-!socketio/index.js
-src/**/*.js
-src/**/*.js.map
-test/**/*.js
-test/**/*.js.map
-test/spec/*.js
-test/spec/*.js.map
-.npmrc
+test/*.js
+test/*.js.map
+/packages/*.js
+/packages/*.js.map
+/packages/*/lib
+/lib
+/dts
+/es6
+/dist
+/docs/api
+/docs/api/**/*.md
 
 # Test
 /stdout
 /stderr
-/es6/
-/lib/
-/dts/
-/dist
 
-.vscode
-
-/.nyc_output/
-/test/integration/app/spec/swagger.json
-/examples/*.jpeg
-.tmp
+.DS_Store
+.nyc_output
+/docs/.vuepress/dist/

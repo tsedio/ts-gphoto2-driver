@@ -1,0 +1,15 @@
+{
+  "npmClient": "npm",
+  "useWorkspaces": true,
+  "packages": [
+    "packages/*"
+  ],
+  "version": "2.4.2",
+  "command": {
+    "bootstrap": {
+      "npmClientArgs": [
+        "--no-package-lock"
+      ]
+    }
+  }
+}

@@ -11,6 +11,8 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
+> This project is under Alpha version.
+
 A Node.js wrapper for libgphoto2 written in TypeScript. Useful for remote controlling of DSLRs and other digital cameras supported by gphoto2.
 
 ## Features
@@ -39,12 +41,7 @@ A Node.js wrapper for libgphoto2 written in TypeScript. Useful for remote contro
 After installing the dependencies, just install using:
 
 ```bash
-brew install libgphoto2
-// or
-apt-get install libgphoto2-dev
-
-// then
-npm install @typedproject/gphoto2-driver
+npm install @tsed/gphoto2-driver
 ```
 
 ## Usage
@@ -52,8 +49,8 @@ npm install @typedproject/gphoto2-driver
 Here an example with TypeScript (works also with pure javascript in Node.js):
 
 ```typescript
-import * as Path from "path";
-import { CameraList, closeQuietly } from "@typedproject/gphoto2-driver";
+import Path from "path";
+import { CameraList, closeQuietly } from "@tsed/gphoto2-driver";
 
 const cameraList = new CameraList().load();
 

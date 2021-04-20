@@ -1,23 +1,12 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "moduleResolution": "node",
     "declaration": true,
-    "rootDir": "src/",
-    "outDir": "lib/",
-    "declarationDir": "lib/",
-    "sourceMap": true,
     "noResolve": false,
     "preserveConstEnums": true,
-    "noEmit": false
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "**/*.spec.ts",
-    "node_modules",
-    "test",
-    "lib",
-    "dist"
-  ]
+    "sourceMap": true,
+    "noEmit": false,
+    "inlineSources": true
+  }
 }

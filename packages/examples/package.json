@@ -1,0 +1,10 @@
+{
+  "name": "@tsed/examples",
+  "version": "2.4.2",
+  "private": true,
+  "dependencies": {
+    "@tsed/gphoto2-driver": "2.4.2"
+  },
+  "devDependencies": {},
+  "peerDependencies": {}
+}
