@@ -1,7 +1,7 @@
 import {nameOf} from "@tsed/core";
 import {
   checkCode,
-  GPhoto2Driver,
+  getGPhoto2Driver,
   GPPointerFloat,
   GPPointerInt,
   GPPointerRef,
@@ -44,7 +44,7 @@ export class Widget implements WidgetProps {
 
     const ref = GPPointerString();
 
-    checkCode(GPhoto2Driver.gp_widget_get_label(this._pointer, ref));
+    checkCode(getGPhoto2Driver().gp_widget_get_label(this._pointer, ref));
 
     return ref.deref();
   }
@@ -58,7 +58,7 @@ export class Widget implements WidgetProps {
 
     const ref = GPPointerInt();
 
-    checkCode(GPhoto2Driver.gp_widget_get_type(this._pointer, ref));
+    checkCode(getGPhoto2Driver().gp_widget_get_type(this._pointer, ref));
 
     return WidgetTypes.fromCVal(ref.deref());
   }
@@ -73,7 +73,7 @@ export class Widget implements WidgetProps {
 
     const ref = GPPointerString();
 
-    checkCode(GPhoto2Driver.gp_widget_get_info(this._pointer, ref));
+    checkCode(getGPhoto2Driver().gp_widget_get_info(this._pointer, ref));
 
     return ref.deref();
   }
@@ -89,12 +89,12 @@ export class Widget implements WidgetProps {
       return undefined;
     }
 
-    const choiceCount: number = checkCode(GPhoto2Driver.gp_widget_count_choices(this._pointer), "gp_widget_count_choices");
+    const choiceCount: number = checkCode(getGPhoto2Driver().gp_widget_count_choices(this._pointer), "gp_widget_count_choices");
     const result: string[] = [];
 
     for (let i = 0; i < choiceCount; i++) {
       const ref = GPPointerString();
-      checkCode(GPhoto2Driver.gp_widget_get_choice(this._pointer, i, ref), "gp_widget_get_choice");
+      checkCode(getGPhoto2Driver().gp_widget_get_choice(this._pointer, i, ref), "gp_widget_get_choice");
 
       result.push(ref.deref());
     }
@@ -116,7 +116,7 @@ export class Widget implements WidgetProps {
       case WidgetTypes.RADIO:
       case WidgetTypes.MENU: {
         const pref = GPPointerRef<void>();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this._pointer, pref));
+        checkCode(getGPhoto2Driver().gp_widget_get_value(this._pointer, pref));
         const p = pref.deref();
 
         return p == null ? null : PointerToString(p as PointerOf<string>);
@@ -124,21 +124,21 @@ export class Widget implements WidgetProps {
 
       case WidgetTypes.RANGE: {
         const pref = GPPointerFloat();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this._pointer, pref));
+        checkCode(getGPhoto2Driver().gp_widget_get_value(this._pointer, pref));
 
         return pref.deref();
       }
 
       case WidgetTypes.TOGGLE: {
         const pref = GPPointerInt();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this._pointer, pref));
+        checkCode(getGPhoto2Driver().gp_widget_get_value(this._pointer, pref));
 
         return pref.deref() === 2 ? null : pref.deref() === 1;
       }
 
       case WidgetTypes.DATE: {
         const pref = GPPointerInt();
-        checkCode(GPhoto2Driver.gp_widget_get_value(this._pointer, pref));
+        checkCode(getGPhoto2Driver().gp_widget_get_value(this._pointer, pref));
 
         return new Date(pref.deref() * 1000.0);
       }
@@ -162,19 +162,19 @@ export class Widget implements WidgetProps {
   }
 
   get changed(): boolean {
-    return checkCode(GPhoto2Driver.gp_widget_changed(this._pointer)) === 1;
+    return checkCode(getGPhoto2Driver().gp_widget_changed(this._pointer)) === 1;
   }
 
   set changed(changed: boolean) {
     this.cameraWidgets.checkNotClosed();
-    checkCode(GPhoto2Driver.gp_widget_set_changed(this._pointer, changed ? 1 : 0));
+    checkCode(getGPhoto2Driver().gp_widget_set_changed(this._pointer, changed ? 1 : 0));
   }
 
   get readonly() {
     this.cameraWidgets.checkNotClosed();
 
     const result = GPPointerInt();
-    checkCode(GPhoto2Driver.gp_widget_get_readonly(this._pointer, result), "gp_widget_get_readonly");
+    checkCode(getGPhoto2Driver().gp_widget_get_readonly(this._pointer, result), "gp_widget_get_readonly");
 
     return result.deref() === 1;
   }
@@ -245,7 +245,7 @@ export class Widget implements WidgetProps {
         throw new Error("Parameter type: invalid value " + type + ": unsupported");
     }
 
-    checkCode(GPhoto2Driver.gp_widget_set_value(this._pointer, ptr as PointerOf<any>));
+    checkCode(getGPhoto2Driver().gp_widget_set_value(this._pointer, ptr as PointerOf<any>));
 
     if (refresh) {
       try {

@@ -2,8 +2,8 @@ import {
   checkCode,
   Closeable,
   closeQuietly,
+  getGPhoto2Driver,
   GPCameraFileType,
-  GPhoto2Driver,
   PointerCamera,
   PointerOf,
   StructCameraFilePath
@@ -51,7 +51,7 @@ export class CameraFilePath implements Closeable {
       const path = this.path;
       const filepath = this.filename;
 
-      const result = GPhoto2Driver.gp_camera_file_get(
+      const result = getGPhoto2Driver().gp_camera_file_get(
         pCamera,
         path,
         filepath,
@@ -81,7 +81,7 @@ export class CameraFilePath implements Closeable {
       const path = this.path;
       const filepath = this.filename;
 
-      const result = await GPhoto2Driver.gp_camera_file_get_async(
+      const result = await getGPhoto2Driver().gp_camera_file_get_async(
         pCamera,
         path,
         filepath,

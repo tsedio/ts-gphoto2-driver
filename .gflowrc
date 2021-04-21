@@ -1,6 +1,6 @@
 {
   "production": "production",
-  "develop": "master",
+  "develop": "production",
   "charBranchNameSeparator": "_",
   "remote": "origin",
   "ignores": [],
@@ -12,8 +12,5 @@
     "fix": "fix",
     "chore": "chore",
     "docs": "docs"
-  },
-  "refs": {
-    "feat_#6_change_require": "master"
   }
 }

@@ -1,6 +1,5 @@
+import {checkCode, Closeable, closeQuietly, getGPhoto2Driver, GPCodes, PointerOf} from "@tsed/gphoto2-core";
 import {alloc, Type} from "ref-napi";
-import {checkCode, Closeable, closeQuietly, GPCodes, GPhoto2Driver} from "@tsed/gphoto2-core";
-import {PointerOf} from "@tsed/gphoto2-core";
 import {addInstance, removeInstance} from "./Garbage";
 
 export interface IPointerWrapperOptions {
@@ -11,11 +10,11 @@ export interface IPointerWrapperOptions {
 }
 
 export class PointerWrapper<P extends PointerOf<any>> implements Closeable {
-  private _buffer: PointerOf<P>;
-
   constructor(private options: IPointerWrapperOptions, ...args: any[]) {
     this.new(...args);
   }
+
+  private _buffer: PointerOf<P>;
 
   get buffer(): PointerOf<P> {
     return this._buffer;
@@ -27,26 +26,6 @@ export class PointerWrapper<P extends PointerOf<any>> implements Closeable {
 
   get pointer(): P {
     return this._buffer.deref();
-  }
-
-  private getOptions() {
-    const {method, refType, openMethod = "new", closeMethod = "free"} = this.options;
-
-    return {
-      method,
-      refType,
-      openMethod,
-      closeMethod
-    };
-  }
-
-  protected new(...args: any[]): GPCodes {
-    const {openMethod, refType} = this.getOptions();
-
-    addInstance(this);
-    this._buffer = alloc(refType) as any;
-
-    return this.callByRef(openMethod!, ...args);
   }
 
   close(): this {
@@ -65,9 +44,10 @@ export class PointerWrapper<P extends PointerOf<any>> implements Closeable {
   callByRef(key: string, ...args: any[]) {
     let {method} = this.getOptions();
     method = `${method}_${key}`;
+    const driver = getGPhoto2Driver();
 
-    if ((GPhoto2Driver as any)[method]) {
-      return checkCode((GPhoto2Driver as any)[method](this.byRef, ...args), method);
+    if (driver[method]) {
+      return checkCode(driver[method](this.byRef, ...args), method);
     }
 
     if (process.env.NODE_ENV !== "production") {
@@ -78,9 +58,10 @@ export class PointerWrapper<P extends PointerOf<any>> implements Closeable {
   call(key: string, ...args: any[]) {
     let {method} = this.getOptions();
     method = `${method}_${key}`;
+    const driver = getGPhoto2Driver();
 
-    if ((GPhoto2Driver as any)[method]) {
-      return checkCode((GPhoto2Driver as any)[method](this.pointer, ...args), method);
+    if (driver[method]) {
+      return checkCode(driver[method](this.pointer, ...args), method);
     }
 
     if (process.env.NODE_ENV !== "production") {
@@ -91,9 +72,10 @@ export class PointerWrapper<P extends PointerOf<any>> implements Closeable {
   async callAsync(key: string, ...args: any[]) {
     let {method} = this.getOptions();
     method = `${method}_${key}`;
+    const driver = getGPhoto2Driver();
 
-    if ((GPhoto2Driver as any)[method]) {
-      const result = await (GPhoto2Driver as any)[method](this.pointer, ...args);
+    if (driver[method]) {
+      const result = await driver[method](this.pointer, ...args);
 
       return checkCode(result, method);
     }
@@ -101,5 +83,25 @@ export class PointerWrapper<P extends PointerOf<any>> implements Closeable {
     if (process.env.NODE_ENV !== "production") {
       console.warn(`${method} on GPhoto2Driver doesn't exists`);
     }
+  }
+
+  protected new(...args: any[]): GPCodes {
+    const {openMethod, refType} = this.getOptions();
+
+    addInstance(this);
+    this._buffer = alloc(refType) as any;
+
+    return this.callByRef(openMethod!, ...args);
+  }
+
+  private getOptions() {
+    const {method, refType, openMethod = "new", closeMethod = "free"} = this.options;
+
+    return {
+      method,
+      refType,
+      openMethod,
+      closeMethod
+    };
   }
 }

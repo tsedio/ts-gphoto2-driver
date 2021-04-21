@@ -1,7 +1,7 @@
 # @tsed/gphoto2-core
 
 [![Build & Release](https://github.com/TypedProject/ts-gphoto2-driver/actions/workflows/build.yml/badge.svg)](https://github.com/TypedProject/ts-gphoto2-driver/actions/workflows/build.yml)
-[![Coverage Status](https://coveralls.io/repos/github/TypedProject/ts-gphoto2-driver/badge.svg?branch=master)](https://coveralls.io/github/TypedProject/ts-gphoto2-driver?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/TypedProject/ts-gphoto2-driver/badge.svg?branch=production)](https://coveralls.io/github/TypedProject/ts-gphoto2-driver?branch=production)
 ![npm](https://img.shields.io/npm/dm/%40tsed%2Fgphoto2-core.svg)
 [![npm version](https://badge.fury.io/js/%40tsed%2Fgphoto2-core.svg)](https://badge.fury.io/js/%tsed%2Fgphoto2-core)
 [![Dependencies](https://david-dm.org/typedproject/ts-gphoto2-driver.svg)](https://david-dm.org/typedproject/ts-gphoto2-driver#info=dependencies)

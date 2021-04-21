@@ -2,7 +2,7 @@ import {nameOf} from "@tsed/core";
 import {
   checkCode,
   Closeable,
-  GPhoto2Driver,
+  getGPhoto2Driver,
   GPPointer,
   GPPointerRef,
   GPPointerString,
@@ -26,8 +26,8 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
 
   public refresh() {
     const buffer = GPPointerRef<PointerCameraWidget>();
-    checkCode(GPhoto2Driver.gp_widget_new(WidgetTypes.WINDOW.cval, "", buffer));
-    checkCode(GPhoto2Driver.gp_camera_get_config(this.camera.pointer, buffer, Context.get().pointer));
+    checkCode(getGPhoto2Driver().gp_widget_new(WidgetTypes.WINDOW.cval, "", buffer));
+    checkCode(getGPhoto2Driver().gp_camera_get_config(this.camera.pointer, buffer, Context.get().pointer));
 
     this.rootWidget = buffer.deref();
 
@@ -79,7 +79,7 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
       });
     }
 
-    checkCode(GPhoto2Driver.gp_camera_set_config(this.camera.pointer, this.rootWidget, Context.get().pointer), "gp_camera_set_config");
+    checkCode(getGPhoto2Driver().gp_camera_set_config(this.camera.pointer, this.rootWidget, Context.get().pointer), "gp_camera_set_config");
 
     this.refresh();
   }
@@ -335,7 +335,7 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
     this.checkNotClosed();
     const type = GPPointer<number>("int");
 
-    checkCode(GPhoto2Driver.gp_widget_get_type(widget, type));
+    checkCode(getGPhoto2Driver().gp_widget_get_type(widget, type));
 
     const widgetType = WidgetTypes.fromCVal(type.deref());
 
@@ -347,11 +347,11 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
       }
     }
 
-    const childcount: number = checkCode(GPhoto2Driver.gp_widget_count_children(widget));
+    const childcount: number = checkCode(getGPhoto2Driver().gp_widget_count_children(widget));
 
     for (let i = 0; i < childcount; i++) {
       const buffer = GPPointerRef<PointerCameraWidget>();
-      checkCode(GPhoto2Driver.gp_widget_get_child(widget, i, buffer));
+      checkCode(getGPhoto2Driver().gp_widget_get_child(widget, i, buffer));
 
       this.enumWidgets(buffer.deref(), `${path}/${this.getBasename(buffer.deref())}`);
     }
@@ -366,7 +366,7 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
     this.checkNotClosed();
 
     const ref = GPPointerString();
-    checkCode(GPhoto2Driver.gp_widget_get_name(widget, ref));
+    checkCode(getGPhoto2Driver().gp_widget_get_name(widget, ref));
 
     return ref.deref();
   }

@@ -1,4 +1,4 @@
-import {checkCode, GPhoto2Driver, GPPointerString} from "@tsed/gphoto2-core";
+import {checkCode, getGPhoto2Driver, GPPointerString} from "@tsed/gphoto2-core";
 import {deref} from "ref-napi";
 import {CameraOptions} from "../interfaces";
 import {AbilitiesList} from "./AbilitiesList";
@@ -15,7 +15,7 @@ export class CameraList extends List<CameraOptions> {
   }
 
   autodetect() {
-    GPhoto2Driver.gp_camera_autodetect(this.pointer, Context.get().pointer);
+    getGPhoto2Driver().gp_camera_autodetect(this.pointer, Context.get().pointer);
   }
 
   /**
@@ -31,8 +31,8 @@ export class CameraList extends List<CameraOptions> {
       const model = GPPointerString(); // alloc("string") as PointerOf<string>;
       const path = GPPointerString(); // alloc("string") as PointerOf<string>;
 
-      checkCode(GPhoto2Driver.gp_list_get_name(cameraList.pointer, i, model));
-      checkCode(GPhoto2Driver.gp_list_get_value(cameraList.pointer, i, path));
+      checkCode(getGPhoto2Driver().gp_list_get_name(cameraList.pointer, i, model));
+      checkCode(getGPhoto2Driver().gp_list_get_value(cameraList.pointer, i, path));
 
       if (deref(path).match(CameraList.USB_PATTERN)) {
         this.push(deref(model), deref(path));

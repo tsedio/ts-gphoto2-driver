@@ -1,5 +1,4 @@
-import {checkCode, GPhoto2Driver} from "@tsed/gphoto2-core";
-import {PointerAbilitiesList, RefAbilitiesList} from "@tsed/gphoto2-core";
+import {checkCode, getGPhoto2Driver, PointerAbilitiesList, RefAbilitiesList} from "@tsed/gphoto2-core";
 import {Context} from "./Context";
 import {List} from "./List";
 import {PointerWrapper} from "./PointerWrapper";
@@ -11,14 +10,14 @@ export class AbilitiesList extends PointerWrapper<PointerAbilitiesList> {
   }
 
   get size(): number {
-    return checkCode(GPhoto2Driver.gp_abilities_list_count(this.pointer), "gp_abilities_list_count");
+    return checkCode(getGPhoto2Driver().gp_abilities_list_count(this.pointer), "gp_abilities_list_count");
   }
 
   /**
    *
    */
   load(): this {
-    checkCode(GPhoto2Driver.gp_abilities_list_load(this.pointer, Context.get().pointer), "gp_abilities_list_load");
+    checkCode(getGPhoto2Driver().gp_abilities_list_load(this.pointer, Context.get().pointer), "gp_abilities_list_load");
 
     return this;
   }
@@ -32,7 +31,7 @@ export class AbilitiesList extends PointerWrapper<PointerAbilitiesList> {
     const list = new List();
 
     checkCode(
-      GPhoto2Driver.gp_abilities_list_detect(this.pointer, portInfoList.pointer, list.pointer, Context.get().pointer),
+      getGPhoto2Driver().gp_abilities_list_detect(this.pointer, portInfoList.pointer, list.pointer, Context.get().pointer),
       "gp_abilities_list_detect"
     );
 

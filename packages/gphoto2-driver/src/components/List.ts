@@ -1,4 +1,4 @@
-import {checkCode, GPhoto2Driver, GPPointerString, PointerList, RefList} from "@tsed/gphoto2-core";
+import {checkCode, getGPhoto2Driver, GPPointerString, PointerList, RefList} from "@tsed/gphoto2-core";
 import {PointerWrapper} from "./PointerWrapper";
 
 export class List<T> extends PointerWrapper<PointerList> {
@@ -11,7 +11,7 @@ export class List<T> extends PointerWrapper<PointerList> {
    * @returns {any}
    */
   get size(): number {
-    return checkCode(GPhoto2Driver.gp_list_count(this.pointer));
+    return checkCode(getGPhoto2Driver().gp_list_count(this.pointer));
   }
 
   /**
@@ -22,7 +22,7 @@ export class List<T> extends PointerWrapper<PointerList> {
   public getName(index: number): string {
     const ref = GPPointerString();
 
-    GPhoto2Driver.gp_list_get_name(this.pointer, index, ref);
+    getGPhoto2Driver().gp_list_get_name(this.pointer, index, ref);
 
     return ref.deref();
   }
@@ -35,13 +35,13 @@ export class List<T> extends PointerWrapper<PointerList> {
   public getValue(index: number): string {
     const ref = GPPointerString();
 
-    GPhoto2Driver.gp_list_get_value(this.pointer, index, ref);
+    getGPhoto2Driver().gp_list_get_value(this.pointer, index, ref);
 
     return ref.deref();
   }
 
   public push(name: string, value: string) {
-    checkCode(GPhoto2Driver.gp_list_append(this.pointer, name, value));
+    checkCode(getGPhoto2Driver().gp_list_append(this.pointer, name, value));
   }
 
   public get(index: number): T | undefined {
