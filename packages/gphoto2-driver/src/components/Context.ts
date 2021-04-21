@@ -1,4 +1,4 @@
-import {Closeable, GPhoto2Driver, PointerContext} from "@tsed/gphoto2-core";
+import {Closeable, getGPhoto2Driver, PointerContext} from "@tsed/gphoto2-core";
 import {addInstance, removeInstance} from "./Garbage";
 
 export class Context implements Closeable {
@@ -10,7 +10,7 @@ export class Context implements Closeable {
    *
    * @type {PointerContext}
    */
-  readonly pointer: PointerContext = GPhoto2Driver.gp_context_new();
+  readonly pointer: PointerContext = getGPhoto2Driver().gp_context_new();
 
   constructor() {
     addInstance(this);
@@ -25,7 +25,7 @@ export class Context implements Closeable {
   }
 
   public close(): this {
-    GPhoto2Driver.gp_context_unref(this.pointer);
+    getGPhoto2Driver().gp_context_unref(this.pointer);
     removeInstance(this);
 
     return this;

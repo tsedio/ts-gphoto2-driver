@@ -1,3 +1,5 @@
+import ffi from "ffi-napi";
+import util from "util";
 import {
   GP_CAMERA_MODULE_ASYNC_KEYS,
   GP_FILE_MODULE_ASYNC_KEYS,
@@ -17,9 +19,6 @@ import {
   IGPWidgetModule
 } from "./modules";
 
-const ffi = require("ffi-napi");
-const util = require("util");
-
 /**
  *
  */
@@ -33,7 +32,8 @@ export interface GPhoto2Driver
     IGPPortInfoModule {}
 
 // tslint:disable-next-line
-export const GPhoto2Driver: GPhoto2Driver & {[key: string]: any} = ffi.Library("libgphoto2", {
+export let GPhoto2Driver: GPhoto2Driver & Record<string, any>;
+export const driverFunctions = {
   // CONTEXT
   ...GPContextModuleDescription,
 
@@ -54,8 +54,19 @@ export const GPhoto2Driver: GPhoto2Driver & {[key: string]: any} = ffi.Library("
 
   // Widget
   ...GPWidgetModuleDescription
-});
+};
 
-[...GP_CAMERA_MODULE_ASYNC_KEYS, ...GP_FILE_MODULE_ASYNC_KEYS].forEach((key) => {
-  GPhoto2Driver[`${key}_async`] = util.promisify(GPhoto2Driver[key].async);
-});
+// istanbul ignore next
+export function getGPhoto2Driver(): GPhoto2Driver & Record<string, any> {
+  if (!GPhoto2Driver) {
+    const driver = ffi.Library("libgphoto2", driverFunctions);
+
+    [...GP_CAMERA_MODULE_ASYNC_KEYS, ...GP_FILE_MODULE_ASYNC_KEYS].forEach((key) => {
+      driver[`${key}_async`] = util.promisify(driver[key].async);
+    });
+
+    GPhoto2Driver = driver;
+  }
+
+  return GPhoto2Driver;
+}

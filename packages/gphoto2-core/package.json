@@ -31,13 +31,15 @@
   "dependencies": {
     "@tsed/core": "6.43.4",
     "@tsed/logger": "5.13.2",
+    "ffi-napi": "4.0.3",
     "ref-array-napi": "1.2.2",
-    "ref-napi": "^3.0.2",
+    "ref-napi": "3.0.2",
     "ref-struct-napi": "1.1.1",
     "tslib": "2.2.0"
   },
   "devDependencies": {
-    "@types/ref-napi": "^1.4.1"
+    "@types/ref-napi": "^1.4.1",
+    "@types/ffi-napi": "2.4.3"
   },
   "directories": {
     "lib": "lib",
