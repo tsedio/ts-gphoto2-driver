@@ -29,7 +29,7 @@
     "build:doc": "tsc --build tsconfig.doc.json"
   },
   "dependencies": {
-    "@tsed/core": "6.43.4",
+    "@tsed/core": "6.45.1",
     "@tsed/gphoto2-core": "3.0.1",
     "@tsed/logger": "5.13.2",
     "source-map-support": "0.5.19",
