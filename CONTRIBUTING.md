@@ -42,7 +42,7 @@ $ git clone https://github.com/YOUR_USERNAME/ts-gphoto2-driver.git
 Or if you have access to this repository:
 
 ```bash
- $ git checkout https://github.com/TypedProject/ts-gphoto2-driver.git
+ $ git checkout https://github.com/tsedio/ts-gphoto2-driver.git
  ```
 
 Install npm dependencies

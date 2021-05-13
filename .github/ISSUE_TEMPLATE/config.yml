@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 questions:
   - name: ❓ Questions / Discussions
-    url: https://github.com/TypedProject/ts-gphoto2-driver/discussions
+    url: https://github.com/tsedio/ts-gphoto2-driver/discussions
     about: You want to ask a question or discuss with other community members

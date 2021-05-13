@@ -10,12 +10,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TypedProject/ts-gphoto2-driver.git"
+    "url": "https://github.com/tsedio/ts-gphoto2-driver.git"
   },
   "bugs": {
-    "url": "https://github.com/TypedProject/ts-gphoto2-driver/issues"
+    "url": "https://github.com/tsedio/ts-gphoto2-driver/issues"
   },
-  "homepage": "https://github.com/TypedProject/ts-gphoto2-driver",
+  "homepage": "https://github.com/tsedio/ts-gphoto2-driver",
   "scripts": {
     "configure": "monorepo ci configure",
     "test": "yarn test:lint && yarn test:coverage",
