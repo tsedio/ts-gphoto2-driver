@@ -1548,10 +1548,10 @@
   resolved "https://registry.npmjs.org/@tootallnate/once/-/once-1.1.2.tgz"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@tsed/core@6.43.4":
-  version "6.43.4"
-  resolved "https://registry.npmjs.org/@tsed/core/-/core-6.43.4.tgz"
-  integrity sha512-2ofkyX381pMn0TAUhiu+iUuWdrRgHQ5zdxDxbZ6xVCZW1ly5thkC+pZAjZuzKfy9/Lmx7VZxQCcgnId6vhLQaQ==
+"@tsed/core@6.48.4":
+  version "6.48.4"
+  resolved "https://registry.yarnpkg.com/@tsed/core/-/core-6.48.4.tgz#9fb3562a8f28b19a7d2e6e0879403d00a1bbbddc"
+  integrity sha512-nZW6tRrmmdW6PGodp5F1dpfB+8hTeghMMJ+plFWCmf+dfiQsLnliEAYtzUVyl1cwRGUCfHo779eijkWLaPVb3A==
   dependencies:
     normalize-path "3.0.0"
     reflect-metadata "^0.1.13"
