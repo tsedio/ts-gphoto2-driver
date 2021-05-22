@@ -1,6 +1,8 @@
 import {Closeable} from "@tsed/gphoto2-core";
 import {EventEmitter} from "events";
 import fs from "fs";
+import {ensureDirSync} from "fs-extra";
+import {dirname} from "path";
 import {LiveViewOptions} from "../interfaces/LiveViewOptions";
 import {Camera} from "./Camera";
 import {CameraFile} from "./CameraFile";
@@ -29,6 +31,11 @@ export class LiveView extends EventEmitter implements Closeable {
   constructor(private camera: Camera, options: Partial<LiveViewOptions>) {
     super();
     this.options = {fps: 24, output: "binary", ...options};
+
+    if (this.options.filePath) {
+      ensureDirSync(dirname(this.options.filePath));
+    }
+
     addInstance(this);
   }
 

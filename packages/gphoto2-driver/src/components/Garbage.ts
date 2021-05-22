@@ -1,4 +1,5 @@
 import type {Closeable} from "@tsed/gphoto2-core";
+import {$log} from "@tsed/logger";
 
 const garbage = new Map<Closeable, Closeable>();
 
@@ -14,9 +15,7 @@ export function removeInstance(item: Closeable): void {
 
 export function closeAll() {
   if (garbage.size) {
-    if (process.env.NODE_ENV !== "production") {
-      console.debug("Close " + garbage.size + " references unclosed");
-    }
+    $log.debug("Close", garbage.size, "unclosed references");
     garbage.forEach((item: Closeable) => {
       try {
         item.close();

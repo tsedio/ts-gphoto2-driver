@@ -26,7 +26,19 @@
     "build": "monorepo build",
     "prettier": "prettier '{packages,test}/**/*.ts' --write",
     "release": "semantic-release",
-    "release:dryRun": "semantic-release --dry-run"
+    "release:dryRun": "semantic-release --dry-run",
+    "start:abilities": "lerna run start:abilities",
+    "start:camera": "lerna run start:camera",
+    "start:camera:abilities": "lerna run start:camera:abilities",
+    "start:camera:autoselect": "lerna run start:camera:autoselect",
+    "start:camera:info": "lerna run start:camera:info",
+    "start:camera:list:autodetect": "lerna run start:camera:list:autodetect",
+    "start:camera:list:liveview": "lerna run start:camera:list:liveview",
+    "start:camera:list:liveview:file": "lerna run start:camera:list:liveview:file",
+    "start:camera:scenario": "lerna run start:camera:scenario",
+    "start:camera:scenario:async": "lerna run start:camera:scenario:async",
+    "start:port:list": "lerna run start:port:list",
+    "start:widgets": "lerna run start:widgets"
   },
   "dependencies": {
     "lerna": "4.0.0",
@@ -49,7 +61,8 @@
     "semantic-release": "17.4.2",
     "ts-node": "9.1.1",
     "ts-jest": "26.5.5",
-    "typescript": "4.2.4"
+    "typescript": "4.2.4",
+    "tsconfig-paths": "3.9.0"
   },
   "devDependencies": {},
   "workspaces": {

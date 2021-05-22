@@ -8,7 +8,7 @@ import {
   GPPointerString,
   PointerCameraWidget,
   PointerOf,
-  PointerToString
+  pointerToString
 } from "@tsed/gphoto2-core";
 import {WidgetProps} from "../interfaces";
 import {WidgetRange} from "./WidgetRange";
@@ -119,7 +119,7 @@ export class Widget implements WidgetProps {
         checkCode(getGPhoto2Driver().gp_widget_get_value(this._pointer, pref));
         const p = pref.deref();
 
-        return p == null ? null : PointerToString(p as PointerOf<string>);
+        return p == null ? null : pointerToString(p as PointerOf<string>);
       }
 
       case WidgetTypes.RANGE: {

@@ -1,10 +1,26 @@
 {
-  "name": "@tsed/examples",
+  "name": "@tsed/examples-typescript",
   "version": "3.0.2",
   "private": true,
   "dependencies": {
     "@tsed/gphoto2-driver": "3.0.2"
   },
-  "devDependencies": {},
-  "peerDependencies": {}
+  "devDependencies": {
+    "cli-table3": "0.6.0"
+  },
+  "peerDependencies": {},
+  "scripts": {
+    "start:abilities": "ts-node -r tsconfig-paths/register src/abilities-list.ts",
+    "start:camera": "ts-node -r tsconfig-paths/register src/camera.ts",
+    "start:camera:abilities": "ts-node -r tsconfig-paths/register src/camera-abilities.ts",
+    "start:camera:autoselect": "ts-node -r tsconfig-paths/register src/camera-autoselect.ts",
+    "start:camera:info": "ts-node -r tsconfig-paths/register src/camera-info.ts",
+    "start:camera:list:autodetect": "ts-node -r tsconfig-paths/register src/camera-info.ts",
+    "start:camera:list:liveview": "ts-node -r tsconfig-paths/register src/camera-liveview.ts",
+    "start:camera:list:liveview:file": "ts-node -r tsconfig-paths/register src/list-liveview-file.ts",
+    "start:camera:scenario": "ts-node -r tsconfig-paths/register src/camera-scenario.ts",
+    "start:camera:scenario:async": "ts-node -r tsconfig-paths/register src/camera-scenario-async.ts",
+    "start:port:list": "ts-node -r tsconfig-paths/register src/port-list.ts",
+    "start:widgets": "ts-node -r tsconfig-paths/register src/widgets.ts"
+  }
 }

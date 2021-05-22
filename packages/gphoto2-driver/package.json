@@ -28,18 +28,21 @@
     "build": "tsc --build tsconfig.compile.json",
     "build:doc": "tsc --build tsconfig.doc.json"
   },
-  "dependencies": {
-    "@tsed/core": "6.43.4",
-    "@tsed/gphoto2-core": "3.0.2",
-    "@tsed/logger": "5.13.2",
-    "source-map-support": "0.5.19",
-    "tslib": "2.2.0"
-  },
   "directories": {
     "lib": "lib",
     "src": "src",
     "test": "test"
   },
-  "devDependencies": {},
+  "dependencies": {
+    "@tsed/core": "6.49.3",
+    "@tsed/gphoto2-core": "3.0.2",
+    "@tsed/logger": "5.14.0",
+    "fs-extra": "10.0.0",
+    "source-map-support": "0.5.19",
+    "tslib": "2.2.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "9.0.11"
+  },
   "peerDependencies": {}
 }

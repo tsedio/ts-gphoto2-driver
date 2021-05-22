@@ -1,4 +1,5 @@
 import {
+  Closeable,
   GPCameraDriverStatus,
   GPCameraFileOperation,
   GPCameraFolderOperation,
@@ -6,8 +7,7 @@ import {
   GPDeviceType,
   GPPortType,
   PointerOf,
-  StructCameraAbilities,
-  Closeable
+  StructCameraAbilities
 } from "@tsed/gphoto2-core";
 
 export class CameraAbilities implements Closeable {

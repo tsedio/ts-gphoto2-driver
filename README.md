@@ -23,7 +23,6 @@
   <hr />
 </div>
 
-
 A Node.js wrapper for libgphoto2 written in TypeScript. Useful for remote controlling of DSLRs and other digital cameras supported by gphoto2.
 
 ## Features
@@ -38,7 +37,7 @@ A Node.js wrapper for libgphoto2 written in TypeScript. Useful for remote contro
 
 ## Prerequisite
 
- - Node.js: any version supported by nodejs/nan
+ - Node.js: 12
  - NPM: ~7.10.0
  - Nan: ~2.8.0
  - libgphoto2: ~2.5.x - via `brew install libgphoto2`, `apt-get install libgphoto2-dev` or download and build from `http://www.gphoto.org/proj/libgphoto2/`,
@@ -57,34 +56,41 @@ brew install libgphoto2
 apt-get install libgphoto2-dev
 
 // then
-npm install @tsedio/gphoto2-driver
+npm install @tsed/gphoto2-driver
 ```
+
+## Check if your camera is detected
+
+GPhoto2 CLI can help you to know if your camera is correctly detected by the libphoto2 driver. It can help to determine if the
+the detection issue is related from the driver or from the Ts.ED GPhoto2 library.
+
+Install the GPhoto2 CLI:
+
+```bash
+// MacOs
+brew install libgphoto2
+// Linux
+sudo apt install gphoto2
+````
 
 ## Usage
 
 Here an example with TypeScript (works also with pure javascript in Node.js):
 
 ```typescript
-import * as Path from "path";
-import { CameraList, closeQuietly } from "@tsedio/gphoto2-driver";
+import Path from "path";
+import { CameraList, run } from "@tsed/gphoto2-driver";
 
-const cameraList = new CameraList().load();
+run(() => {
+  const cameraList = new CameraList().load();
 
-console.log('Nb camera', cameraList.size);
+  if (cameraList.size) {
+    const camera = cameraList.getCamera(0);
+    const cameraFile = camera.captureImage();
 
-if (cameraList.size) {
-  const camera = cameraList.getCamera(0);
-  console.log('Camera =>', camera);
-
-  const cameraFile = camera.captureImage();
-
-  cameraFile.save(path.join(__dirname, 'capture.jpeg'));
-
-  closeQuietly(cameraFile);
-  closeQuietly(camera);
-}
-
-cameraList.close();
+    cameraFile.save(path.join(__dirname, 'capture.jpeg'));
+  }
+}, {logLevel: 'debug'})
 ```
 
 ## CameraFile
@@ -109,7 +115,7 @@ You have several options to get your image:
 
 Some examples are available in the `packages/examples/src` directory, when you have cloned or downloaded the complete project from github.
 
-Checkout this project then run `npm run install:examples && npm run develop` and run `node examples/camera.js`.
+Checkout this project then run `npm run install:examples && npm run develop` and run `node examples/camera.ts`.
 
 ## Contribute
 

@@ -1,4 +1,5 @@
 import {checkCode, getGPhoto2Driver, GPPointerString} from "@tsed/gphoto2-core";
+import {$log} from "@tsed/logger";
 import {deref} from "ref-napi";
 import {CameraOptions} from "../interfaces";
 import {AbilitiesList} from "./AbilitiesList";
@@ -18,26 +19,13 @@ export class CameraList extends List<CameraOptions> {
     getGPhoto2Driver().gp_camera_autodetect(this.pointer, Context.get().pointer);
   }
 
-  /**
-   *
-   */
   load(): this {
     const portInfoList = new PortInfoList().load();
     const abilitiesList = new AbilitiesList().load();
     const cameraList = abilitiesList.detect(portInfoList);
-    const count = cameraList.size;
 
-    for (let i = 0; i < count; i++) {
-      const model = GPPointerString(); // alloc("string") as PointerOf<string>;
-      const path = GPPointerString(); // alloc("string") as PointerOf<string>;
-
-      checkCode(getGPhoto2Driver().gp_list_get_name(cameraList.pointer, i, model));
-      checkCode(getGPhoto2Driver().gp_list_get_value(cameraList.pointer, i, path));
-
-      if (deref(path).match(CameraList.USB_PATTERN)) {
-        this.push(deref(model), deref(path));
-      }
-    }
+    $log.debug("Found", cameraList.size, "camera(s)");
+    this.getCameraListInfos(cameraList);
 
     portInfoList.close();
     abilitiesList.close();
@@ -69,6 +57,12 @@ export class CameraList extends List<CameraOptions> {
     return undefined;
   }
 
+  static getCamera(index: number) {
+    const cameraList = new CameraList().load();
+
+    return cameraList.getCamera(index);
+  }
+
   /**
    *
    * @returns {string}
@@ -79,5 +73,21 @@ export class CameraList extends List<CameraOptions> {
       .join(", ");
 
     return `CameraList{${str}}`;
+  }
+
+  private getCameraListInfos(cameraList: List<any>) {
+    const count = cameraList.size;
+
+    for (let i = 0; i < count; i++) {
+      const model = GPPointerString(); // alloc("string") as PointerOf<string>;
+      const path = GPPointerString(); // alloc("string") as PointerOf<string>;
+
+      checkCode(getGPhoto2Driver().gp_list_get_name(cameraList.pointer, i, model));
+      checkCode(getGPhoto2Driver().gp_list_get_value(cameraList.pointer, i, path));
+
+      if (deref(path).match(CameraList.USB_PATTERN)) {
+        this.push(deref(model), deref(path));
+      }
+    }
   }
 }
