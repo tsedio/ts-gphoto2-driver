@@ -1,6 +1,6 @@
 {
   "name": "@typedproject/gphoto2-driver",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
   "main": "lib/index.js",
   "typings": "lib/index.d.js",
@@ -29,7 +29,7 @@
     "build:doc": "tsc --build tsconfig.doc.json"
   },
   "dependencies": {
-    "@tsed/gphoto2-driver": "3.0.2"
+    "@tsed/gphoto2-driver": "3.0.3"
   },
   "directories": {
     "lib": "lib",

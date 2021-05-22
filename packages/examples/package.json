@@ -1,14 +1,13 @@
 {
   "name": "@tsed/examples-typescript",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "private": true,
   "dependencies": {
-    "@tsed/gphoto2-driver": "3.0.2"
+    "@tsed/gphoto2-driver": "3.0.3"
   },
   "devDependencies": {
     "cli-table3": "0.6.0"
   },
-  "peerDependencies": {},
   "scripts": {
     "start:abilities": "ts-node -r tsconfig-paths/register src/abilities-list.ts",
     "start:camera": "ts-node -r tsconfig-paths/register src/camera.ts",
@@ -22,5 +21,6 @@
     "start:camera:scenario:async": "ts-node -r tsconfig-paths/register src/camera-scenario-async.ts",
     "start:port:list": "ts-node -r tsconfig-paths/register src/port-list.ts",
     "start:widgets": "ts-node -r tsconfig-paths/register src/widgets.ts"
-  }
+  },
+  "peerDependencies": {}
 }
