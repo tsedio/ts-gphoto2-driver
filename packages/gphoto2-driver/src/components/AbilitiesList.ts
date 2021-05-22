@@ -1,4 +1,5 @@
 import {checkCode, getGPhoto2Driver, PointerAbilitiesList, RefAbilitiesList} from "@tsed/gphoto2-core";
+import {$log} from "@tsed/logger";
 import {Context} from "./Context";
 import {List} from "./List";
 import {PointerWrapper} from "./PointerWrapper";
@@ -17,8 +18,9 @@ export class AbilitiesList extends PointerWrapper<PointerAbilitiesList> {
    *
    */
   load(): this {
+    $log.debug("Load abilities...");
     checkCode(getGPhoto2Driver().gp_abilities_list_load(this.pointer, Context.get().pointer), "gp_abilities_list_load");
-
+    $log.debug("Load abilities... ok");
     return this;
   }
 
@@ -28,12 +30,16 @@ export class AbilitiesList extends PointerWrapper<PointerAbilitiesList> {
    * @returns {List}
    */
   detect(portInfoList: PortInfoList): List<any> {
+    $log.debug("Get available camera list");
+
     const list = new List();
 
     checkCode(
       getGPhoto2Driver().gp_abilities_list_detect(this.pointer, portInfoList.pointer, list.pointer, Context.get().pointer),
       "gp_abilities_list_detect"
     );
+
+    $log.debug("Get available camera list... ok");
 
     return list;
   }

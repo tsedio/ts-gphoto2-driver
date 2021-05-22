@@ -50,25 +50,18 @@ Here an example with TypeScript (works also with pure javascript in Node.js):
 
 ```typescript
 import Path from "path";
-import { CameraList, closeQuietly } from "@tsed/gphoto2-driver";
+import { CameraList, run } from "@tsed/gphoto2-driver";
 
-const cameraList = new CameraList().load();
+run(() => {
+  const cameraList = new CameraList().load();
 
-console.log('Nb camera', cameraList.size);
+  if (cameraList.size) {
+    const camera = cameraList.getCamera(0);
+    const cameraFile = camera.captureImage();
 
-if (cameraList.size) {
-  const camera = cameraList.getCamera(0);
-  console.log('Camera =>', camera);
-
-  const cameraFile = camera.captureImage();
-
-  cameraFile.save(path.join(__dirname, 'capture.jpeg'));
-
-  closeQuietly(cameraFile);
-  closeQuietly(camera);
-}
-
-cameraList.close();
+    cameraFile.save(path.join(__dirname, 'capture.jpeg'));
+  }
+}, {logLevel: 'debug'})
 ```
 
 ## CameraFile
@@ -93,7 +86,7 @@ You have several options to get your image:
 
 Some examples are available in the `packages/examples/src` directory, when you have cloned or downloaded the complete project from github.
 
-Checkout this project then run `npm run install:examples && npm run develop` and run `node examples/camera.js`.
+Checkout this project then run `yarn run start:camera`.
 
 ## Contribute
 

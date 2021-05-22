@@ -1,3 +1,4 @@
+import {$log} from "@tsed/logger";
 import ffi from "ffi-napi";
 import util from "util";
 import {
@@ -18,6 +19,7 @@ import {
   IGPPortInfoModule,
   IGPWidgetModule
 } from "./modules";
+import {getLibLocation} from "./utils/getLibLocation";
 
 /**
  *
@@ -59,7 +61,10 @@ export const driverFunctions = {
 // istanbul ignore next
 export function getGPhoto2Driver(): GPhoto2Driver & Record<string, any> {
   if (!GPhoto2Driver) {
-    const driver = ffi.Library("libgphoto2", driverFunctions);
+    const libPath = getLibLocation();
+
+    $log.debug("Load library from", libPath);
+    const driver = ffi.Library(libPath, driverFunctions);
 
     [...GP_CAMERA_MODULE_ASYNC_KEYS, ...GP_FILE_MODULE_ASYNC_KEYS].forEach((key) => {
       driver[`${key}_async`] = util.promisify(driver[key].async);

@@ -2,7 +2,7 @@ import {checkCode, Closeable, closeQuietly, getGPhoto2Driver, GPCodes, PointerOf
 import {alloc, Type} from "ref-napi";
 import {addInstance, removeInstance} from "./Garbage";
 
-export interface IPointerWrapperOptions {
+export interface PointerWrapperOptions {
   method: string;
   refType: Type;
   openMethod?: string;
@@ -10,7 +10,7 @@ export interface IPointerWrapperOptions {
 }
 
 export class PointerWrapper<P extends PointerOf<any>> implements Closeable {
-  constructor(private options: IPointerWrapperOptions, ...args: any[]) {
+  constructor(private options: PointerWrapperOptions, ...args: any[]) {
     this.new(...args);
   }
 

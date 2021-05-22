@@ -1,9 +1,11 @@
 import {checkCode, GPCodes, GPPointer, GPPointerString, PointerCameraFile, PointerOf, RefCameraFile} from "@tsed/gphoto2-core";
+import {ensureDir, ensureDirSync} from "fs-extra";
+import {dirname} from "path";
 import {reinterpret} from "ref-napi";
-import {IPointerWrapperOptions, PointerWrapper} from "./PointerWrapper";
+import {PointerWrapperOptions, PointerWrapper} from "./PointerWrapper";
 
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
-  constructor(options: Partial<IPointerWrapperOptions> = {}, ...args: any[]) {
+  constructor(options: Partial<PointerWrapperOptions> = {}, ...args: any[]) {
     super(
       {
         ...options,
@@ -27,6 +29,7 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
    * @param filename OS-dependent path on the local file system.
    */
   public save(filename: string): GPCodes {
+    ensureDirSync(dirname(filename));
     return this.call("save", filename);
   }
 
@@ -36,6 +39,7 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
    * @returns {Promise<GPCodes>}
    */
   public async saveAsync(filename: string): Promise<GPCodes> {
+    await ensureDir(dirname(filename));
     return this.callAsync("save", filename);
   }
 

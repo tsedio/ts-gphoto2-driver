@@ -51,18 +51,19 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
     }
   }
 
-  /**
-   * @deprecated
-   * @returns {string[]}
-   */
-  getNames(): string[] {
-    return this.getPaths();
-  }
-
   getPaths(): string[] {
     this.checkNotClosed();
 
     return Array.from(this.keys()).sort();
+  }
+
+  getInformation() {
+    return this.getPaths().reduce((props, key) => {
+      return {
+        ...props,
+        [key]: this.get(key).value
+      };
+    }, {});
   }
 
   /**

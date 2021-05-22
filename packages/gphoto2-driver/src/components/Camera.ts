@@ -1,4 +1,18 @@
-import {GPCameraCaptureType, GPCodes, PointerCamera, RefCamera, StructCameraText} from "@tsed/gphoto2-core";
+import {
+  GPCameraCaptureType,
+  GPCameraDriverStatus,
+  GPCameraFileOperation,
+  GPCameraFolderOperation,
+  GPCodes,
+  GPDeviceType,
+  GPPortType,
+  PointerCamera,
+  RefCamera,
+  StructCameraText
+} from "@tsed/gphoto2-core";
+import {$log} from "@tsed/logger";
+import {ensureDir, ensureDirSync} from "fs-extra";
+import {dirname} from "path";
 import {LiveViewOptions} from "../interfaces";
 import {CameraAbilities} from "./CameraAbilities";
 import {CameraFile} from "./CameraFile";
@@ -29,11 +43,28 @@ export class Camera extends PointerWrapper<PointerCamera> {
     return this._widgets;
   }
 
+  static listen(portInfo?: PortInfo) {
+    return new Camera().initialize(portInfo);
+  }
+
+  autoFocus() {
+    try {
+      this.widgets.get("/actions/autofocusdrive").value = true;
+    } catch (er) {
+      $log.warn("Unable to run autofocus command", er);
+    }
+  }
+
+  openFlash() {
+    this.widgets.get("/status/flashopen").value = true;
+  }
+
   /**
    *
    */
-  public initialize(portInfo?: PortInfo): void {
+  public initialize(portInfo?: PortInfo): this {
     this.checkNotClosed();
+
     if (!this.isInitialized()) {
       if (portInfo) {
         this.setPortInfo(portInfo);
@@ -43,6 +74,8 @@ export class Camera extends PointerWrapper<PointerCamera> {
 
       this.initialized = true;
     }
+
+    return this;
   }
 
   /**
@@ -155,6 +188,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * @return camera file, never null. Must be closed afterwards.
    */
   public captureImage(path?: string): CameraFile | undefined {
+    path && ensureDirSync(dirname(path));
     return this.capture(GPCameraCaptureType.GP_CAPTURE_IMAGE, path);
   }
 
@@ -164,7 +198,8 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * @param {string} path Save the captured picture under the given file path.
    * @return camera file, never null. Must be closed afterwards.
    */
-  public captureImageAsync(path?: string): Promise<CameraFile | undefined> {
+  public async captureImageAsync(path?: string): Promise<CameraFile | undefined> {
+    path && (await ensureDir(dirname(path)));
     return this.captureAsync(GPCameraCaptureType.GP_CAPTURE_IMAGE, path);
   }
 
@@ -304,6 +339,27 @@ export class Camera extends PointerWrapper<PointerCamera> {
     this.checkNotClosed();
 
     return this.call("set_port_info", portInfo.pointer);
+  }
+
+  getAbilitiesInformation() {
+    const abilities = this.getAbilities();
+
+    return {
+      model: abilities.model,
+      port: GPPortType[abilities.port],
+      status: GPCameraDriverStatus[abilities.status],
+      id: abilities.id,
+      library: abilities.library,
+      operation: abilities.operation,
+      fileOperations: GPCameraFileOperation[abilities.fileOperations],
+      folderOperations: GPCameraFolderOperation[abilities.folderOperations],
+      usbVendor: abilities.usbVendor,
+      usbProduct: abilities.usbProduct,
+      usbClass: abilities.usbClass,
+      usbSubclass: abilities.usbSubclass,
+      deviceType: GPDeviceType[abilities.deviceType],
+      speed: abilities.speed
+    };
   }
 
   toString(): string {

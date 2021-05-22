@@ -1,15 +1,27 @@
-# ts-gphoto2-driver
+<p style="text-align: center" align="center">
+ <a href="https://tsed.io" target="_blank"><img src="https://tsed.io/tsed-og.png" width="200" alt="Ts.ED logo"/></a>
+</p>
 
-[![Build & Release](https://github.com/tsedio/ts-gphoto2-driver/actions/workflows/build.yml/badge.svg)](https://github.com/tsedio/ts-gphoto2-driver/actions/workflows/build.yml)[![npm version](https://badge.fury.io/js/%40tsedio%2Fgphoto2-driver.svg)](https://badge.fury.io/js/%40tsedio%2Fgphoto2-driver)
+<div align="center">
+  <h1>Ts.ED GPhotoDriver2</h1>
+
+[![Build & Release](https://github.com/tsedio/ts-gphoto2-driver/actions/workflows/build.yml/badge.svg)](https://github.com/tsedio/ts-gphoto2-driver/actions/workflows/build.yml)
+[![PR Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/tsedio/ts-gphoto2-driver/blob/master/CONTRIBUTING.md)
 [![Coverage Status](https://coveralls.io/repos/github/tsedio/ts-gphoto2-driver/badge.svg?branch=production)](https://coveralls.io/github/tsedio/ts-gphoto2-driver?branch=production)
-![npm](https://img.shields.io/npm/dm/%40tsed%2Fgphoto2-driver.svg)
 [![npm version](https://badge.fury.io/js/%40tsed%2Fgphoto2-driver.svg)](https://badge.fury.io/js/%40tsed%2Fgphoto2-driver)
-[![Dependencies](https://david-dm.org/tsedio/ts-gphoto2-driver.svg)](https://david-dm.org/tsedio/ts-gphoto2-driver#info=dependencies)
-[![img](https://david-dm.org/tsedio/ts-gphoto2-driver/dev-status.svg)](https://david-dm.org/tsedio/ts-gphoto2-driver/#info=devDependencies)
-[![img](https://david-dm.org/tsedio/ts-gphoto2-driver/peer-status.svg)](https://david-dm.org/tsedio/ts-gphoto2-driver/#info=peerDependenciess)
-[![Known Vulnerabilities](https://snyk.io/test/github/tsedio/ts-gphoto2-driver/badge.svg)](https://snyk.io/test/github/tsedio/ts-gphoto2-driver)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![backers](https://opencollective.com/tsed/tiers/badge.svg)](https://opencollective.com/tsed)
+
+
+  <br />
+<div align="center">
+  <a href="https://api.tsed.io/rest/slack/tsedio/tsed">Slack</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  <a href="https://twitter.com/TsED_io">Twitter</a>
+</div>
+  <hr />
+</div>
 
 A Node.js wrapper for libgphoto2 written in TypeScript. Useful for remote controlling of DSLRs and other digital cameras supported by gphoto2.
 
@@ -39,6 +51,11 @@ A Node.js wrapper for libgphoto2 written in TypeScript. Useful for remote contro
 After installing the dependencies, just install using:
 
 ```bash
+brew install libgphoto2
+// or
+apt-get install libgphoto2-dev
+
+// then
 npm install @tsed/gphoto2-driver
 ```
 
@@ -91,7 +108,7 @@ You have several options to get your image:
 
 Some examples are available in the `packages/examples/src` directory, when you have cloned or downloaded the complete project from github.
 
-Checkout this project then run `npm run install:examples && npm run develop` and run `node examples/camera.js`.
+Checkout this project then run `npm run install:examples && npm run develop` and run `node examples/camera.ts`.
 
 ## Contribute
 
