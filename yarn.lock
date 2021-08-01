@@ -1725,10 +1725,10 @@
   resolved "https://registry.npmjs.org/@types/prettier/-/prettier-2.2.3.tgz"
   integrity sha512-PijRCG/K3s3w1We6ynUKdxEc5AcuuH3NBmMDP8uvKVp6X43UY7NQlTzczakXP3DJR0F4dfNQIGjU2cUeRYs2AA==
 
-"@types/ref-napi@*", "@types/ref-napi@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@types/ref-napi/-/ref-napi-1.4.1.tgz#cf5a5ae6a90f6cb2a1d4db21ad32ce0e7c59a6fb"
-  integrity sha512-30A5bpOd+403PJCyyarGH8AOW2IowJ5AZySiGG1B4Sad5CRHt8O+cALEbSUZT+0sE456yAwB2+UjXpH+BIVN1g==
+"@types/ref-napi@*", "@types/ref-napi@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@types/ref-napi/-/ref-napi-3.0.4.tgz#d7edc063b244c85767867ce1167ec2d7051728a1"
+  integrity sha512-ng8SCmdZbz1GHaW3qgGoX9IaHoIvgMqgBHLe3sv18NbAkHVgnjRW8fJq51VTUm4lnJyLu60q9/002o7qjOg13g==
   dependencies:
     "@types/node" "*"
 
