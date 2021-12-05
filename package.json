@@ -20,7 +20,7 @@
     "configure": "monorepo ci configure",
     "test": "yarn test:lint && yarn test:coverage",
     "test:unit": "cross-env NODE_ENV=test lerna run test",
-    "test:coverage": "yarn test:unit &&",
+    "test:coverage": "yarn test:unit && yarn coverage:merge",
     "coverage:merge": "istanbul-merge --out coverage/coverage-final.json 'packages/*/coverage/coverage-final.json' && nyc report --temp-dir ./coverage --reporter clover --reporter lcov --report-dir ./coverage",
     "test:lint": "eslint packages --ext .ts",
     "test:lint:fix": "eslint packages --ext .ts --fix",

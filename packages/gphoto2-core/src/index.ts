@@ -8,4 +8,4 @@ export * from "./utils/GPUtils";
 export * from "./utils/GPPointer";
 export * from "./utils/GPPointerRef";
 
-getGPhoto2Driver();
+process.env.NODE_ENV !== "test" && getGPhoto2Driver();

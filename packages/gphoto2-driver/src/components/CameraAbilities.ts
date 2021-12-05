@@ -15,6 +15,7 @@ export class CameraAbilities implements Closeable {
 
   constructor() {
     const struct = new StructCameraAbilities();
+
     this.buffer = struct.ref();
   }
 

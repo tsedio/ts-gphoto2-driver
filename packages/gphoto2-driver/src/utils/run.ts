@@ -26,7 +26,7 @@ export async function run(cb: any, options: RunOptions = {}) {
   try {
     await cb();
   } catch (er) {
-    $log.error(er.message);
+    $log.error(er.message, er.stack);
   } finally {
     closeAll();
   }

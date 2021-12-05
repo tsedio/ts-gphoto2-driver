@@ -16,7 +16,6 @@ describe("GPUtils", () => {
 
       const error = catchError(() => checkCode(GPCodes.GP_ERROR_BAD_PARAMETERS, "method"));
       expect(error?.message).toEqual("method returned -2: GP_ERROR_BAD_PARAMETERS > Error GP");
-      expect($log.error).toHaveBeenCalledWith("method returned -2: GP_ERROR_BAD_PARAMETERS > Error GP");
     });
     it("should fail silently", () => {
       (getGPhoto2Driver as any).mockReturnValue({

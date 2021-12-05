@@ -1,8 +1,22 @@
-import {checkCode, GPCodes, GPPointer, GPPointerString, PointerCameraFile, PointerOf, RefCameraFile} from "@tsed/gphoto2-core";
+import {
+  checkCode,
+  closeQuietly,
+  GPCameraFileType,
+  GPCodes,
+  GPPointer,
+  GPPointerString,
+  PointerCamera,
+  PointerCameraFile,
+  PointerOf,
+  RefCameraFile
+} from "@tsed/gphoto2-core";
+import {runMethod, runAsyncMethod} from "@tsed/gphoto2-core";
+import {Context} from "./Context";
 import {ensureDir, ensureDirSync} from "fs-extra";
 import {dirname} from "path";
 import {reinterpret} from "ref-napi";
-import {PointerWrapperOptions, PointerWrapper} from "./PointerWrapper";
+import {CameraFilePath} from "./CameraFilePath";
+import {PointerWrapper, PointerWrapperOptions} from "./PointerWrapper";
 
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
   constructor(options: Partial<PointerWrapperOptions> = {}, ...args: any[]) {
@@ -22,6 +36,49 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
 
   public free(): void {
     return this.call("free");
+  }
+
+  /**
+   * Get File on camera
+   * @param pCamera
+   * @param file
+   */
+  get(pCamera: PointerCamera, file: CameraFilePath = new CameraFilePath()) {
+    try {
+      runMethod(
+        "gp_camera_file_get",
+        pCamera,
+        file.path,
+        file.filename,
+        GPCameraFileType.GP_FILE_TYPE_NORMAL,
+        this.pointer,
+        Context.get().pointer
+      );
+    } catch (er) {
+      closeQuietly(this);
+      throw er;
+    }
+
+    return file;
+  }
+
+  async getAsync(pCamera: PointerCamera, file: CameraFilePath = new CameraFilePath()) {
+    try {
+      await runAsyncMethod(
+        "gp_camera_file_get",
+        pCamera,
+        file.path,
+        file.filename,
+        GPCameraFileType.GP_FILE_TYPE_NORMAL,
+        this.pointer,
+        Context.get().pointer
+      );
+    } catch (er) {
+      closeQuietly(this);
+      throw er;
+    }
+
+    return file;
   }
 
   /**
