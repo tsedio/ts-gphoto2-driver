@@ -91,7 +91,7 @@ export class PointerWrapper<P extends PointerOf<any>> implements Closeable {
     addInstance(this);
     this._buffer = alloc(refType) as any;
 
-    return this.callByRef(openMethod!, ...args);
+    return this.callByRef(openMethod, ...args);
   }
 
   private getOptions() {

@@ -316,7 +316,7 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
       throw new Error(`Parameter path: invalid value ${path}: is of type ${widget.type} which does not have any choices.`);
     }
 
-    return widget.choices!;
+    return widget.choices || [];
   }
 
   /**
@@ -329,30 +329,31 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
 
   /**
    * Enumerate all widgets
-   * @param widget
+   * @param pWidget
    * @param path
    */
-  private enumWidgets(widget: PointerCameraWidget, path: string) {
+  private enumWidgets(pWidget: PointerCameraWidget, path: string) {
     this.checkNotClosed();
     const type = GPPointer<number>("int");
 
-    checkCode(getGPhoto2Driver().gp_widget_get_type(widget, type));
+    checkCode(getGPhoto2Driver().gp_widget_get_type(pWidget, type));
 
     const widgetType = WidgetTypes.fromCVal(type.deref());
 
     if (widgetType.hasValue) {
-      if (super.has(path)) {
-        super.get(path)!.pointer = widget;
+      const widget = super.get(path);
+      if (widget) {
+        widget.pointer = pWidget;
       } else {
-        super.set(path, new Widget(path, widget, this));
+        super.set(path, new Widget(path, pWidget, this));
       }
     }
 
-    const childcount: number = checkCode(getGPhoto2Driver().gp_widget_count_children(widget));
+    const childcount: number = checkCode(getGPhoto2Driver().gp_widget_count_children(pWidget));
 
     for (let i = 0; i < childcount; i++) {
       const buffer = GPPointerRef<PointerCameraWidget>();
-      checkCode(getGPhoto2Driver().gp_widget_get_child(widget, i, buffer));
+      checkCode(getGPhoto2Driver().gp_widget_get_child(pWidget, i, buffer));
 
       this.enumWidgets(buffer.deref(), `${path}/${this.getBasename(buffer.deref())}`);
     }

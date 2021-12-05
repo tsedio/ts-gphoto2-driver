@@ -45,7 +45,7 @@ export class CameraList extends List<CameraOptions> {
     if (cameraInfo) {
       const portInfoList = new PortInfoList().load();
       const camera = new Camera();
-      const portInfo = portInfoList.findByPath(cameraInfo.port)!;
+      const portInfo = portInfoList.findByPath(cameraInfo.port);
 
       camera.initialize(portInfo);
 

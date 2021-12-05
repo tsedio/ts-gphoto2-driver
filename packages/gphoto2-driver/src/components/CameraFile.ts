@@ -87,9 +87,7 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
    * @param encoding
    **/
 
-  public async getDataAndSizeAsync(
-    encoding: "binary" | "base64" = "binary"
-  ): Promise<{
+  public async getDataAndSizeAsync(encoding: "binary" | "base64" = "binary"): Promise<{
     data: Buffer | string;
     size: number;
   }> {
