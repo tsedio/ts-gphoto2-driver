@@ -1,6 +1,11 @@
-import {Pointer, refType, types, ArrayType, StructType} from "../napi";
-import {GPCameraDriverStatus, GPCameraFileOperation, GPCameraFolderOperation, GPCameraOperation, GPDeviceType, GPPortType} from "../types";
+import {ArrayType, Pointer, refType, StructType, types} from "../napi/exports";
+import {GPCameraDriverStatus} from "../types/GPCameraDriverStatus";
+import {GPCameraFileOperation} from "../types/GPCameraFileOperation";
+import {GPCameraFolderOperation} from "../types/GPCameraFolderOperation";
+import {GPCameraOperation} from "../types/GPCameraOperation";
 import {GPCodes} from "../types/GPCodes";
+import {GPDeviceType} from "../types/GPDeviceType";
+import {GPPortType} from "../types/GPPortType";
 import {StructBuffer} from "../types/StructBuffer";
 import {PointerContext, RefContext} from "./GPContextModule";
 import {PointerList, RefList} from "./GPListModule";

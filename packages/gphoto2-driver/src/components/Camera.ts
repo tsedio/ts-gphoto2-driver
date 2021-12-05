@@ -13,7 +13,7 @@ import {
 import {$log} from "@tsed/logger";
 import {ensureDir, ensureDirSync} from "fs-extra";
 import {dirname} from "path";
-import {LiveViewOptions} from "../interfaces";
+import {LiveViewOptions} from "../interfaces/LiveViewOptions";
 import {CameraAbilities} from "./CameraAbilities";
 import {CameraFile} from "./CameraFile";
 import {CameraFilePath} from "./CameraFilePath";
@@ -27,12 +27,11 @@ import {parseSummary} from "../utils/parseSummary";
 export class Camera extends PointerWrapper<PointerCamera> {
   private initialized = false;
   private closed = false;
+  private _widgets: CameraWidgets;
 
   constructor() {
     super({method: "gp_camera", refType: RefCamera});
   }
-
-  private _widgets: CameraWidgets;
 
   get widgets(): CameraWidgets {
     this.checkNotClosed();
@@ -46,6 +45,18 @@ export class Camera extends PointerWrapper<PointerCamera> {
 
   static listen(portInfo?: PortInfo) {
     return new Camera().initialize(portInfo);
+  }
+
+  setWidgetValue(widgetId: string, value: any) {
+    const widget = this.widgets.get(widgetId);
+
+    if (widget) {
+      //      const config = this.call("get_config", widget.pointer.ref(), Context.get().pointer);
+
+      widget.setValue(value, true);
+      // console.log(this.call("set_single_config", widget.path, widget.pointer, Context.get().pointer));
+      //  console.log(this.call("set_config", widget.pointer, Context.get().pointer));
+    }
   }
 
   autoFocus() {
@@ -67,7 +78,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
       try {
         this.widgets.get("/status/flashopen").value = true;
       } catch (er) {
-        $log.warn("Unable to run autofocus command", er);
+        $log.warn("Unable to run flash command", er);
       }
     }
   }
@@ -354,6 +365,12 @@ export class Camera extends PointerWrapper<PointerCamera> {
     this.checkNotClosed();
 
     return this.call("unref");
+  }
+
+  public exit() {
+    this.checkNotClosed();
+
+    return this.call("exit", Context.get().pointer);
   }
 
   /**

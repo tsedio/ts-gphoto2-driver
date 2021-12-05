@@ -1,0 +1,26 @@
+@import "react-toastify/dist/ReactToastify.css";
+
+.Toastify__toast-container--top-right {
+  top: 80px;
+}
+
+.Toastify__progress-bar--default {
+    background: transparent;
+    @apply bg-blue-600;
+}
+
+.Toastify__toast.success .Toastify__progress-bar--default {
+    @apply bg-green-600;
+}
+
+.Toastify__toast.danger .Toastify__progress-bar--default{
+    @apply bg-red-800
+}
+
+.Toastify__toast.warning .Toastify__progress-bar--default{
+    @apply bg-orange-700;
+}
+
+.Toastify__toast.info .Toastify__progress-bar--default{
+    @apply bg-blue-600;
+}

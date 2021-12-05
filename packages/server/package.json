@@ -1,0 +1,56 @@
+{
+  "name": "@tsed/gphoto2-server",
+  "version": "3.0.3",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "yarn run tsc",
+    "tsc": "tsc --project tsconfig.compile.json",
+    "tsc:w": "tsc --project tsconfig.json -w",
+    "start": "tsnd --inspect --ignore-watch node_modules --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
+    "start:prod": "cross-env NODE_ENV=production node dist/index.js"
+  },
+  "dependencies": {
+    "@tsed/ajv": "^6.107.4",
+    "@tsed/common": "^6.107.4",
+    "@tsed/core": "^6.107.4",
+    "@tsed/di": "^6.107.4",
+    "@tsed/exceptions": "^6.107.4",
+    "@tsed/json-mapper": "^6.107.4",
+    "@tsed/logger": "6.1.1",
+    "@tsed/platform-express": "^6.107.4",
+    "@tsed/schema": "^6.107.4",
+    "@tsed/swagger": "^6.107.4",
+    "@tsed/gphoto2-driver": "3.1.1",
+    "@types/node": "^16.11.11",
+    "ajv": "^8.8.2",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "method-override": "^3.0.0",
+    "swagger-typescript-api": "9.3.1",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.12.0",
+    "typescript": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.7.2",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/method-override": "^0.0.32",
+    "@types/multer": "^1.4.7",
+    "ts-node-dev": "^1.1.8",
+    "tslib": "^2.3.1"
+  },
+  "tsed": {
+    "packageManager": "yarn",
+    "convention": "default",
+    "architecture": "default"
+  },
+  "peerDependencies": {}
+}

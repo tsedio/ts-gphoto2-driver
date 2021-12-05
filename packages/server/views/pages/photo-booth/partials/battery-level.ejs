@@ -1,0 +1,8 @@
+<div class="battery-level flex items-center">
+    <div class="battery-progress-bar flex grow">
+        <div class="relative" style="width: <%= batteryLevel.value %>%"></div>
+    </div>
+    <div class="flex items-center">
+        <%= batteryLevel.value %><%= batteryLevel.unit %>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@tsed/*": ["../*/src"]
+    }
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules", "./public", "dist", "test"],
+  "linterOptions": {
+    "exclude": ["dist"]
+  }
+}

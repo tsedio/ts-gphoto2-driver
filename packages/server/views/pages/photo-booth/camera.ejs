@@ -1,0 +1,26 @@
+<%- include('../../partials/header') %>
+
+<div class="container-photo-booth flex">
+    <section class="col-right flex flex-col h-full justify-start content-start grow pr-1">
+        <div class="col-head flex items-center">
+            <div class="flex-1"></div>
+            <div class="col-left camera-statuses">
+                <%- include('./partials/battery-level') %>
+            </div>
+        </div>
+        <div class="col-body flex flex-1 items-center justify-center overflow-hidden">
+            <canvas class="camera-preview" data-src="<%= BASE_URL ;%>/rest/cameras/<%= cameraId ;%>/live-view/stream"></canvas>
+        </div>
+    </section>
+
+    <section class="col-left flex flex-col h-full justify-start content-start">
+        <div class="col-head"></div>
+
+        <div class="col-body flex flex-1 overflow-auto p-1">
+            <%- include('./partials/summary') %>
+        </div>
+    </section>
+</div>
+
+<script src="<%= BASE_URL ;%>/statics/js/camera-preview.js" type="text/javascript"></script>
+<%- include('../../partials/footer') %>

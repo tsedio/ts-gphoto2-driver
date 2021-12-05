@@ -14,7 +14,7 @@ function runScenario({autoFocus = false, preview = false, capture = false, trigg
     const camera = Camera.listen();
 
     if (autoFocus) {
-      $log.info("Autofocus =============================");
+      $log.info("Autofocus  =============================");
       camera.autoFocus();
     }
 

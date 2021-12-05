@@ -1,0 +1,16 @@
+<%- include('../../partials/header') %>
+
+<% if (cameras.length) { %>
+    <p>Select a camera:</p>
+    <ul>
+        <% cameras.forEach((camera) => { %>
+            <li><a href="/photo-booth/<%= camera.id; %>"><span><%= camera.model; %></span></a></li>
+        <% }); %>
+    </ul>
+<% } else { %>
+    <p>No camera available. Please connect a camera.</p>
+
+    <a href="/photo-booth">Refresh list</a>
+<% } %>
+
+<%- include('../../partials/footer') %>
