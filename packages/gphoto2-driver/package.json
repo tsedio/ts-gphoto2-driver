@@ -2,8 +2,16 @@
   "name": "@tsed/gphoto2-driver",
   "version": "3.0.3",
   "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.js",
+  "private": false,
+  "source": "./src/index.ts",
+  "main": "./lib/cjs/index.js",
+  "typings": "./lib/types/index.d.ts",
+  "exports": {
+    "types": "./lib/types/index.d.ts",
+    "import": "./lib/esm/index.js",
+    "require": "./lib/cjs/index.js",
+    "default": "./lib/esm/index.js"
+  },
   "author": "Romain Lenzotti",
   "contributors": [
     "Alexander Gusez (https://github.com/goooseman)"
@@ -25,8 +33,9 @@
     "reflex"
   ],
   "scripts": {
-    "build": "tsc --build tsconfig.compile.json",
-    "build:doc": "tsc --build tsconfig.doc.json"
+    "build": "yarn run build:esm && yarn run build:cjs",
+    "build:cjs": "tsc --build tsconfig.compile.json",
+    "build:esm": "tsc --build tsconfig.compile.esm.json"
   },
   "directories": {
     "lib": "lib",
@@ -34,12 +43,12 @@
     "test": "test"
   },
   "dependencies": {
-    "@tsed/core": "6.92.0",
+    "@tsed/core": "6.94.0",
     "@tsed/gphoto2-core": "3.0.3",
-    "@tsed/logger": "5.14.0",
+    "@tsed/logger": "6.0.0",
     "fs-extra": "10.0.0",
-    "source-map-support": "0.5.19",
-    "tslib": "2.2.0"
+    "source-map-support": "0.5.21",
+    "tslib": "2.3.1"
   },
   "devDependencies": {
     "@types/fs-extra": "9.0.11"
