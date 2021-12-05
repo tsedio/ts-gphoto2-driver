@@ -19,8 +19,9 @@
   "scripts": {
     "configure": "monorepo ci configure",
     "test": "yarn test:lint && yarn test:coverage",
-    "test:unit": "cross-env NODE_ENV=test jest",
-    "test:coverage": "yarn test:unit",
+    "test:unit": "cross-env NODE_ENV=test lerna run test",
+    "test:coverage": "yarn test:unit &&",
+    "coverage:merge": "istanbul-merge --out coverage/coverage-final.json 'packages/*/coverage/coverage-final.json' && nyc report --temp-dir ./coverage --reporter clover --reporter lcov --report-dir ./coverage",
     "test:lint": "eslint packages --ext .ts",
     "test:lint:fix": "eslint packages --ext .ts --fix",
     "build": "monorepo build",
@@ -53,9 +54,12 @@
     "eslint-plugin-prettier": "4.0.0",
     "gflow": "5.1.2",
     "husky": "6.0.0",
+    "istanbul-merge": "^1.1.1",
+    "nyc": "^15.1.0",
     "jest": "27.4.3",
     "lerna": "4.0.0",
     "lint-staged": "12.1.2",
+    "normalize-path": "^3.0.0",
     "prettier": "2.5.1",
     "segfault-handler": "1.3.0",
     "semantic-release": "18.0.1",
@@ -64,7 +68,6 @@
     "tsconfig-paths": "3.12.0",
     "typescript": "4.5.2"
   },
-  "devDependencies": {},
   "workspaces": {
     "packages": [
       "packages/*"

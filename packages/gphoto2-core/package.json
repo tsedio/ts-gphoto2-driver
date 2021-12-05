@@ -35,7 +35,8 @@
   "scripts": {
     "build": "yarn run build:esm && yarn run build:cjs",
     "build:cjs": "tsc --build tsconfig.compile.json",
-    "build:esm": "tsc --build tsconfig.compile.esm.json"
+    "build:esm": "tsc --build tsconfig.compile.esm.json",
+    "test": "cross-env NODE_ENV=test jest"
   },
   "dependencies": {
     "@tsed/core": "6.94.0",
