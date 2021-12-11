@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/tsedio/ts-gphoto2-driver",
   "keywords": [
+    "dslr",
     "gphoto-driver",
     "typescript",
     "driver",

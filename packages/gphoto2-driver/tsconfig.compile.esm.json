@@ -6,7 +6,8 @@
     "rootDir": "src",
     "outDir": "./lib/esm",
     "declaration": true,
-    "declarationDir": "./lib/types"
+    "declarationDir": "./lib/types",
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules",

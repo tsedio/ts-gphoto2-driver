@@ -1,6 +1,6 @@
 import {getGPhoto2Driver, GPPointer} from "@tsed/gphoto2-core";
+import {PortInfoList} from "@tsed/gphoto2-driver";
 import {createDriverFixture} from "../__mock__/createDriverFixture";
-import {Context, PortInfoList} from "@tsed/gphoto2-driver";
 import {alloc} from "../__mock__/ref-napi";
 import {$log} from "@tsed/logger";
 

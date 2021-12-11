@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@types/ffi-napi": "4.0.4",
-    "@types/ref-napi": "^3.0.4"
+    "@types/ref-napi": "3.0.4"
   },
   "directories": {
     "lib": "lib",

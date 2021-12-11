@@ -27,13 +27,26 @@ A Node.js wrapper for libgphoto2 written in TypeScript. Useful for remote contro
 
 ## Features
 
- - Camera autodetection,
- - Take a picture/movie capture,
- - Take a preview,
- - Retrieve camera list,
- - Select camera,
- - Take a liveview from camera and get binary or base64 of each frame, or write it to file,
- - Display info about your camera (summary, about, manual).
+- Camera autodetection,
+- Take a picture/movie capture,
+- Take a preview,
+- Retrieve camera list,
+- Select camera,
+- Take a liveview from camera and get binary or base64 of each frame, or write it to file,
+- Display info about your camera (summary, about, manual).
+
+## Know issue
+
+This package isn't compatible with Node.js 13 and higher version. `@tsed/gphoto2-driver use` `ref-array-napi` which have a
+bug with some node.js version related [here](https://github.com/node-ffi-napi/ref-napi/issues/47).
+
+The possible solutions would be:
+
+- Find a way not to use ref-array-napi to manipulate C++ Array in Node.js,
+- That the author of the module finds a solution to correct the problem,
+- Redevelop the driver directly with NAPI.
+
+Obviously any help is welcome to move the project forward :)
 
 ## Prerequisite
 
