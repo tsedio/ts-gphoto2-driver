@@ -55,5 +55,8 @@
   "devDependencies": {
     "@types/fs-extra": "9.0.13"
   },
-  "peerDependencies": {}
+  "peerDependencies": {
+    "@types/ffi-napi": ">=4.0.4",
+    "@types/ref-napi": ">=3.0.4"
+  }
 }

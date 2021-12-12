@@ -1,12 +1,11 @@
-import {PointerOf} from "../types/Pointer";
 import {readCString} from "ref-napi";
 
 /**
  * Return the string value of the pointer.
- * @param {PointerOf<string>} p
+ * @param {Pointer<string>} p
  * @returns {string}
  * @constructor
  */
-export function pointerToString(p: PointerOf<string>) {
+export function pointerToString(p: Buffer) {
   return readCString(p, 0);
 }

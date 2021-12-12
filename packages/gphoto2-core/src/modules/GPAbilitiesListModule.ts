@@ -1,15 +1,7 @@
-import {refType, types} from "ref-napi";
+import {Pointer, refType, types} from "ref-napi";
 import ArrayType from "ref-array-napi";
 import StructType from "ref-struct-napi";
-import {
-  GPCameraDriverStatus,
-  GPCameraFileOperation,
-  GPCameraFolderOperation,
-  GPCameraOperation,
-  GPDeviceType,
-  GPPortType,
-  PointerOf
-} from "../types";
+import {GPCameraDriverStatus, GPCameraFileOperation, GPCameraFolderOperation, GPCameraOperation, GPDeviceType, GPPortType} from "../types";
 import {GPCodes} from "../types/GPCodes";
 import {StructBuffer} from "../types/StructBuffer";
 import {PointerContext, RefContext} from "./GPContextModule";
@@ -19,7 +11,7 @@ import {PointerPortInfoList, RefPortInfoList} from "./GPPortInfoModule";
 /**
  *
  */
-export type PointerAbilitiesList = PointerOf<void>;
+export type PointerAbilitiesList = Pointer<void>;
 /**
  *
  */
@@ -30,12 +22,12 @@ export const RefAbilitiesList = refType("void");
  *
  */
 export type StructCameraAbilities = StructType & {
-  model: PointerOf<string> & StructBuffer;
-  speed: PointerOf<number[]>;
+  model: Pointer<string> & StructBuffer;
+  speed: Pointer<number[]>;
   port: GPPortType;
   status: GPCameraDriverStatus;
-  id: PointerOf<string> & StructBuffer;
-  library: PointerOf<string> & StructBuffer;
+  id: Pointer<string> & StructBuffer;
+  library: Pointer<string> & StructBuffer;
   operation: GPCameraOperation;
   file_operations: GPCameraFileOperation;
   folder_operations: GPCameraFolderOperation;
@@ -52,7 +44,7 @@ export type StructCameraAbilities = StructType & {
   reserved6: number /**< reserved space \internal */;
   reserved7: number /**< reserved space \internal */;
   reserved8: number /**< reserved space \internal */;
-  ref(): PointerOf<StructCameraAbilities>;
+  ref(): Pointer<StructCameraAbilities>;
 };
 /**
  *
@@ -115,7 +107,7 @@ export interface IGPAbilitiesListModule {
    *
 
    */
-  gp_abilities_list_new(abilitiesList: PointerOf<PointerAbilitiesList>): void;
+  gp_abilities_list_new(abilitiesList: Pointer<PointerAbilitiesList>): void;
 
   /**
    * Scans the system for camera drivers.

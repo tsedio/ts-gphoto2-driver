@@ -1,7 +1,7 @@
 import {classOf, nameOf} from "@tsed/core";
 import {$log} from "@tsed/logger";
-import {Closeable, closeQuietly, getGPhoto2Driver, GPCodes, GPhoto2Driver, PointerOf} from "@tsed/gphoto2-core";
-import {alloc, Type} from "ref-napi";
+import {Closeable, closeQuietly, getGPhoto2Driver, GPCodes, GPhoto2Driver} from "@tsed/gphoto2-core";
+import {alloc, Pointer, Type} from "ref-napi";
 import {addInstance, removeInstance} from "./Garbage";
 import {Context} from "./Context";
 
@@ -13,14 +13,14 @@ export interface PointerWrapperOptions {
   closeMethod?: string;
 }
 
-export class PointerWrapper<P extends PointerOf<any>> implements Closeable {
+export class PointerWrapper<P extends Pointer<any>> implements Closeable {
+  private _buffer: Pointer<P>;
+
   constructor(private options: PointerWrapperOptions, ...args: any[]) {
     this.new(...args);
   }
 
-  private _buffer: PointerOf<P>;
-
-  get buffer(): PointerOf<P> {
+  get buffer(): Pointer<P> {
     return this._buffer;
   }
 
@@ -28,8 +28,8 @@ export class PointerWrapper<P extends PointerOf<any>> implements Closeable {
     return this.call<number>("count");
   }
 
-  get byRef(): PointerOf<P> {
-    return this._buffer;
+  get byRef() {
+    return this.buffer;
   }
 
   get pointer(): P {

@@ -1,4 +1,4 @@
-import {GPPointerRef} from "./GPPointerRef";
+import {GPPointerRef} from "./GPPointer";
 
 describe("GPPointerRef", () => {
   describe("GPPointerRef()", () => {

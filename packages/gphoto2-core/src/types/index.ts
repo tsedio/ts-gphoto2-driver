@@ -9,5 +9,4 @@ export * from "./GPDeviceType";
 export * from "./GPPortType";
 export * from "./GPVersionType";
 export * from "./GPWidgetType";
-export * from "./Pointer";
 export * from "./StructBuffer";

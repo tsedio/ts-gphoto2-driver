@@ -1874,7 +1874,7 @@
 
 "@types/ffi-napi@4.0.4":
   version "4.0.4"
-  resolved "https://registry.npmjs.org/@types/ffi-napi/-/ffi-napi-4.0.4.tgz"
+  resolved "https://registry.yarnpkg.com/@types/ffi-napi/-/ffi-napi-4.0.4.tgz#2136fb9f4c211336da6d3e24c4567fd9182cd4b4"
   integrity sha512-okbJHGWpRsZTKudP9StCsxe8sWJozdF0WwXC2CLrfKWb9fkwc7nJaSJRfGQ9OeF9lQ9ihZEaOpcsuUvkdZ8Ksw==
   dependencies:
     "@types/node" "*"
@@ -1962,14 +1962,7 @@
   resolved "https://registry.npmjs.org/@types/prettier/-/prettier-2.4.2.tgz"
   integrity sha512-ekoj4qOQYp7CvjX8ZDBgN86w3MqQhLE1hczEJbEIjgFEumDy+na/4AJAbLXfgEWFNB2pKadM5rPFtuSGMWK7xA==
 
-"@types/ref-napi@*":
-  version "1.4.1"
-  resolved "https://registry.npmjs.org/@types/ref-napi/-/ref-napi-1.4.1.tgz"
-  integrity sha512-30A5bpOd+403PJCyyarGH8AOW2IowJ5AZySiGG1B4Sad5CRHt8O+cALEbSUZT+0sE456yAwB2+UjXpH+BIVN1g==
-  dependencies:
-    "@types/node" "*"
-
-"@types/ref-napi@3.0.4":
+"@types/ref-napi@*", "@types/ref-napi@3.0.4":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@types/ref-napi/-/ref-napi-3.0.4.tgz#d7edc063b244c85767867ce1167ec2d7051728a1"
   integrity sha512-ng8SCmdZbz1GHaW3qgGoX9IaHoIvgMqgBHLe3sv18NbAkHVgnjRW8fJq51VTUm4lnJyLu60q9/002o7qjOg13g==
@@ -1977,9 +1970,9 @@
     "@types/node" "*"
 
 "@types/ref-struct-di@*":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@types/ref-struct-di/-/ref-struct-di-1.1.0.tgz"
-  integrity sha512-obdtTOGqfV/3MdouZEe2hup7fZwAK6RvusqLIL0hK/MuEBKHWpC3j/NXiC5N6zXdj7p52QB0wsnUEsdkFc+DOw==
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@types/ref-struct-di/-/ref-struct-di-1.1.5.tgz#68a85436744108b2834f567e0500a9400b21b804"
+  integrity sha512-8pPFcSyw+jI7tvUC5Du9NqOhZeKOvt2LxvPN+9aKnXAu68URpWYrwY99LaraH58+XQIYWbD8tw3SH+h4/1A5vA==
   dependencies:
     "@types/ref-napi" "*"
 

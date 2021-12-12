@@ -1,38 +1,46 @@
-import {alloc, allocCString} from "ref-napi";
-import {PointerOf} from "../types";
+import {alloc, allocCString, Pointer, refType} from "ref-napi";
 
 /**
  * Create a new Pointer.
  * @param type
- * @returns {PointerOf<T>}
+ * @returns {Pointer<T>}
  */
-export function GPPointer<T = any>(type: any = "void"): PointerOf<T> {
+export function GPPointer<T = any>(type: any = "void"): Pointer<T> {
   return alloc(type) as any;
 }
 
 /**
  * Create a new pointer of string.
  * @param {string} value
- * @returns {PointerOf<string>}
+ * @returns {Pointer<string>}
  */
-export function GPPointerString(value?: string): PointerOf<string> {
+export function GPPointerString(value?: string): Pointer<string> {
   return value !== undefined ? (allocCString(value) as any) : (alloc("string") as any);
 }
 
 /**
  * Create a new pointer of int
  * @param {number} value
- * @returns {PointerOf<number>}
+ * @returns {Pointer<number>}
  */
-export function GPPointerInt(value?: number): PointerOf<number> {
+export function GPPointerInt(value?: number): Pointer<number> {
   return alloc("int", value) as any;
 }
 
 /**
  * Create a new pointer of Float.
  * @param {number} value
- * @returns {PointerOf<number>}
+ * @returns {Pointer<number>}
  */
-export function GPPointerFloat(value?: number): PointerOf<number> {
+export function GPPointerFloat(value?: number): Pointer<number> {
   return alloc("float", value) as any;
+}
+
+/**
+ * @param type
+ * @returns {Pointer<Pointer<T>}
+ * @constructor
+ */
+export function GPPointerRef<T = any>(type: any = "void"): Pointer<T> {
+  return alloc(refType(type)) as any;
 }

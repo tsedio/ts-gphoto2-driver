@@ -7,15 +7,16 @@ import {
   GPPointerString,
   PointerCamera,
   PointerCameraFile,
-  PointerOf,
-  RefCameraFile
+  RefCameraFile,
+  runAsyncMethod,
+  runMethod
 } from "@tsed/gphoto2-core";
-import {runMethod, runAsyncMethod} from "@tsed/gphoto2-core";
 import {Context} from "./Context";
 import {ensureDir, ensureDirSync} from "fs-extra";
 import {dirname} from "path";
 import {CameraFilePath} from "./CameraFilePath";
 import {PointerWrapper, PointerWrapperOptions} from "./PointerWrapper";
+import type {Pointer} from "ref-napi";
 
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
   constructor(options: Partial<PointerWrapperOptions> = {}, ...args: any[]) {
@@ -115,10 +116,10 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
 
   /**
    *
-   * @param {PointerOf<string>} mime
+   * @param {Pointer<string>} mime
    * @returns {GPCodes}
    */
-  public async getMimeTypeAsync(mime: PointerOf<string>): Promise<string> {
+  public async getMimeTypeAsync(mime: Pointer<string>): Promise<string> {
     const mimePointer = GPPointerString();
     const code = await this.call("get_mime_type", mime);
     checkCode(code);
@@ -147,8 +148,8 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
     data: Buffer | string;
     size: number;
   }> {
-    const dataPointer: PointerOf<string> = GPPointerString();
-    const sizePointer: PointerOf<number> = GPPointer("int");
+    const dataPointer = GPPointerString();
+    const sizePointer = GPPointer("int");
 
     await this.callAsync("get_data_and_size", dataPointer, sizePointer);
 

@@ -1,5 +1,5 @@
-import {refType, types} from "ref-napi";
-import {GPCodes, PointerOf} from "../types";
+import {Pointer, refType, types} from "ref-napi";
+import {GPCodes} from "../types";
 import {PointerCameraFile, RefCameraFile} from "./GPCameraModule";
 
 export const GP_FILE_MODULE_ASYNC_KEYS: string[] = ["gp_file_save"];
@@ -21,26 +21,26 @@ export const GPFileModuleDescription = {
 export interface IGPFileModule {
   /**
    *
-   * @param {PointerOf<PointerCameraFile>} buffer
+   * @param {Pointer<PointerCameraFile>} buffer
    * @returns {GPCodes}
    */
-  gp_file_new(buffer: PointerOf<PointerCameraFile>): GPCodes;
+  gp_file_new(buffer: Pointer<PointerCameraFile>): GPCodes;
 
   /**
    * Create new {@link CameraFile} object from a UNIX filedescriptor.
-   * @param {PointerOf<PointerCameraFile>} buffer
+   * @param {Pointer<PointerCameraFile>} buffer
    * @param {number} fd
    * @returns {GPCodes}
    */
-  gp_file_new_from_fd(buffer: PointerOf<PointerCameraFile>, fd: number): GPCodes;
+  gp_file_new_from_fd(buffer: Pointer<PointerCameraFile>, fd: number): GPCodes;
 
   /**
    *
    * @param {PointerCameraFile} file
-   * @param {PointerOf<string>} mime
+   * @param {Pointer<string>} mime
    * @returns {GPCodes}
    */
-  gp_file_get_mime_type(file: PointerCameraFile, mime: PointerOf<string>): GPCodes;
+  gp_file_get_mime_type(file: PointerCameraFile, mime: Pointer<string>): GPCodes;
 
   gp_file_set_mime_type(file: PointerCameraFile, mime: string): GPCodes;
   /**
@@ -107,5 +107,5 @@ export interface IGPFileModule {
    * memory leaks.
    *
    **/
-  gp_file_get_data_and_size(file: PointerCameraFile, data: PointerOf<PointerOf<Buffer>>, size: PointerOf<number>): GPCodes;
+  gp_file_get_data_and_size(file: PointerCameraFile, data: Pointer<Pointer<Buffer>>, size: Pointer<number>): GPCodes;
 }
