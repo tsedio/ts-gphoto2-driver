@@ -1,8 +1,22 @@
-import {checkCode, GPCodes, GPPointer, GPPointerString, PointerCameraFile, PointerOf, RefCameraFile} from "@tsed/gphoto2-core";
+import {
+  checkCode,
+  closeQuietly,
+  GPCameraFileType,
+  GPCodes,
+  GPPointer,
+  GPPointerString,
+  PointerCamera,
+  PointerCameraFile,
+  RefCameraFile,
+  runAsyncMethod,
+  runMethod
+} from "@tsed/gphoto2-core";
+import {Context} from "./Context";
 import {ensureDir, ensureDirSync} from "fs-extra";
 import {dirname} from "path";
-import {reinterpret} from "ref-napi";
-import {PointerWrapperOptions, PointerWrapper} from "./PointerWrapper";
+import {CameraFilePath} from "./CameraFilePath";
+import {PointerWrapper, PointerWrapperOptions} from "./PointerWrapper";
+import type {Pointer} from "ref-napi";
 
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
   constructor(options: Partial<PointerWrapperOptions> = {}, ...args: any[]) {
@@ -22,6 +36,49 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
 
   public free(): void {
     return this.call("free");
+  }
+
+  /**
+   * Get File on camera
+   * @param pCamera
+   * @param file
+   */
+  get(pCamera: PointerCamera, file: CameraFilePath = new CameraFilePath()) {
+    try {
+      runMethod(
+        "gp_camera_file_get",
+        pCamera,
+        file.path,
+        file.filename,
+        GPCameraFileType.GP_FILE_TYPE_NORMAL,
+        this.pointer,
+        Context.get().pointer
+      );
+    } catch (er) {
+      closeQuietly(this);
+      throw er;
+    }
+
+    return file;
+  }
+
+  async getAsync(pCamera: PointerCamera, file: CameraFilePath = new CameraFilePath()) {
+    try {
+      await runAsyncMethod(
+        "gp_camera_file_get",
+        pCamera,
+        file.path,
+        file.filename,
+        GPCameraFileType.GP_FILE_TYPE_NORMAL,
+        this.pointer,
+        Context.get().pointer
+      );
+    } catch (er) {
+      closeQuietly(this);
+      throw er;
+    }
+
+    return file;
   }
 
   /**
@@ -59,10 +116,10 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
 
   /**
    *
-   * @param {PointerOf<string>} mime
+   * @param {Pointer<string>} mime
    * @returns {GPCodes}
    */
-  public async getMimeTypeAsync(mime: PointerOf<string>): Promise<string> {
+  public async getMimeTypeAsync(mime: Pointer<string>): Promise<string> {
     const mimePointer = GPPointerString();
     const code = await this.call("get_mime_type", mime);
     checkCode(code);
@@ -87,27 +144,26 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
    * @param encoding
    **/
 
-  public async getDataAndSizeAsync(
-    encoding: "binary" | "base64" = "binary"
-  ): Promise<{
+  public async getDataAndSizeAsync(encoding: "binary" | "base64" = "binary"): Promise<{
     data: Buffer | string;
     size: number;
   }> {
-    const dataPointer: PointerOf<Buffer> = GPPointer("char *");
-    const sizePointer: PointerOf<number> = GPPointer("int");
+    const dataPointer = GPPointerString();
+    const sizePointer = GPPointer("int");
+
     await this.callAsync("get_data_and_size", dataPointer, sizePointer);
+
     const size = sizePointer.deref();
-    const binary = reinterpret(dataPointer.deref(), sizePointer.deref());
 
     let data: Buffer | string = "";
 
     switch (encoding) {
       case "binary":
-        data = binary;
+        data = dataPointer;
 
         break;
       case "base64":
-        data = binary.toString("base64");
+        data = dataPointer.toString("base64");
 
         break;
     }

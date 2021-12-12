@@ -1,10 +1,9 @@
-import {refType} from "ref-napi";
-import {PointerOf} from "../types";
+import {refType, Pointer} from "ref-napi";
 
 /**
  *
  */
-export type PointerContext = PointerOf<void>;
+export type PointerContext = Pointer<void>;
 /**
  *
  */
@@ -13,7 +12,7 @@ export const RefContext = refType("void");
 /**
  *
  */
-export type PointerCB = PointerOf<void>;
+export type PointerCB = Pointer<void>;
 /**
  *
  * @type {Type}

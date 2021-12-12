@@ -1,4 +1,4 @@
-import {checkCode, getGPhoto2Driver, PointerPortInfoList, RefPortInfoList} from "@tsed/gphoto2-core";
+import {PointerPortInfoList, RefPortInfoList} from "@tsed/gphoto2-core";
 import {$log} from "@tsed/logger";
 import {PointerWrapper} from "./PointerWrapper";
 import {PortInfo} from "./PortInfo";
@@ -10,27 +10,6 @@ export class PortInfoList extends PointerWrapper<PointerPortInfoList> {
     super({method: "gp_port_info_list", refType: RefPortInfoList});
   }
 
-  get size(): number {
-    return checkCode(getGPhoto2Driver().gp_port_info_list_count(this.pointer), "gp_port_info_list_count");
-  }
-
-  /**
-   *
-   */
-  load(): this {
-    $log.debug("Load port info list...");
-
-    checkCode(getGPhoto2Driver().gp_port_info_list_load(this.pointer), "gp_port_info_list_load");
-
-    this.toArray().forEach((portInfo) => {
-      this.map.set(portInfo.path, portInfo);
-    });
-
-    $log.debug("Load port info list... ok");
-
-    return this;
-  }
-
   /**
    *
    * @param {number} index
@@ -38,8 +17,22 @@ export class PortInfoList extends PointerWrapper<PointerPortInfoList> {
    */
   getPortInfo(index: number): PortInfo {
     $log.debug("Get port info...");
+
     const portInfo = new PortInfo();
-    checkCode(getGPhoto2Driver().gp_port_info_list_get_info(this.pointer, index, portInfo.buffer), "gp_port_info_list_get_info");
+
+    this.call("get_info", index, portInfo.buffer);
+
+    $log.debug("Get port info... ok");
+    return portInfo;
+  }
+
+  async getPortInfoAsync(index: number): Promise<PortInfo> {
+    $log.debug("Get port info...");
+
+    const portInfo = new PortInfo();
+
+    await this.callAsync("get_info", index, portInfo.buffer);
+
     $log.debug("Get port info... ok");
     return portInfo;
   }
@@ -53,13 +46,21 @@ export class PortInfoList extends PointerWrapper<PointerPortInfoList> {
     return this.map.get(path);
   }
 
-  public toArray(): PortInfo[] {
+  toArray(): PortInfo[] {
     const list = [];
     const size = this.size;
+
     for (let i = 0; i < size; i++) {
+      $log.debug("Collect port info", i);
       list.push(this.getPortInfo(i));
     }
 
     return list as any[];
+  }
+
+  protected $afterLoaded() {
+    this.toArray().forEach((portInfo) => {
+      this.map.set(portInfo.path, portInfo);
+    });
   }
 }

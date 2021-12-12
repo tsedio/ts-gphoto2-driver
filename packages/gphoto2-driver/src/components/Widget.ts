@@ -7,7 +7,6 @@ import {
   GPPointerRef,
   GPPointerString,
   PointerCameraWidget,
-  PointerOf,
   pointerToString
 } from "@tsed/gphoto2-core";
 import {WidgetProps} from "../interfaces";
@@ -119,7 +118,7 @@ export class Widget implements WidgetProps {
         checkCode(getGPhoto2Driver().gp_widget_get_value(this._pointer, pref));
         const p = pref.deref();
 
-        return p == null ? null : pointerToString(p as PointerOf<string>);
+        return p == null ? null : pointerToString(p);
       }
 
       case WidgetTypes.RANGE: {
@@ -245,7 +244,7 @@ export class Widget implements WidgetProps {
         throw new Error("Parameter type: invalid value " + type + ": unsupported");
     }
 
-    checkCode(getGPhoto2Driver().gp_widget_set_value(this._pointer, ptr as PointerOf<any>));
+    checkCode(getGPhoto2Driver().gp_widget_set_value(this._pointer, ptr));
 
     if (refresh) {
       try {

@@ -1,7 +1,7 @@
-import {refType, types} from "ref-napi";
+import {Pointer, refType, types} from "ref-napi";
 import ArrayType from "ref-array-napi";
 import StructType from "ref-struct-napi";
-import {GPCameraCaptureType, GPCameraFileType, GPCodes, PointerOf} from "../types";
+import {GPCameraCaptureType, GPCameraFileType, GPCodes} from "../types";
 import {StructBuffer} from "../types/StructBuffer";
 import {StructCameraAbilities} from "./GPAbilitiesListModule";
 import {PointerContext, RefContext} from "./GPContextModule";
@@ -12,7 +12,7 @@ import {PointerCameraWidget, RefCameraWidget} from "./GPWidgetModule";
 /**
  *
  */
-export type PointerCamera = PointerOf<void>;
+export type PointerCamera = Pointer<void>;
 
 /**
  *
@@ -23,7 +23,7 @@ export const RefCamera = refType("void");
 /**
  *
  */
-export type PointerCameraFile = PointerOf<void>;
+export type PointerCameraFile = Pointer<void>;
 
 /**
  *
@@ -34,7 +34,7 @@ export const RefCameraFile = refType("void");
 /**
  *
  */
-export type StructCameraText = StructType & {text: PointerOf<string> & StructBuffer};
+export type StructCameraText = StructType & {text: Pointer<string> & StructBuffer};
 /**
  *
  * @type {StructType}
@@ -48,9 +48,9 @@ export const StructCameraText = StructType({
  *
  */
 export type StructCameraFilePath = StructType & {
-  name: PointerOf<string> & StructBuffer;
-  folder: PointerOf<string> & StructBuffer;
-  ref(): PointerOf<StructCameraFilePath>;
+  name: Pointer<string> & StructBuffer;
+  folder: Pointer<string> & StructBuffer;
+  ref(): Pointer<StructCameraFilePath>;
 };
 /**
  *
@@ -129,7 +129,7 @@ export interface IGPCameraModule {
    * @return a gphoto2 error code
    *
    */
-  gp_camera_new(camera: PointerOf<PointerCamera>): GPCodes;
+  gp_camera_new(camera: Pointer<PointerCamera>): GPCodes;
 
   /**
    *
@@ -160,7 +160,7 @@ export interface IGPCameraModule {
    * #gp_abilities_list_get_abilities.
    *
    */
-  gp_camera_set_abilities(camera: PointerCamera, abilities: PointerOf<StructCameraAbilities>): GPCodes;
+  gp_camera_set_abilities(camera: PointerCamera, abilities: Pointer<StructCameraAbilities>): GPCodes;
 
   /**
    * Gets the camera abilities.
@@ -169,7 +169,7 @@ export interface IGPCameraModule {
    * @param abilities
    * @return a gphoto2 error code
    */
-  gp_camera_get_abilities(camera: PointerCamera, abilities: PointerOf<StructCameraAbilities>): GPCodes;
+  gp_camera_get_abilities(camera: PointerCamera, abilities: Pointer<StructCameraAbilities>): GPCodes;
 
   /**
    * Initiate a connection to the camera.
@@ -235,7 +235,7 @@ export interface IGPCameraModule {
    * @return gphoto2 error code
    *
    */
-  gp_camera_get_config(camera: PointerCamera, window: PointerOf<PointerCameraWidget>, context: PointerContext): GPCodes;
+  gp_camera_get_config(camera: PointerCamera, window: Pointer<PointerCameraWidget>, context: PointerContext): GPCodes;
 
   /**
    *
@@ -257,12 +257,7 @@ export interface IGPCameraModule {
    * @param context
    * @returns {GPCodes} gphoto2 error code
    */
-  gp_camera_get_single_config(
-    camera: PointerCamera,
-    name: string,
-    buffer: PointerOf<PointerCameraWidget>,
-    context: PointerContext
-  ): GPCodes;
+  gp_camera_get_single_config(camera: PointerCamera, name: string, buffer: Pointer<PointerCameraWidget>, context: PointerContext): GPCodes;
 
   /**
    * Sets the configuration.
@@ -304,7 +299,7 @@ export interface IGPCameraModule {
    * taken, or generally information that is not configurable.
    *
    **/
-  gp_camera_get_summary(camera: PointerCamera, summary: PointerOf<StructCameraText>, context: PointerContext): GPCodes;
+  gp_camera_get_summary(camera: PointerCamera, summary: Pointer<StructCameraText>, context: PointerContext): GPCodes;
 
   /**
    * Retrieves the manual for given camera.
@@ -317,7 +312,7 @@ export interface IGPCameraModule {
    * This manual typically contains information about using the camera.
    *
    **/
-  gp_camera_get_manual(camera: PointerCamera, manual: PointerOf<StructCameraText>, context: PointerContext): GPCodes;
+  gp_camera_get_manual(camera: PointerCamera, manual: Pointer<StructCameraText>, context: PointerContext): GPCodes;
 
   /**
    * Retrieves information about the camera driver.
@@ -331,7 +326,7 @@ export interface IGPCameraModule {
    * acknowledgements, etc.
    *
    */
-  gp_camera_get_about(camera: PointerCamera, about: PointerOf<StructCameraText>, context: PointerContext): GPCodes;
+  gp_camera_get_about(camera: PointerCamera, about: Pointer<StructCameraText>, context: PointerContext): GPCodes;
 
   /**
    * Gets information on the camera attached storage.
@@ -372,7 +367,7 @@ export interface IGPCameraModule {
   gp_camera_capture(
     camera: PointerCamera,
     type: GPCameraCaptureType,
-    path: PointerOf<StructCameraFilePath>,
+    path: Pointer<StructCameraFilePath>,
     context: PointerContext
   ): GPCodes;
 
@@ -392,7 +387,7 @@ export interface IGPCameraModule {
   gp_camera_capture_async(
     camera: PointerCamera,
     type: GPCameraCaptureType,
-    path: PointerOf<StructCameraFilePath>,
+    path: Pointer<StructCameraFilePath>,
     context: PointerContext
   ): Promise<GPCodes>;
 

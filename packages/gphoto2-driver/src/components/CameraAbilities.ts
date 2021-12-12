@@ -6,15 +6,16 @@ import {
   GPCameraOperation,
   GPDeviceType,
   GPPortType,
-  PointerOf,
   StructCameraAbilities
 } from "@tsed/gphoto2-core";
+import type {Pointer} from "ref-napi";
 
 export class CameraAbilities implements Closeable {
-  readonly buffer: PointerOf<StructCameraAbilities>;
+  readonly buffer: Pointer<StructCameraAbilities>;
 
   constructor() {
     const struct = new StructCameraAbilities();
+
     this.buffer = struct.ref();
   }
 

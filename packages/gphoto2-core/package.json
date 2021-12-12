@@ -2,8 +2,16 @@
   "name": "@tsed/gphoto2-core",
   "version": "3.0.3",
   "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.js",
+  "private": false,
+  "source": "./src/index.ts",
+  "main": "./lib/cjs/index.js",
+  "typings": "./lib/types/index.d.ts",
+  "exports": {
+    "types": "./lib/types/index.d.ts",
+    "import": "./lib/esm/index.js",
+    "require": "./lib/cjs/index.js",
+    "default": "./lib/esm/index.js"
+  },
   "author": "Romain Lenzotti",
   "contributors": [
     "Alexander Gusez (https://github.com/goooseman)"
@@ -25,26 +33,28 @@
     "reflex"
   ],
   "scripts": {
-    "build": "tsc --build tsconfig.compile.json",
-    "build:doc": "tsc --build tsconfig.doc.json"
+    "build": "yarn run build:esm && yarn run build:cjs",
+    "build:cjs": "tsc --build tsconfig.compile.json",
+    "build:esm": "tsc --build tsconfig.compile.esm.json",
+    "test": "cross-env NODE_ENV=test jest"
   },
   "dependencies": {
-    "@tsed/core": "6.92.0",
-    "@tsed/logger": "5.14.0",
+    "@tsed/core": "6.94.0",
+    "@tsed/logger": "6.0.0",
     "ffi-napi": "4.0.3",
     "ref-array-napi": "1.2.2",
-    "ref-napi": "3.0.2",
+    "ref-napi": "3.0.3",
     "ref-struct-napi": "1.1.1",
-    "tslib": "2.2.0"
+    "tslib": "2.3.1"
   },
-  "devDependencies": {
-    "@types/ffi-napi": "2.4.3",
-    "@types/ref-napi": "^1.4.1"
-  },
+  "devDependencies": {},
   "directories": {
     "lib": "lib",
     "src": "src",
     "test": "test"
   },
-  "peerDependencies": {}
+  "peerDependencies": {
+    "@types/ffi-napi": ">=4.0.4",
+    "@types/ref-napi": ">=3.0.4"
+  }
 }

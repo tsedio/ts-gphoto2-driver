@@ -1,6 +1,4 @@
-import {checkCode, getGPhoto2Driver, GPPointerString} from "@tsed/gphoto2-core";
 import {$log} from "@tsed/logger";
-import {deref} from "ref-napi";
 import {CameraOptions} from "../interfaces";
 import {AbilitiesList} from "./AbilitiesList";
 import {Camera} from "./Camera";
@@ -15,14 +13,39 @@ export class CameraList extends List<CameraOptions> {
     super();
   }
 
+  static getCamera(index: number) {
+    const cameraList = new CameraList().load();
+
+    return cameraList.getCamera(index);
+  }
+
   autodetect() {
-    getGPhoto2Driver().gp_camera_autodetect(this.pointer, Context.get().pointer);
+    return this.run("gp_camera_autodetect", this.pointer, Context.get().pointer);
+  }
+
+  async autodetectAsync() {
+    return this.runAsync("gp_camera_autodetect", this.pointer, Context.get().pointer);
   }
 
   load(): this {
     const portInfoList = new PortInfoList().load();
     const abilitiesList = new AbilitiesList().load();
     const cameraList = abilitiesList.detect(portInfoList);
+
+    $log.debug("Found", cameraList.size, "camera(s)");
+    this.getCameraListInfos(cameraList);
+
+    portInfoList.close();
+    abilitiesList.close();
+    cameraList.close();
+
+    return this;
+  }
+
+  async loadAsync() {
+    const [portInfoList, abilitiesList] = await Promise.all([new PortInfoList().load(), new AbilitiesList().load()]);
+
+    const cameraList = await abilitiesList.detectAsync(portInfoList);
 
     $log.debug("Found", cameraList.size, "camera(s)");
     this.getCameraListInfos(cameraList);
@@ -45,7 +68,7 @@ export class CameraList extends List<CameraOptions> {
     if (cameraInfo) {
       const portInfoList = new PortInfoList().load();
       const camera = new Camera();
-      const portInfo = portInfoList.findByPath(cameraInfo.port)!;
+      const portInfo = portInfoList.findByPath(cameraInfo.port);
 
       camera.initialize(portInfo);
 
@@ -55,12 +78,6 @@ export class CameraList extends List<CameraOptions> {
     }
 
     return undefined;
-  }
-
-  static getCamera(index: number) {
-    const cameraList = new CameraList().load();
-
-    return cameraList.getCamera(index);
   }
 
   /**
@@ -79,14 +96,11 @@ export class CameraList extends List<CameraOptions> {
     const count = cameraList.size;
 
     for (let i = 0; i < count; i++) {
-      const model = GPPointerString(); // alloc("string") as PointerOf<string>;
-      const path = GPPointerString(); // alloc("string") as PointerOf<string>;
+      const model = cameraList.getName(i);
+      const path = cameraList.getValue(i);
 
-      checkCode(getGPhoto2Driver().gp_list_get_name(cameraList.pointer, i, model));
-      checkCode(getGPhoto2Driver().gp_list_get_value(cameraList.pointer, i, path));
-
-      if (deref(path).match(CameraList.USB_PATTERN)) {
-        this.push(deref(model), deref(path));
+      if (path.match(CameraList.USB_PATTERN)) {
+        this.push(model, path);
       }
     }
   }

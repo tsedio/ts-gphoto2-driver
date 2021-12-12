@@ -1,10 +1,10 @@
-import {refType} from "ref-napi";
-import {GPCodes, PointerOf} from "../types";
+import {Pointer, refType} from "ref-napi";
+import {GPCodes} from "../types";
 
 /**
  *
  */
-export type PointerList = PointerOf<void>;
+export type PointerList = Pointer<void>;
 
 /**
  *
@@ -27,7 +27,6 @@ export const GPListModuleDescription = {
   gp_list_get_value: ["int", [RefList, "int", refType("string")]],
   gp_list_set_name: ["int", [RefList, "int", "string"]],
   gp_list_set_value: ["int", [RefList, "int", "string"]]
-  // "gp_list_populate":     ["int", [RefList, "string", "int"]],
 };
 
 /**
@@ -39,7 +38,7 @@ export interface IGPListModule {
    * @returns {GPCodes}
    * @param buffer
    */
-  gp_list_new(buffer: PointerOf<PointerList>): GPCodes;
+  gp_list_new(buffer: Pointer<PointerList>): GPCodes;
 
   /**
    *
@@ -101,7 +100,7 @@ export interface IGPListModule {
    * @param name
    * @returns {GPCodes}
    */
-  gp_list_get_name(cameraList: PointerList, index: number, name: PointerOf<string>): GPCodes;
+  gp_list_get_name(cameraList: PointerList, index: number, name: Pointer<string>): GPCodes;
 
   /**
    *
@@ -110,7 +109,7 @@ export interface IGPListModule {
    * @param value
    * @returns {GPCodes}
    */
-  gp_list_get_value(cameraList: PointerList, index: number, value: PointerOf<string>): GPCodes;
+  gp_list_get_value(cameraList: PointerList, index: number, value: Pointer<string>): GPCodes;
 
   /**
    *

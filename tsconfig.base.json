@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es2018",
+    "target": "es2019",
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,
@@ -19,8 +19,9 @@
     "resolveJsonModule": true,
     "newLine": "LF",
     "noEmit": true,
+    "allowJs": true,
     "lib": [
-      "es7",
+      "ES2019",
       "esnext.asynciterable"
     ],
     "typeRoots": [
@@ -37,6 +38,8 @@
   "exclude": [
     "lib",
     "**/lib",
-    "node_modules"
+    "node_modules",
+    "coverage",
+    ".nyc_output"
   ]
 }

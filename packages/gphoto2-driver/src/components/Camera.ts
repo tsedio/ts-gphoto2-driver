@@ -127,6 +127,10 @@ export class Camera extends PointerWrapper<PointerCamera> {
     return new LiveView(this, options);
   }
 
+  public async preview(file: CameraFile) {
+    return this.callAsync<void>("capture_preview", file.pointer, Context.get().pointer);
+  }
+
   /**
    * Captures a quick preview image on the camera.
    * @return camera file, never null. Must be closed afterwards.
@@ -162,7 +166,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
     this.checkNotClosed();
 
     try {
-      await this.callAsync("capture_preview", file.pointer, Context.get().pointer);
+      await this.preview(file);
 
       if (path) {
         try {
@@ -255,7 +259,7 @@ export class Camera extends PointerWrapper<PointerCamera> {
   public async triggerCaptureAsync(): Promise<GPCodes> {
     this.checkNotClosed();
 
-    const result = await this.callAsync("trigger_capture", Context.get().pointer);
+    const result = await this.callAsync<GPCodes>("trigger_capture", Context.get().pointer);
 
     this.deinitialize();
     this.initialize();
@@ -305,12 +309,16 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * @returns {string}
    */
   public getManual(): string {
-    const struct = new StructCameraText();
-    const buffer = struct.ref();
+    try {
+      const struct = new StructCameraText();
+      const buffer = struct.ref();
 
-    this.call("get_manual", buffer, Context.get().pointer);
+      this.call("get_manual", buffer, Context.get().pointer);
 
-    return struct.text.buffer.readCString(0);
+      return struct.text.buffer.readCString(0);
+    } catch (er) {}
+
+    return "";
   }
 
   /**
@@ -372,26 +380,27 @@ export class Camera extends PointerWrapper<PointerCamera> {
    * @param path
    * @returns {CameraFile | undefined}
    */
-  protected capture(type: GPCameraCaptureType, path?: string): CameraFile | undefined {
+  protected capture(type: GPCameraCaptureType, path?: string): CameraFile {
     this.checkNotClosed();
     const cFilePath = new CameraFilePath();
+    const cameraFile = new CameraFile();
 
     this.call("capture", type, cFilePath.buffer, Context.get().pointer);
 
-    const cFile = cFilePath.newFile(this.pointer);
+    cameraFile.get(this.pointer, cFilePath);
 
-    if (path && cFile) {
+    if (path) {
       try {
-        cFile.save(path);
+        cameraFile.save(path);
       } finally {
         this.deinitialize();
         this.initialize();
-        cFile.closeQuietly();
+        cameraFile.closeQuietly();
         cFilePath.close();
       }
     }
 
-    return cFile;
+    return cameraFile;
   }
 
   /**
@@ -403,23 +412,24 @@ export class Camera extends PointerWrapper<PointerCamera> {
   protected async captureAsync(type: GPCameraCaptureType, path?: string): Promise<CameraFile | undefined> {
     this.checkNotClosed();
     const cFilePath = new CameraFilePath();
+    const cameraFile = new CameraFile();
 
     await this.callAsync("capture", type, cFilePath.buffer, Context.get().pointer);
 
-    const cFile = await cFilePath.newFileAsync(this.pointer);
+    await cameraFile.get(this.pointer, cFilePath);
 
-    if (path && cFile) {
+    if (path) {
       try {
-        await cFile.saveAsync(path);
+        await cameraFile.saveAsync(path);
       } finally {
         this.deinitialize();
         this.initialize();
-        cFile.closeQuietly();
+        cameraFile.closeQuietly();
         cFilePath.close();
       }
     }
 
-    return cFile;
+    return cameraFile;
   }
 
   /**

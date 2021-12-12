@@ -7,7 +7,6 @@ import {LiveViewOptions} from "../interfaces/LiveViewOptions";
 import {Camera} from "./Camera";
 import {CameraFile} from "./CameraFile";
 import {CameraFileFromFd} from "./CameraFileFromFd";
-import {Context} from "./Context";
 import {addInstance} from "./Garbage";
 
 export class LiveView extends EventEmitter implements Closeable {
@@ -76,7 +75,8 @@ export class LiveView extends EventEmitter implements Closeable {
     if (!this.file) {
       throw new Error("LiveView was closed");
     }
-    await this.camera.callAsync("capture_preview", this.file.pointer, Context.get().pointer);
+
+    await this.camera.preview(this.file);
 
     if (this.options.output === "binary" || this.options.output === "base64") {
       const {data, size} = await this.file.getDataAndSizeAsync(this.options.output);

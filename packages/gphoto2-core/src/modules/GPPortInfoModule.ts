@@ -1,10 +1,10 @@
-import {refType, types} from "ref-napi";
-import {GPCodes, PointerOf} from "../types";
+import {Pointer, refType, types} from "ref-napi";
+import {GPCodes} from "../types";
 
 /**
  *
  */
-export type PointerPortInfoList = PointerOf<void>;
+export type PointerPortInfoList = Pointer<void>;
 /**
  *
  * @type {Type}
@@ -14,7 +14,7 @@ export const RefPortInfoList = refType("void");
 /**
  *
  */
-export type PointerPortInfo = PointerOf<void>;
+export type PointerPortInfo = Pointer<void>;
 
 /**
  *
@@ -32,7 +32,7 @@ export const RefPortType = refType("void");
 /**
  *
  */
-export type PointerPortType = PointerOf<void>;
+export type PointerPortType = Pointer<void>;
 
 /**
  *
@@ -69,10 +69,10 @@ export interface IGPPortInfoModule {
    *
    * Allocates and initializes a GPPortInfo structure. This is a libgphoto2_port internal function.
    *
-   * @param {PointerOf<PointerPortInfo>} info pointer to a #GPPortInfo
+   * @param {Pointer<PointerPortInfo>} info pointer to a #GPPortInfo
    * @returns {GPCodes} a gphoto2 error code
    */
-  gp_port_info_new(info: PointerOf<PointerPortInfo>): GPCodes;
+  gp_port_info_new(info: Pointer<PointerPortInfo>): GPCodes;
 
   // gp_port_info_free(portInfo: PointerPortInfo): GPCodes;
 
@@ -90,7 +90,7 @@ export interface IGPPortInfoModule {
    * @param {Buffer} buffer pointer to a GPPortInfoList* which is allocated
    * @returns {GPCodes} a gphoto2 error code
    */
-  gp_port_info_list_new(buffer: PointerOf<PointerPortInfoList>): GPCodes;
+  gp_port_info_list_new(buffer: Pointer<PointerPortInfoList>): GPCodes;
 
   /**
    * Load system ports.
@@ -167,7 +167,7 @@ export interface IGPPortInfoModule {
    * @param name a pointer to a char* which will receive the path
    * @return a gphoto2 error code
    **/
-  gp_port_info_get_name(portInfo: PointerPortInfoList, name: PointerOf<string>): GPCodes;
+  gp_port_info_get_name(portInfo: PointerPortInfoList, name: Pointer<string>): GPCodes;
 
   /**
    * Get path of a specific port entry
@@ -178,5 +178,5 @@ export interface IGPPortInfoModule {
    * @param path a pointer to a char* which will receive the path
    * @return a gphoto2 error code
    **/
-  gp_port_info_get_path(portInfo: PointerPortInfoList, path: PointerOf<string>): GPCodes;
+  gp_port_info_get_path(portInfo: PointerPortInfoList, path: Pointer<string>): GPCodes;
 }
