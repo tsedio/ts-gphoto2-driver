@@ -1,5 +1,4 @@
-import {GPPointer, PointerPortInfo, RefPortInfo} from "@tsed/gphoto2-core";
-import {types} from "ref-napi";
+import {types, GPPointer, PointerPortInfo, RefPortInfo} from "@tsed/gphoto2-core";
 import {PointerWrapper} from "./PointerWrapper";
 
 export class PortInfo extends PointerWrapper<PointerPortInfo> {

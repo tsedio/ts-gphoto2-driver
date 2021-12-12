@@ -1,4 +1,4 @@
-import {Pointer, refType, types} from "ref-napi";
+import {Pointer, refType, types} from "../napi";
 import {GPCodes} from "../types";
 
 /**
@@ -28,11 +28,6 @@ export const RefPortInfo = refType("void");
  */
 // tslint:disable-next-line
 export const RefPortType = refType("void");
-
-/**
- *
- */
-export type PointerPortType = Pointer<void>;
 
 /**
  *

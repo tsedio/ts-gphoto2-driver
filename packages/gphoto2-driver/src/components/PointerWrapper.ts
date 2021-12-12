@@ -1,7 +1,6 @@
 import {classOf, nameOf} from "@tsed/core";
 import {$log} from "@tsed/logger";
-import {Closeable, closeQuietly, getGPhoto2Driver, GPCodes, GPhoto2Driver} from "@tsed/gphoto2-core";
-import {alloc, Pointer, Type} from "ref-napi";
+import {Pointer, Type, Closeable, closeQuietly, getGPhoto2Driver, GPCodes, GPhoto2Driver, GPPointer} from "@tsed/gphoto2-core";
 import {addInstance, removeInstance} from "./Garbage";
 import {Context} from "./Context";
 
@@ -137,7 +136,7 @@ export class PointerWrapper<P extends Pointer<any>> extends CallablePointer<P> i
     const {openMethod, refType} = this.getOptions();
 
     addInstance(this);
-    this._buffer = alloc(refType) as any;
+    this._buffer = GPPointer(refType);
 
     return this.callByRef(openMethod, ...args);
   }

@@ -1,4 +1,4 @@
-import {refType, Pointer} from "ref-napi";
+import {Pointer, refType} from "../napi";
 
 /**
  *

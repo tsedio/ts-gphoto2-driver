@@ -1,5 +1,4 @@
-import {Closeable, StructCameraFilePath} from "@tsed/gphoto2-core";
-import type {Pointer} from "ref-napi";
+import {Closeable, StructCameraFilePath, Pointer} from "@tsed/gphoto2-core";
 
 export class CameraFilePath implements Closeable {
   readonly buffer: Pointer<StructCameraFilePath>;

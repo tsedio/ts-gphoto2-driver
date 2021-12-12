@@ -6,9 +6,9 @@ import {
   GPCameraOperation,
   GPDeviceType,
   GPPortType,
+  Pointer,
   StructCameraAbilities
 } from "@tsed/gphoto2-core";
-import type {Pointer} from "ref-napi";
 
 export class CameraAbilities implements Closeable {
   readonly buffer: Pointer<StructCameraAbilities>;

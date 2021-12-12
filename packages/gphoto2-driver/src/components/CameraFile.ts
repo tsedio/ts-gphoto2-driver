@@ -9,14 +9,14 @@ import {
   PointerCameraFile,
   RefCameraFile,
   runAsyncMethod,
-  runMethod
+  runMethod,
+  Pointer
 } from "@tsed/gphoto2-core";
 import {Context} from "./Context";
 import {ensureDir, ensureDirSync} from "fs-extra";
 import {dirname} from "path";
 import {CameraFilePath} from "./CameraFilePath";
 import {PointerWrapper, PointerWrapperOptions} from "./PointerWrapper";
-import type {Pointer} from "ref-napi";
 
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
   constructor(options: Partial<PointerWrapperOptions> = {}, ...args: any[]) {

@@ -1,4 +1,4 @@
-import {Pointer, refType, types} from "ref-napi";
+import {Pointer, refType, types} from "../napi";
 import {GPCodes} from "../types";
 import {PointerCameraFile, RefCameraFile} from "./GPCameraModule";
 
@@ -43,6 +43,7 @@ export interface IGPFileModule {
   gp_file_get_mime_type(file: PointerCameraFile, mime: Pointer<string>): GPCodes;
 
   gp_file_set_mime_type(file: PointerCameraFile, mime: string): GPCodes;
+
   /**
    *
    * @param {PointerCameraFile} cameraFile
