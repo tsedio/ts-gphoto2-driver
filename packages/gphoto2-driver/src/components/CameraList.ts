@@ -1,13 +1,15 @@
 import {$log} from "@tsed/logger";
-import {CameraOptions} from "../interfaces";
+import {CameraProps} from "../interfaces";
 import {AbilitiesList} from "./AbilitiesList";
 import {Camera} from "./Camera";
 import {Context} from "./Context";
 import {List} from "./List";
 import {PortInfoList} from "./PortInfoList";
 
-export class CameraList extends List<CameraOptions> {
+export class CameraList extends List<CameraProps> {
   static readonly USB_PATTERN = /usb:\d+,\d+/;
+
+  #cache = new Map<number, Camera>();
 
   constructor() {
     super();
@@ -28,6 +30,7 @@ export class CameraList extends List<CameraOptions> {
   }
 
   load(): this {
+    this.#cache = new Map<number, Camera>();
     const portInfoList = new PortInfoList().load();
     const abilitiesList = new AbilitiesList().load();
     const cameraList = abilitiesList.detect(portInfoList);
@@ -43,6 +46,8 @@ export class CameraList extends List<CameraOptions> {
   }
 
   async loadAsync() {
+    this.#cache = new Map<number, Camera>();
+
     const [portInfoList, abilitiesList] = await Promise.all([new PortInfoList().load(), new AbilitiesList().load()]);
 
     const cameraList = await abilitiesList.detectAsync(portInfoList);
@@ -63,6 +68,12 @@ export class CameraList extends List<CameraOptions> {
    * @returns {Camera | undefined}
    */
   getCamera(index: number): Camera | undefined {
+    const cam = this.#cache.get(index);
+
+    if (cam) {
+      return cam;
+    }
+
     const cameraInfo = this.get(index);
 
     if (cameraInfo) {
@@ -73,6 +84,8 @@ export class CameraList extends List<CameraOptions> {
       camera.initialize(portInfo);
 
       portInfoList.close();
+
+      this.#cache.set(index, camera);
 
       return camera;
     }
@@ -101,6 +114,8 @@ export class CameraList extends List<CameraOptions> {
 
       if (path.match(CameraList.USB_PATTERN)) {
         this.push(model, path);
+
+        this.getCamera(i);
       }
     }
   }

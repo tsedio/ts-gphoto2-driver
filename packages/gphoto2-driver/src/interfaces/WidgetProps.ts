@@ -1,21 +1,34 @@
-import {PointerCameraWidget} from "@tsed/gphoto2-core";
-import {WidgetTypes} from "../components/WidgetTypes";
+import type {WidgetRange} from "../components/WidgetRange";
 
-export interface WidgetProps {
-  pointer: PointerCameraWidget;
-  readonly path: any;
-  readonly type: WidgetTypes;
+export enum WidgetTypesProps {
+  WINDOW = "WINDOW",
+  SECTION = "SECTION",
+  TEXT = "TEXT",
+  RANGE = "RANGE",
+  TOGGLE = "TOGGLE",
+  RADIO = "RADIO",
+  MENU = "MENU",
+  BUTTON = "BUTTON",
+  DATE = "DATE"
+}
+
+export interface WidgetCommonProps {
+  readonly path: string;
+  readonly type: WidgetTypesProps;
   readonly label: string;
   readonly info: string;
-  readonly choices: string[] | undefined;
   readonly readonly: boolean;
-  readonly changed: boolean;
+  changed: boolean;
   value: any;
-  readonly range?: {
-    min: number;
-    max: number;
-    step: number;
-  };
-
-  toJSON(): any;
 }
+
+export interface WidgetRangeProps extends WidgetCommonProps {
+  readonly type: WidgetTypesProps.RANGE;
+  readonly range: WidgetRange;
+}
+
+export interface WidgetSelectProps extends WidgetCommonProps {
+  readonly choices: string[] | undefined;
+}
+
+export type WidgetProps = WidgetCommonProps | WidgetRangeProps | WidgetSelectProps;

@@ -1,18 +1,8 @@
 import {nameOf} from "@tsed/core";
-import {
-  checkCode,
-  Closeable,
-  getGPhoto2Driver,
-  GPPointer,
-  GPPointerRef,
-  GPPointerString,
-  PointerCamera,
-  PointerCameraWidget
-} from "@tsed/gphoto2-core";
+import {Closeable, GPPointer, GPPointerRef, GPPointerString, PointerCamera, PointerCameraWidget, runMethod} from "@tsed/gphoto2-core";
 import {WidgetProps} from "../interfaces/WidgetProps";
 import {Context} from "./Context";
 import {Widget} from "./Widget";
-import {WidgetRange} from "./WidgetRange";
 import {WidgetTypes} from "./WidgetTypes";
 
 export class CameraWidgets extends Map<string, Widget> implements Closeable {
@@ -26,8 +16,9 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
 
   public refresh() {
     const buffer = GPPointerRef<PointerCameraWidget>();
-    checkCode(getGPhoto2Driver().gp_widget_new(WidgetTypes.WINDOW.cval, "", buffer));
-    checkCode(getGPhoto2Driver().gp_camera_get_config(this.camera.pointer, buffer, Context.get().pointer));
+
+    runMethod("gp_widget_new", WidgetTypes.WINDOW.cval, "", buffer);
+    runMethod("gp_camera_get_config", this.camera.pointer, buffer, Context.get().pointer);
 
     this.rootWidget = buffer.deref();
 
@@ -80,7 +71,7 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
       });
     }
 
-    checkCode(getGPhoto2Driver().gp_camera_set_config(this.camera.pointer, this.rootWidget, Context.get().pointer), "gp_camera_set_config");
+    runMethod("gp_camera_set_config", this.camera.pointer, this.rootWidget, Context.get().pointer);
 
     this.refresh();
   }
@@ -128,7 +119,7 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
    * @param value
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  set(key: string, value: WidgetProps): this {
+  set(key: string, value: Widget): this {
     return this;
   }
 
@@ -159,7 +150,7 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
     super.forEach(callbackfn, thisArg);
   }
 
-  toJSON() {
+  toJSON(): Record<string, WidgetProps> {
     this.checkNotClosed();
 
     const obj: any = {};
@@ -220,113 +211,6 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
     return "CameraWidgets: " + this.getPaths().join(", ");
   }
 
-  // DEPRECATED
-  /**
-   * Returns the label of the widget.
-   * @param path the widget path
-   * @return widget label.
-   * @deprecated
-   */
-  getLabel(path: string): string {
-    return this.get(path).label;
-  }
-
-  /**
-   * Returns the info for the widget.
-   * @param path the widget path
-   * @return widget info.
-   * @deprecated
-   */
-  getInfo(path: string): string {
-    return this.get(path).info;
-  }
-
-  /**
-   * Returns the data type of the widget.
-   * @param path the widget path
-   * @return widget type, never null.
-   * @deprecated
-   */
-  getType(path: string): WidgetTypes {
-    return this.get(path).type;
-  }
-
-  /**
-   * Returns the value of the configuration option.
-   * @param {string} path the widget path
-   * @returns the value.
-   * @deprecated
-   */
-  getValue(path: string): any {
-    return this.get(path).value;
-  }
-
-  /**
-   * Sets the value of given property. The value must be of correct class.
-   * <p></p>
-   * Important: after the changes are made, the {@link #apply()} method must be called, to apply the new values.
-   * @param path the property path, not null
-   * @param value the value, may be null.
-   * @deprecated
-   */
-  setValue(path: string, value: any): void {
-    this.get(path).value = value;
-  }
-
-  /**
-   * Returns allowed range for {@link WidgetTypes#RANGE} options.
-   * @param path the widget path.
-   * @deprecated
-   * @return the range.
-   */
-  getRange(path: string): WidgetRange | undefined {
-    return this.get(path).range;
-  }
-
-  /**
-   *
-   * @param {string} path
-   * @param {boolean} changed
-   * @deprecated
-   */
-  setChanged(path: string, changed: boolean): void {
-    this.get(path).changed = changed;
-  }
-
-  /**
-   *
-   * @param {string} path
-   * @returns {boolean}
-   * @deprecated
-   */
-  isChanged(path: string): boolean {
-    return this.get(path).changed;
-  }
-
-  /**
-   * Lists choices for given widget. Only applicable to {@link WidgetTypes#RADIO} and {@link WidgetTypes#MENU} types.
-   * @param path widget path.
-   * @return list of possible choices captions.
-   * @deprecated
-   */
-  listChoices(path: string): string[] {
-    const widget = this.get(path);
-
-    if (!widget.type.hasChoices) {
-      throw new Error(`Parameter path: invalid value ${path}: is of type ${widget.type} which does not have any choices.`);
-    }
-
-    return widget.choices || [];
-  }
-
-  /**
-   * @deprecated
-   * @param path
-   */
-  isReadOnly(path: string): boolean {
-    return this.get(path).readonly;
-  }
-
   /**
    * Enumerate all widgets
    * @param pWidget
@@ -336,27 +220,32 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
     this.checkNotClosed();
     const type = GPPointer<number>("int");
 
-    checkCode(getGPhoto2Driver().gp_widget_get_type(pWidget, type));
+    runMethod("gp_widget_get_type", pWidget, type);
 
     const widgetType = WidgetTypes.fromCVal(type.deref());
 
     if (widgetType.hasValue) {
       const widget = super.get(path);
       if (widget) {
-        widget.pointer = pWidget;
+        widget.updatePointer(pWidget);
       } else {
         super.set(path, new Widget(path, pWidget, this));
       }
     }
 
-    const childcount: number = checkCode(getGPhoto2Driver().gp_widget_count_children(pWidget));
+    const childcount: number = runMethod("gp_widget_count_children", pWidget);
 
     for (let i = 0; i < childcount; i++) {
-      const buffer = GPPointerRef<PointerCameraWidget>();
-      checkCode(getGPhoto2Driver().gp_widget_get_child(pWidget, i, buffer));
+      const buffer = this.getChild(pWidget, i);
 
       this.enumWidgets(buffer.deref(), `${path}/${this.getBasename(buffer.deref())}`);
     }
+  }
+
+  private getChild(pWidget: Buffer & {deref(): void}, i: number) {
+    const buffer = GPPointerRef<PointerCameraWidget>();
+    runMethod("gp_widget_get_child", pWidget, i, buffer);
+    return buffer;
   }
 
   /**
@@ -368,7 +257,7 @@ export class CameraWidgets extends Map<string, Widget> implements Closeable {
     this.checkNotClosed();
 
     const ref = GPPointerString();
-    checkCode(getGPhoto2Driver().gp_widget_get_name(widget, ref));
+    runMethod("gp_widget_get_name", widget, ref);
 
     return ref.deref();
   }

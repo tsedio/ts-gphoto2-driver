@@ -22,6 +22,7 @@ import {Context} from "./Context";
 import {LiveView} from "./LiveView";
 import {PointerWrapper} from "./PointerWrapper";
 import {PortInfo} from "./PortInfo";
+import {parseSummary} from "../utils/parseSummary";
 
 export class Camera extends PointerWrapper<PointerCamera> {
   private initialized = false;
@@ -48,15 +49,27 @@ export class Camera extends PointerWrapper<PointerCamera> {
   }
 
   autoFocus() {
-    try {
-      this.widgets.get("/actions/autofocusdrive").value = true;
-    } catch (er) {
-      $log.warn("Unable to run autofocus command", er);
+    const widget = this.widgets.get("/actions/autofocusdrive");
+
+    if (widget && !widget.readonly) {
+      try {
+        this.widgets.get("/actions/autofocusdrive").value = true;
+      } catch (er) {
+        $log.warn("Unable to run autofocus command", er);
+      }
     }
   }
 
   openFlash() {
-    this.widgets.get("/status/flashopen").value = true;
+    const widget = this.widgets.get("/status/flashopen");
+
+    if (widget) {
+      try {
+        this.widgets.get("/status/flashopen").value = true;
+      } catch (er) {
+        $log.warn("Unable to run autofocus command", er);
+      }
+    }
   }
 
   /**
@@ -289,6 +302,10 @@ export class Camera extends PointerWrapper<PointerCamera> {
     this.call("get_summary", buffer, Context.get().pointer);
 
     return struct.text.buffer.readCString(0);
+  }
+
+  public getParsedSummary() {
+    return parseSummary(this.getSummary());
   }
 
   /**
