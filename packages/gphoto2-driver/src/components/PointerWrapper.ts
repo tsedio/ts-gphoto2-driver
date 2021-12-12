@@ -13,10 +13,62 @@ export interface PointerWrapperOptions {
   closeMethod?: string;
 }
 
-export class PointerWrapper<P extends Pointer<any>> implements Closeable {
+export class CallablePointer<P extends Pointer<any>> {
+  protected _pointer: P;
+
+  constructor(protected options: any) {
+    if (options.pointer) {
+      this._pointer = options.pointer;
+    }
+  }
+
+  get pointer() {
+    return this._pointer;
+  }
+
+  protected getOptions() {
+    const {method, refType, openMethod = "new", closeMethod = "free"} = this.options;
+
+    return {
+      method,
+      refType,
+      openMethod,
+      closeMethod
+    };
+  }
+
+  protected call<T = any>(key: string, ...args: any[]) {
+    let {method} = this.getOptions();
+    method = `${method}_${key.replace(method, "")}`;
+
+    return this.run<T>(method, this.pointer, ...args);
+  }
+
+  protected run<T = any>(key: keyof GPhoto2Driver | string, ...args: any[]): T {
+    const driver = getGPhoto2Driver();
+
+    return driver.run(key as any, ...args);
+  }
+
+  protected async callAsync<T>(key: string, ...args: any[]) {
+    let {method} = this.getOptions();
+    method = `${method}_${key.replace(method, "")}`;
+
+    return this.runAsync<T>(method as any, this.pointer, ...args);
+  }
+
+  protected async runAsync<T = any>(key: keyof GPhoto2Driver | string, ...args: any[]): Promise<T> {
+    const driver = getGPhoto2Driver();
+
+    return driver.runAsync(key as any, ...args);
+  }
+}
+
+export class PointerWrapper<P extends Pointer<any>> extends CallablePointer<P> implements Closeable {
   private _buffer: Pointer<P>;
 
-  constructor(private options: PointerWrapperOptions, ...args: any[]) {
+  constructor(options: PointerWrapperOptions, ...args: any[]) {
+    super(options);
     this.new(...args);
   }
 
@@ -81,32 +133,6 @@ export class PointerWrapper<P extends Pointer<any>> implements Closeable {
     return this.run(method, this.byRef, ...args);
   }
 
-  protected call<T = any>(key: string, ...args: any[]) {
-    let {method} = this.getOptions();
-    method = `${method}_${key.replace(method, "")}`;
-
-    return this.run<T>(method, this.pointer, ...args);
-  }
-
-  protected run<T = any>(key: keyof GPhoto2Driver | string, ...args: any[]): T {
-    const driver = getGPhoto2Driver();
-
-    return driver.run(key as any, ...args);
-  }
-
-  protected async callAsync<T>(key: string, ...args: any[]) {
-    let {method} = this.getOptions();
-    method = `${method}_${key.replace(method, "")}`;
-
-    return this.runAsync<T>(method as any, this.pointer, ...args);
-  }
-
-  protected async runAsync<T = any>(key: keyof GPhoto2Driver | string, ...args: any[]): Promise<T> {
-    const driver = getGPhoto2Driver();
-
-    return driver.runAsync(key as any, ...args);
-  }
-
   protected new(...args: any[]): GPCodes {
     const {openMethod, refType} = this.getOptions();
 
@@ -114,16 +140,5 @@ export class PointerWrapper<P extends Pointer<any>> implements Closeable {
     this._buffer = alloc(refType) as any;
 
     return this.callByRef(openMethod, ...args);
-  }
-
-  private getOptions() {
-    const {method, refType, openMethod = "new", closeMethod = "free"} = this.options;
-
-    return {
-      method,
-      refType,
-      openMethod,
-      closeMethod
-    };
   }
 }

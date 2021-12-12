@@ -1,35 +1,21 @@
-import {checkCode, getGPhoto2Driver, GPPointerFloat, PointerCameraWidget} from "@tsed/gphoto2-core";
-
 export class WidgetRange {
   /**
    * The minimum accepted value.
    */
-  public min: number;
+  readonly min: number;
   /**
    * The maximum accepted value.
    */
-  public max: number;
+  readonly max: number;
   /**
    * The stepping.
    */
-  public step: number;
+  readonly step: number;
 
-  constructor(widget: PointerCameraWidget) {
-    const min = GPPointerFloat();
-    const max = GPPointerFloat();
-    const step = GPPointerFloat();
-    checkCode(getGPhoto2Driver().gp_widget_get_range(widget, min, max, step), "gp_widget_get_range");
-    this.min = min.deref();
-    this.max = max.deref();
-    this.step = step.deref();
-  }
-
-  public toJSON() {
-    return {
-      min: this.min,
-      max: this.max,
-      step: this.step
-    };
+  constructor(options: {min: number; max: number; step: number}) {
+    this.min = options.min;
+    this.max = options.max;
+    this.step = options.step;
   }
 
   public toString() {
