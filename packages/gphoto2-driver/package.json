@@ -1,6 +1,6 @@
 {
   "name": "@tsed/gphoto2-driver",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
   "private": false,
   "source": "./src/index.ts",
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@tsed/core": "6.94.0",
-    "@tsed/gphoto2-core": "3.1.0",
+    "@tsed/gphoto2-core": "3.1.1",
     "@tsed/logger": "6.0.0",
     "fs-extra": "10.0.0",
     "source-map-support": "0.5.21",

@@ -1,6 +1,6 @@
 {
   "name": "@tsed/gphoto2-core",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Node.js wrapper of C library libgphoto2 written in TypeScript",
   "private": false,
   "source": "./src/index.ts",
