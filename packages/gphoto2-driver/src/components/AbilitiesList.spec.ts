@@ -6,11 +6,10 @@ import {$log} from "@tsed/logger";
 
 $log.stop();
 
-jest.mock("@tsed/gphoto2-core");
-jest.mock("ref-napi", () => {
+jest.mock("@tsed/gphoto2-core", () => {
   return {
-    ...jest.requireActual("ref-napi"),
-    ...jest.requireActual("@tsed/gphoto2-driver/src/__mock__/ref-napi")
+    ...jest.requireActual("@tsed/gphoto2-core"),
+    ...jest.requireActual("@tsed/gphoto2-driver/src/__mock__/gphoto2-core")
   };
 });
 
