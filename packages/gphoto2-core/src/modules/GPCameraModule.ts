@@ -1,6 +1,4 @@
-import {Pointer, refType, types} from "ref-napi";
-import ArrayType from "ref-array-napi";
-import StructType from "ref-struct-napi";
+import {Pointer, refType, types, ArrayType, StructType} from "../napi";
 import {GPCameraCaptureType, GPCameraFileType, GPCodes} from "../types";
 import {StructBuffer} from "../types/StructBuffer";
 import {StructCameraAbilities} from "./GPAbilitiesListModule";

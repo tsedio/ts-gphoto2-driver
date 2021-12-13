@@ -9,14 +9,15 @@ import {
   PointerCameraFile,
   RefCameraFile,
   runAsyncMethod,
-  runMethod
+  runMethod,
+  reinterpret,
+  Pointer
 } from "@tsed/gphoto2-core";
 import {Context} from "./Context";
 import {ensureDir, ensureDirSync} from "fs-extra";
 import {dirname} from "path";
 import {CameraFilePath} from "./CameraFilePath";
 import {PointerWrapper, PointerWrapperOptions} from "./PointerWrapper";
-import type {Pointer} from "ref-napi";
 
 export class CameraFile extends PointerWrapper<PointerCameraFile> {
   constructor(options: Partial<PointerWrapperOptions> = {}, ...args: any[]) {
@@ -148,18 +149,19 @@ export class CameraFile extends PointerWrapper<PointerCameraFile> {
     data: Buffer | string;
     size: number;
   }> {
-    const dataPointer = GPPointerString();
+    const dataPointer = GPPointer("char *");
     const sizePointer = GPPointer("int");
 
     await this.callAsync("get_data_and_size", dataPointer, sizePointer);
 
     const size = sizePointer.deref();
+    const binary = reinterpret(dataPointer.deref(), size);
 
     let data: Buffer | string = "";
 
     switch (encoding) {
       case "binary":
-        data = dataPointer;
+        data = binary;
 
         break;
       case "base64":

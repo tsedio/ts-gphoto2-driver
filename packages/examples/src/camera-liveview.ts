@@ -4,10 +4,13 @@
 // To check if liveview works with your camera, you can just use
 // node examples/camera-liveview.js | xxd | grep ffd9
 // if you see a lot of ffd9 (not in the first column) - then it works
-import {Camera, sleep, run} from "@tsed/gphoto2-driver";
+import {Camera, run, sleep} from "@tsed/gphoto2-driver";
+import fs from "fs";
+import path from "path";
 
 const NUMBER_OF_SECONDS_TO_LISTEN = 10;
-
+const PATH_TO_SAVE = path.join(__dirname, "../.tmp/live");
+let id = 0;
 run(
   async () => {
     const camera = new Camera();
@@ -24,7 +27,10 @@ run(
     });
 
     liveview.on("data", (data) => {
-      process.stdout.write(data); // We can not use console.log for binary, because it puts \n after each line
+      fs.writeFile(`${PATH_TO_SAVE + id}.jpg`, data, () => {
+        console.log("Written");
+      });
+      id++;
     });
 
     liveview.start();

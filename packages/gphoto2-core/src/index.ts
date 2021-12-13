@@ -1,6 +1,7 @@
 import "@tsed/core";
 import {getGPhoto2Driver} from "./GPhoto2Driver";
 
+export * from "./napi";
 export * from "./modules";
 export * from "./types";
 export * from "./GPhoto2Driver";

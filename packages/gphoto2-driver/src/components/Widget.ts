@@ -1,11 +1,11 @@
 import {nameOf} from "@tsed/core";
+import {$log} from "@tsed/logger";
 import {GPPointerFloat, GPPointerInt, GPPointerRef, GPPointerString, PointerCameraWidget, pointerToString} from "@tsed/gphoto2-core";
+import type {Pointer} from "ref-napi";
 import {WidgetProps} from "../interfaces";
 import {WidgetRange} from "./WidgetRange";
 import {WidgetTypes} from "./WidgetTypes";
-import {$log} from "@tsed/logger";
 import {CallablePointer} from "./PointerWrapper";
-import {Pointer} from "ref-napi";
 
 export class Widget extends CallablePointer<PointerCameraWidget> {
   /**

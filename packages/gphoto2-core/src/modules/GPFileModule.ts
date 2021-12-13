@@ -1,4 +1,4 @@
-import {Pointer, refType, types} from "ref-napi";
+import {Pointer, refType, types} from "../napi";
 import {GPCodes} from "../types";
 import {PointerCameraFile, RefCameraFile} from "./GPCameraModule";
 
@@ -15,7 +15,7 @@ export const GPFileModuleDescription = {
   gp_file_save: ["int", [RefCameraFile, types.CString]],
   gp_file_unref: ["int", [RefCameraFile]],
   gp_file_free: ["int", [RefCameraFile]],
-  gp_file_get_data_and_size: ["int", [RefCameraFile, refType(types.CString), refType(types.int)]]
+  gp_file_get_data_and_size: ["int", [RefCameraFile, refType(refType(types.char)), refType(types.int)]]
 };
 
 export interface IGPFileModule {
@@ -43,6 +43,7 @@ export interface IGPFileModule {
   gp_file_get_mime_type(file: PointerCameraFile, mime: Pointer<string>): GPCodes;
 
   gp_file_set_mime_type(file: PointerCameraFile, mime: string): GPCodes;
+
   /**
    *
    * @param {PointerCameraFile} cameraFile
@@ -107,5 +108,5 @@ export interface IGPFileModule {
    * memory leaks.
    *
    **/
-  gp_file_get_data_and_size(file: PointerCameraFile, data: Pointer<Pointer<Buffer>>, size: Pointer<number>): GPCodes;
+  gp_file_get_data_and_size(file: PointerCameraFile, data: Pointer<Pointer<"char">>, size: Pointer<number>): GPCodes;
 }

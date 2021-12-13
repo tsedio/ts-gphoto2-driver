@@ -1,4 +1,4 @@
-import {Pointer, refType, types, Value} from "ref-napi";
+import {Pointer, refType, types} from "../napi";
 import {GPCodes} from "../types";
 
 /**
@@ -11,11 +11,6 @@ export type PointerCameraWidget = Pointer<void>;
 // tslint:disable-next-line
 export const RefCameraWidget = refType("void");
 
-/**
- *
- */
-// tslint:disable-next-line
-export type PointerCameraWidgetType = Value<number>;
 /**
  *
  * @type {Type}
