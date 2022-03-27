@@ -3,27 +3,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@tsed/*": [
-        "packages/*/src"
-      ]
+      "@tsed/*": ["packages/*/src"]
     }
   },
   "linterOptions": {
-    "exclude": [
-      "test",
-      "**/test",
-      "lib",
-      "**/lib",
-      "packages/*/lib",
-      "node_modules",
-    ]
+    "exclude": ["test", "**/test", "lib", "**/lib", "packages/*/lib", "node_modules"]
   },
-  "exclude": [
-    "test",
-    "**/test",
-    "lib",
-    "**/lib",
-    "packages/*/lib",
-    "node_modules"
-  ]
+  "exclude": ["test", "**/test", "lib", "**/lib", "packages/*/lib", "node_modules"]
 }

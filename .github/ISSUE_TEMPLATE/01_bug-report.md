@@ -4,13 +4,12 @@ about: Create a report to help us improve
 title: "[BUG] Title"
 labels: bug
 assignees: Romakita
-
 ---
 
 ## Information
 
 - **Version:** 5.x
-- Packages: 
+- Packages:
 
 A few sentences describing the overall goals of the issue.
 

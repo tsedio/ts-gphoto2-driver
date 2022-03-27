@@ -17,22 +17,22 @@ A Node.js wrapper for libgphoto2 written in TypeScript. Useful for remote contro
 
 ## Features
 
- - Camera autodetection,
- - Take a picture/movie capture,
- - Take a preview,
- - Retrieve camera list,
- - Select camera,
- - Take a liveview from camera and get binary or base64 of each frame, or write it to file,
- - Display info about your camera (summary, about, manual).
+- Camera autodetection,
+- Take a picture/movie capture,
+- Take a preview,
+- Retrieve camera list,
+- Select camera,
+- Take a liveview from camera and get binary or base64 of each frame, or write it to file,
+- Display info about your camera (summary, about, manual).
 
 ## Prerequisite
 
- - Node.js: any version supported by nodejs/nan
- - NPM: ~7.10.0
- - Nan: ~2.8.0
- - libgphoto2: ~2.5.x - via `brew install libgphoto2`, `apt-get install libgphoto2-dev` or download and build from `http://www.gphoto.org/proj/libgphoto2/`,
- - pkg-config | dpkg (used for dependency checking)
- - clang compiler
+- Node.js: any version supported by nodejs/nan
+- NPM: ~7.10.0
+- Nan: ~2.8.0
+- libgphoto2: ~2.5.x - via `brew install libgphoto2`, `apt-get install libgphoto2-dev` or download and build from `http://www.gphoto.org/proj/libgphoto2/`,
+- pkg-config | dpkg (used for dependency checking)
+- clang compiler
 
 > Note: This package cannot be used in front-end context (like webpack, browserify, etc...). You have to develop your own web server and expose your API.
 
@@ -50,18 +50,21 @@ Here an example with TypeScript (works also with pure javascript in Node.js):
 
 ```typescript
 import Path from "path";
-import { CameraList, run } from "@tsed/gphoto2-driver";
+import {CameraList, run} from "@tsed/gphoto2-driver";
 
-run(() => {
-  const cameraList = new CameraList().load();
+run(
+  () => {
+    const cameraList = new CameraList().load();
 
-  if (cameraList.size) {
-    const camera = cameraList.getCamera(0);
-    const cameraFile = camera.captureImage();
+    if (cameraList.size) {
+      const camera = cameraList.getCamera(0);
+      const cameraFile = camera.captureImage();
 
-    cameraFile.save(path.join(__dirname, 'capture.jpeg'));
-  }
-}, {logLevel: 'debug'})
+      cameraFile.save(path.join(__dirname, "capture.jpeg"));
+    }
+  },
+  {logLevel: "debug"}
+);
 ```
 
 ## CameraFile
@@ -72,8 +75,8 @@ This object does not contain the image, it is just a pointer to the file in came
 
 You have several options to get your image:
 
-1) Use `.save(filename)` of `.saveAsync(filename)` methods, that will save the image to your filesystem.
-2) Use `.getDataAndSizeAsync('binary' | 'base64')` method, which returns following object:
+1. Use `.save(filename)` of `.saveAsync(filename)` methods, that will save the image to your filesystem.
+2. Use `.getDataAndSizeAsync('binary' | 'base64')` method, which returns following object:
 
 ```
 {
@@ -105,4 +108,3 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [travis]: https://travis-ci.org/
-

@@ -1,4 +1,5 @@
 # Contributing
+
 ## Introduction
 
 First, thank you for considering contributing to ts-gphoto2-driver! It's people like you that make the open source community such a great community! 😊
@@ -31,6 +32,7 @@ We also welcome financial contributions in full transparency on our open collect
 If you have any questions, create an [issue](https://github.com/Romakita/tsed/blob/master/issue) (protip: do a quick search first to see if someone else didn't ask the same question before!). You can also reach us at https://gitter.im/Tsed-io/community.
 
 ## How to work on ts-gphoto2-driver
+
 ### Setup
 
 Clone your fork of the repository
@@ -43,7 +45,7 @@ Or if you have access to this repository:
 
 ```bash
  $ git checkout https://github.com/tsedio/ts-gphoto2-driver.git
- ```
+```
 
 Install npm dependencies
 
@@ -87,6 +89,7 @@ This command rebase your branch feature from the production branch, run the test
 git commit -m "feat(domain): Your message"
 gflow push
 ```
+
 > To write your commit message see https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit
 
 When your feature is ready to review, you can open a PR on ts-gphoto2-driver github.

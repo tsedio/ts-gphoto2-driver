@@ -8,4 +8,4 @@ module.exports = {
       statements: 33.7
     }
   }
-}
+};

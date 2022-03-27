@@ -25,7 +25,7 @@
     "test:lint": "eslint packages --ext .ts",
     "test:lint:fix": "eslint packages --ext .ts --fix",
     "build": "monorepo build",
-    "prettier": "prettier '{packages,test}/**/*.ts' --write",
+    "prettier": "prettier '**/*.{ts,js,json,md,yml,yaml}' --write",
     "release": "semantic-release",
     "release:dryRun": "semantic-release --dry-run",
     "start:abilities": "lerna run start:abilities",
@@ -39,9 +39,12 @@
     "start:camera:scenario": "lerna run start:camera:scenario",
     "start:camera:scenario:async": "lerna run start:camera:scenario:async",
     "start:port:list": "lerna run start:port:list",
-    "start:widgets": "lerna run start:widgets"
+    "start:widgets": "lerna run start:widgets",
+    "prepare": "is-ci || husky install"
   },
   "dependencies": {
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.0.0",
     "@types/ffi-napi": "4.0.4",
     "@types/ref-napi": "3.0.4",
     "@tsed/monorepo-utils": "1.19.3",
@@ -55,12 +58,13 @@
     "eslint-plugin-jest": "25.3.0",
     "eslint-plugin-prettier": "4.0.0",
     "gflow": "5.1.2",
-    "husky": "6.0.0",
+    "husky": "^7.0.4",
+    "is-ci": "^3.0.1",
     "istanbul-merge": "^1.1.1",
     "nyc": "^15.1.0",
     "jest": "27.4.3",
     "lerna": "4.0.0",
-    "lint-staged": "12.1.2",
+    "lint-staged": "^12.3.7",
     "normalize-path": "^3.0.0",
     "prettier": "2.5.1",
     "segfault-handler": "1.3.0",
@@ -77,12 +81,6 @@
     "packages": [
       "packages/*"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "post-commit": "git update-index --again"
-    }
   },
   "monorepo": {
     "productionBranch": "production",

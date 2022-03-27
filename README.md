@@ -13,7 +13,6 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![backers](https://opencollective.com/tsed/tiers/badge.svg)](https://opencollective.com/tsed)
 
-
   <br />
 <div align="center">
   <a href="https://api.tsed.io/rest/slack/tsedio/tsed">Slack</a>
@@ -50,16 +49,17 @@ Obviously any help is welcome to move the project forward :)
 
 ## Prerequisite
 
- - Node.js: 12
- - NPM: ~7.10.0
- - Nan: ~2.8.0
- - libgphoto2: ~2.5.x - via `brew install libgphoto2`, `apt-get install libgphoto2-dev` or download and build from `http://www.gphoto.org/proj/libgphoto2/`,
- - pkg-config | dpkg (used for dependency checking)
- - clang compiler
+- Node.js: 12
+- NPM: ~7.10.0
+- Nan: ~2.8.0
+- libgphoto2: ~2.5.x - via `brew install libgphoto2`, `apt-get install libgphoto2-dev` or download and build from `http://www.gphoto.org/proj/libgphoto2/`,
+- pkg-config | dpkg (used for dependency checking)
+- clang compiler
 
 > Note: This package cannot be used in front-end context (like webpack, browserify, etc...). You have to develop your own web server and expose your API.
 
 ## Installation
+
 ### Linux / Mac OS Intel
 
 ```bash
@@ -90,6 +90,7 @@ arch -arm64 zsh
 ```
 
 Create brew alias. Edit your `~/.zshrc` file and add the followings lines:
+
 ```sh
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -125,7 +126,7 @@ brew install gphoto2
 
 // Linux
 sudo apt install gphoto2
-````
+```
 
 ## Usage
 
@@ -133,18 +134,21 @@ Here an example with TypeScript (works also with pure javascript in Node.js):
 
 ```typescript
 import Path from "path";
-import { CameraList, run } from "@tsed/gphoto2-driver";
+import {CameraList, run} from "@tsed/gphoto2-driver";
 
-run(() => {
-  const cameraList = new CameraList().load();
+run(
+  () => {
+    const cameraList = new CameraList().load();
 
-  if (cameraList.size) {
-    const camera = cameraList.getCamera(0);
-    const cameraFile = camera.captureImage();
+    if (cameraList.size) {
+      const camera = cameraList.getCamera(0);
+      const cameraFile = camera.captureImage();
 
-    cameraFile.save(path.join(__dirname, 'capture.jpeg'));
-  }
-}, {logLevel: 'debug'})
+      cameraFile.save(path.join(__dirname, "capture.jpeg"));
+    }
+  },
+  {logLevel: "debug"}
+);
 ```
 
 ## CameraFile
@@ -155,8 +159,8 @@ This object does not contain the image, it is just a pointer to the file in came
 
 You have several options to get your image:
 
-1) Use `.save(filename)` of `.saveAsync(filename)` methods, that will save the image to your filesystem.
-2) Use `.getDataAndSizeAsync('binary' | 'base64')` method, which returns following object:
+1. Use `.save(filename)` of `.saveAsync(filename)` methods, that will save the image to your filesystem.
+2. Use `.getDataAndSizeAsync('binary' | 'base64')` method, which returns following object:
 
 ```
 {

@@ -2,7 +2,7 @@
 // https://jestjs.io/docs/en/configuration.html
 const {join} = require("path");
 const fixPath = require("normalize-path");
-const packageDir = join(__dirname, 'packages');
+const packageDir = join(__dirname, "packages");
 
 module.exports = (rootDir) => ({
   rootDir: fixPath(rootDir),
@@ -23,7 +23,7 @@ module.exports = (rootDir) => ({
   coveragePathIgnorePatterns: ["index.ts", "GPUtils.ts", "__mock__"],
   moduleNameMapper: {
     "^@tsed/gphoto2-core$": fixPath(join(packageDir, "gphoto2-core/src")),
-    "^@tsed/gphoto2-driver$": fixPath(join(packageDir, "gphoto2-driver/src")),
+    "^@tsed/gphoto2-driver$": fixPath(join(packageDir, "gphoto2-driver/src"))
   },
 
   // An array of file extensions your modules use

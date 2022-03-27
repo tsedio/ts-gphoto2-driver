@@ -20,26 +20,11 @@
     "newLine": "LF",
     "noEmit": true,
     "allowJs": true,
-    "lib": [
-      "ES2019",
-      "esnext.asynciterable"
-    ],
-    "typeRoots": [
-      "./node_modules/@types"
-    ]
+    "lib": ["ES2019", "esnext.asynciterable"],
+    "typeRoots": ["./node_modules/@types"]
   },
   "linterOptions": {
-    "exclude": [
-      "lib",
-      "**/lib",
-      "node_modules",
-    ]
+    "exclude": ["lib", "**/lib", "node_modules"]
   },
-  "exclude": [
-    "lib",
-    "**/lib",
-    "node_modules",
-    "coverage",
-    ".nyc_output"
-  ]
+  "exclude": ["lib", "**/lib", "node_modules", "coverage", ".nyc_output"]
 }

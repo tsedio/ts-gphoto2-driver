@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 12.x ]
+        node-version: [12.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest]
-        node-version: [ 12.22.7 ]
+        node-version: [12.22.7]
 
     steps:
       - uses: actions/checkout@v2
@@ -67,7 +67,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 12.x ]
+        node-version: [12.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -87,7 +87,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 12.x ]
+        node-version: [12.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -109,5 +109,3 @@ jobs:
           path: |
             package.json
             packages/*/package.json
-
-
