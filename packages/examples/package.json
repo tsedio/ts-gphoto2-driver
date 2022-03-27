@@ -9,18 +9,18 @@
     "cli-table3": "0.6.0"
   },
   "scripts": {
-    "start:abilities": "ts-node -r tsconfig-paths/register src/abilities-list.ts",
-    "start:camera": "ts-node -r tsconfig-paths/register src/camera.ts",
-    "start:camera:abilities": "ts-node -r tsconfig-paths/register src/camera-abilities.ts",
-    "start:camera:autoselect": "ts-node -r tsconfig-paths/register src/camera-autoselect.ts",
-    "start:camera:info": "ts-node -r tsconfig-paths/register src/camera-info.ts",
-    "start:camera:list:autodetect": "ts-node -r tsconfig-paths/register src/camera-info.ts",
+    "start:abilities": "yarn ts-node -r tsconfig-paths/register src/abilities-list.ts",
+    "start:camera": "yarn ts-node -r tsconfig-paths/register src/camera.ts",
+    "start:camera:abilities": "yarn ts-node -r tsconfig-paths/register src/camera-abilities.ts",
+    "start:camera:autoselect": "yarn ts-node -r tsconfig-paths/register src/camera-autoselect.ts",
+    "start:camera:info": "yarn ts-node -r tsconfig-paths/register src/camera-info.ts",
+    "start:camera:list:autodetect": "yarn ts-node -r tsconfig-paths/register src/camera-info.ts",
     "start:camera:list:liveview": "yarn ts-node -r tsconfig-paths/register src/camera-liveview.ts",
     "start:camera:list:liveview:file": "yarn ts-node -r tsconfig-paths/register src/camera-liveview-file.ts",
-    "start:camera:scenario": "ts-node -r tsconfig-paths/register src/camera-scenario.ts",
+    "start:camera:scenario": "yarn ts-node -r tsconfig-paths/register src/camera-scenario.ts",
     "start:camera:scenario:async": "ts-node -r tsconfig-paths/register src/camera-scenario-async.ts",
-    "start:port:list": "ts-node -r tsconfig-paths/register src/port-list.ts",
-    "start:widgets": "ts-node -r tsconfig-paths/register src/widgets.ts"
+    "start:port:list": "yarn ts-node -r tsconfig-paths/register src/port-list.ts",
+    "start:widgets": "yarn ts-node -r tsconfig-paths/register src/widgets.ts"
   },
   "peerDependencies": {}
 }

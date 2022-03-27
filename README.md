@@ -60,16 +60,56 @@ Obviously any help is welcome to move the project forward :)
 > Note: This package cannot be used in front-end context (like webpack, browserify, etc...). You have to develop your own web server and expose your API.
 
 ## Installation
-
-After installing the dependencies, just install using:
+### Linux / Mac OS Intel
 
 ```bash
 brew install libgphoto2
+
 // or
 apt-get install libgphoto2-dev
 
 // then
 npm install @tsed/gphoto2-driver
+```
+
+### Mac OS M1 (Rosetta)
+
+On Mac M1 chipset, you have to install homebrew with the x64 architecture:
+
+```bash
+/usr/sbin/softwareupdate --install-rosetta
+
+arch -x86_64 zsh
+mkdir ~/Downloads/homebrew
+curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
+sudo mv ~/Downloads/homebrew /usr/local/homebrew
+sudo chmod 755 /usr/local/homebrew/bin/brew
+arch -x86_64 /usr/local/homebrew/bin/brew install libgphoto2
+
+arch -arm64 zsh
+```
+
+Create brew alias. Edit your `~/.zshrc` file and add the followings lines:
+```sh
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+alias xbrew='arch -x86_64 /usr/local/homebrew/bin/brew'
+```
+
+Now you can run brew with x64 architecture by usin `xbrew` alias:
+
+```sh
+xbrew install libgphoto2
+```
+
+You also need to install Node.js with the appropriate:
+
+```sh
+arch -x86_64 zsh
+nvm install v12
+nvm use v12
+npm install @tsed/gphoto2-driver
+arch -arm64 zsh
 ```
 
 ## Check if your camera is detected
@@ -81,7 +121,8 @@ Install the GPhoto2 CLI:
 
 ```bash
 // MacOs
-brew install libgphoto2
+brew install gphoto2
+
 // Linux
 sudo apt install gphoto2
 ````
