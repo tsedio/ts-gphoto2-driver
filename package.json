@@ -62,7 +62,7 @@
     "is-ci": "^3.0.1",
     "istanbul-merge": "^1.1.1",
     "nyc": "^15.1.0",
-    "jest": "27.4.3",
+    "jest": "27.5.1",
     "lerna": "4.0.0",
     "lint-staged": "^12.3.7",
     "normalize-path": "^3.0.0",
