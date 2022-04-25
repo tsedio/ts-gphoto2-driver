@@ -1,5 +1,5 @@
-import {Pointer, refType} from "../napi";
-import {GPCodes} from "../types";
+import {Pointer, refType} from "../napi/exports";
+import {GPCodes} from "../types/GPCodes";
 
 /**
  *

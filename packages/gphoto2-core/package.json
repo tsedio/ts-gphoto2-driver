@@ -33,14 +33,15 @@
     "reflex"
   ],
   "scripts": {
-    "build": "yarn run build:esm && yarn run build:cjs",
+    "build": "yarn barrels && yarn run build:esm && yarn run build:cjs",
     "build:cjs": "tsc --build tsconfig.compile.json",
     "build:esm": "tsc --build tsconfig.compile.esm.json",
-    "test": "cross-env NODE_ENV=test jest"
+    "barrels": "yarn barrelsby --delete -d ./src -e \"\\.spec\\.ts\" -e \"__mock__\" -e \".benchmark.ts\"",
+    "test": "yarn cross-env NODE_ENV=test jest"
   },
   "dependencies": {
     "@tsed/core": "6.94.0",
-    "@tsed/logger": "6.0.0",
+    "@tsed/logger": "6.1.1",
     "ffi-napi": "4.0.3",
     "ref-array-napi": "1.2.2",
     "ref-napi": "3.0.3",

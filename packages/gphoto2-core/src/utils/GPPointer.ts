@@ -6,7 +6,6 @@ import {alloc, allocCString, Pointer, refType} from "ref-napi";
  * @returns {Pointer<T>}
  */
 export function GPPointer<T = any>(type: any = "void"): Pointer<T> {
-  console.log(alloc);
   return alloc(type) as any;
 }
 

@@ -1,5 +1,5 @@
 import {GPWidgetType} from "@tsed/gphoto2-core";
-import {isPrimitiveOrPrimitiveClass, nameOf, primitiveOf} from "@tsed/core";
+import {nameOf} from "@tsed/core";
 
 const enums: WidgetTypes[] = [];
 
@@ -67,10 +67,6 @@ export class WidgetTypes {
     return this._hasChoices;
   }
 
-  get acceptNullValue(): boolean {
-    return this._acceptNullValue;
-  }
-
   get valueType(): any {
     return this._valueType;
   }
@@ -83,21 +79,6 @@ export class WidgetTypes {
     }
 
     return type;
-  }
-
-  public acceptsValue(value: any): boolean {
-    if (!this.valueType) {
-      return false;
-    }
-    if (!value) {
-      return this.acceptNullValue;
-    }
-
-    if (isPrimitiveOrPrimitiveClass(value)) {
-      return primitiveOf(this.valueType) === primitiveOf(value);
-    }
-
-    return value instanceof this.valueType;
   }
 
   toString() {

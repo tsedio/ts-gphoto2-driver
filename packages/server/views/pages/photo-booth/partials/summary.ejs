@@ -1,0 +1,8 @@
+<ul>
+    <% summary.forEach((infoSummary) => { %>
+        <li>
+            <h5 class="my-0"><%= infoSummary.label; %></h5>
+            <span><%= infoSummary.value; %><%= infoSummary.unit; %></span>
+        </li>
+    <% }); %>
+</ul>

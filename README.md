@@ -128,6 +128,18 @@ brew install gphoto2
 sudo apt install gphoto2
 ```
 
+## Demo
+
+Run:
+
+```sh
+yarn start
+```
+
+Then open the browser on `http://localhost:3000`
+
+The demo code source is inside `packages/client` and `packages/server`.
+
 ## Usage
 
 Here an example with TypeScript (works also with pure javascript in Node.js):

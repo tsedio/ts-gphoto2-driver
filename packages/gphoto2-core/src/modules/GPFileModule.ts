@@ -1,5 +1,5 @@
-import {Pointer, refType, types} from "../napi";
-import {GPCodes} from "../types";
+import {Pointer, refType, types} from "../napi/exports";
+import {GPCodes} from "../types/GPCodes";
 import {PointerCameraFile, RefCameraFile} from "./GPCameraModule";
 
 export const GP_FILE_MODULE_ASYNC_KEYS: string[] = ["gp_file_save"];

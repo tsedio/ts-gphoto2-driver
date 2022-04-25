@@ -20,7 +20,7 @@ module.exports = (rootDir) => ({
 
   // moduleDirectories: ["node_modules", "packages"],
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: ["index.ts", "GPUtils.ts", "__mock__"],
+  coveragePathIgnorePatterns: ["index.ts", "GPUtils.ts", "__mock__", "exports.ts", "src/types"],
   moduleNameMapper: {
     "^@tsed/gphoto2-core$": fixPath(join(packageDir, "gphoto2-core/src")),
     "^@tsed/gphoto2-driver$": fixPath(join(packageDir, "gphoto2-driver/src"))

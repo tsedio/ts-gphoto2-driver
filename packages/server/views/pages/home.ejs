@@ -1,0 +1,10 @@
+<%- include('../partials/header') %>
+
+<ul>
+    <li><a href="/photo-booth"><span>Photo Booth</span></a></li>
+    <% docs.forEach((doc) => { %>
+        <li><a href="<%= doc.path; %>"><span>Doc API <%= doc.specVersion; %></span></a></li>
+    <% }); %>
+</ul>
+
+<%- include('../partials/footer') %>

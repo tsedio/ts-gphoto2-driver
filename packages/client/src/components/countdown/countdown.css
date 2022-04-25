@@ -1,0 +1,201 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.countdown {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 500px;
+    height: 140px;
+    margin-top: -70px;
+    padding: 10px;
+    border-radius: 20px;
+    transform: translateX(-50%);
+}
+
+.countdown__colored-blocks {
+    overflow: hidden;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 500px;
+    height: 100%;
+    margin-left: -250px;
+    padding: 10px;
+    border-radius: 20px;
+    perspective: 1000px;
+    animation: countdownAnim 4s ease-in-out infinite, contAnim 4s infinite;
+}
+
+.countdown__colored-blocks-rotater {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    animation: rotation 1.3s linear infinite;
+}
+
+.countdown__colored-blocks-inner {
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+    background: #32386d;
+    border-radius: inherit;
+}
+
+.countdown__colored-block {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 300%;
+    height: 300%;
+    transform-origin: 0 0;
+}
+
+.countdown__colored-block:nth-child(1) {
+    transform: rotate(0deg) skewX(-30deg);
+    background-color: #fd3359;
+}
+
+.countdown__colored-block:nth-child(2) {
+    transform: rotate(120deg) skewX(-30deg);
+    background-color: #f4d302;
+}
+
+.countdown__colored-block:nth-child(3) {
+    transform: rotate(240deg) skewX(-30deg);
+    background-color: #21bdff;
+}
+
+.countdown__inner {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.countdown__numbers {
+    overflow: visible;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100px;
+    height: 100px;
+    margin-left: -50px;
+    margin-top: -50px;
+}
+
+.countdown__numbers-path {
+    fill: none;
+    stroke-width: 10px;
+    stroke: #fff;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 0, 518.055065155;
+    stroke-dashoffset: 0;
+    animation: numAnim 4s ease-in-out infinite;
+    opacity: 0;
+}
+
+.countdown__text {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 500px;
+    height: 100%;
+    margin-left: -250px;
+    text-align: center;
+    line-height: 140px;
+    font-size: 100px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 15px;
+    transform: translateX(10px);
+    animation: hideText 4s infinite;
+}
+
+@keyframes contAnim {
+    15%, 100% {
+        margin-left: -250px;
+        width: 500px;
+    }
+    25%, 90% {
+        margin-left: -70px;
+        width: 140px;
+    }
+}
+
+@keyframes numAnim {
+    15% {
+        stroke-dasharray: 0, 518.055065155;
+        stroke-dashoffset: 0;
+        opacity: 0;
+    }
+    25%, 41% {
+        opacity: 1;
+        stroke-dasharray: 144.4256591797, 518.055065155;
+        stroke-dashoffset: -40;
+    }
+    53%, 66% {
+        stroke-dasharray: 136.0216217041, 518.055065155;
+        stroke-dashoffset: -227.238697052;
+    }
+    76% {
+        stroke-dasharray: 113.4751205444, 518.055065155;
+        stroke-dashoffset: -445.8995704651;
+    }
+    88%, 100% {
+        stroke-dasharray: 72.1554946899, 518.055065155;
+        stroke-dashoffset: -445.8995704651;
+    }
+    92% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes rotation {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes countdownAnim {
+    15% {
+        border-radius: 20px;
+        transform: rotate(0);
+    }
+    30%, 43% {
+        border-radius: 50%;
+        transform: rotate(360deg);
+    }
+    52%, 65% {
+        border-radius: 0;
+        transform: rotate(720deg);
+    }
+    78%, 90% {
+        border-radius: 50%;
+        transform: rotate(1080deg);
+    }
+    100% {
+        border-radius: 20px;
+        transform: rotate(1440deg);
+    }
+}
+
+@keyframes hideText {
+    15%, 100% {
+        opacity: 1;
+    }
+    20%, 96% {
+        opacity: 0;
+    }
+}
+

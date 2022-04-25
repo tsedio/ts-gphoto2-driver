@@ -1,26 +1,15 @@
 import {$log} from "@tsed/logger";
 import ffi from "ffi-napi";
 import util from "util";
-import {
-  GP_CAMERA_MODULE_ASYNC_KEYS,
-  GP_FILE_MODULE_ASYNC_KEYS,
-  GPAbilitiesListModuleDescription,
-  GPCameraModuleDescription,
-  GPContextModuleDescription,
-  GPFileModuleDescription,
-  GPListModuleDescription,
-  GPPortInfoModuleDescription,
-  GPWidgetModuleDescription,
-  IGPAbilitiesListModule,
-  IGPCameraModule,
-  IGPContextModule,
-  IGPFileModule,
-  IGPListModule,
-  IGPPortInfoModule,
-  IGPWidgetModule
-} from "./modules";
 import {getLibLocation} from "./utils/getLibLocation";
 import {checkCode, CheckCodeException} from "./utils/checkCode";
+import {GPContextModuleDescription, IGPContextModule} from "./modules/GPContextModule";
+import {GPListModuleDescription, IGPListModule} from "./modules/GPListModule";
+import {GP_CAMERA_MODULE_ASYNC_KEYS, GPCameraModuleDescription, IGPCameraModule} from "./modules/GPCameraModule";
+import {GPFileModuleDescription, GP_FILE_MODULE_ASYNC_KEYS, IGPFileModule} from "./modules/GPFileModule";
+import {GPAbilitiesListModuleDescription, IGPAbilitiesListModule} from "./modules/GPAbilitiesListModule";
+import {GPPortInfoModuleDescription, IGPPortInfoModule} from "./modules/GPPortInfoModule";
+import {GPWidgetModuleDescription, IGPWidgetModule} from "./modules/GPWidgetModule";
 
 /**
  *

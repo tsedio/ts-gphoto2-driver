@@ -1,10 +1,10 @@
 import {$log} from "@tsed/logger";
-import {CameraProps} from "../interfaces";
 import {AbilitiesList} from "./AbilitiesList";
 import {Camera} from "./Camera";
 import {Context} from "./Context";
 import {List} from "./List";
 import {PortInfoList} from "./PortInfoList";
+import {CameraProps} from "../interfaces/CameraProps";
 
 export class CameraList extends List<CameraProps> {
   static readonly USB_PATTERN = /usb:\d+,\d+/;

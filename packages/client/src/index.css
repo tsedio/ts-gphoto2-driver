@@ -1,0 +1,36 @@
+@import "./styles/typo.css";
+@import "./styles/bxicons/index.css";
+@import "./styles/tailwind.css";
+@import "./components/battery-level/battery-level.css";
+@import "./components/live-view/live-view.css";
+@import "./components/countdown/countdown.css";
+
+body:after {
+    content: "";
+    background-image: radial-gradient(#eef2f5 0, #f4f7f8 40%, transparent 75%);
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Photo booth */
+.container-photo-booth {
+    height: 470px;
+    width: 80vw;
+    max-width: 1024px;
+}
+
+.col-head {
+    height: 40px;
+}
+
+.col-body {
+    @apply border-2 border-gray-700;
+}
+
+.container-photo-booth > section.col-left {
+    width: 300px;
+}

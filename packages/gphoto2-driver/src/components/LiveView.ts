@@ -59,10 +59,21 @@ export class LiveView extends EventEmitter implements Closeable {
   public stop() {
     this.timer && clearInterval(this.timer);
     this.fd && fs.closeSync(this.fd);
-    this.file && this.file.closeQuietly();
+
+    if (this.file) {
+      this.file.clean();
+      this.file.closeQuietly();
+    }
+
+    this.camera.exit();
+
     this.file = undefined;
     this.timer = undefined;
     this.fd = undefined;
+  }
+
+  public isActive() {
+    return !this.fd;
   }
 
   public close() {
@@ -73,7 +84,8 @@ export class LiveView extends EventEmitter implements Closeable {
 
   private async onTick() {
     if (!this.file) {
-      throw new Error("LiveView was closed");
+      this.stop();
+      return;
     }
 
     await this.camera.preview(this.file);

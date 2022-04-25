@@ -1,8 +1,7 @@
-import {nameOf} from "@tsed/core";
 import {$log} from "@tsed/logger";
 import {GPPointerFloat, GPPointerInt, GPPointerRef, GPPointerString, PointerCameraWidget, pointerToString} from "@tsed/gphoto2-core";
 import type {Pointer} from "ref-napi";
-import {WidgetProps} from "../interfaces";
+import {WidgetProps} from "../interfaces/WidgetProps";
 import {WidgetRange} from "./WidgetRange";
 import {WidgetTypes} from "./WidgetTypes";
 import {CallablePointer} from "./PointerWrapper";
@@ -144,12 +143,6 @@ export class Widget extends CallablePointer<PointerCameraWidget> {
     }
 
     const type = this.type;
-
-    if (!type.acceptsValue(value)) {
-      throw new Error(
-        `Parameter value: invalid value ${value}: expected ${nameOf(type.valueType)} but got ${value == null ? "null" : nameOf(value)}`
-      );
-    }
 
     let ptr;
     switch (type) {
