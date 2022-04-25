@@ -1,9 +1,9 @@
 {
   "name": "@tsed/examples-typescript",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "private": true,
   "dependencies": {
-    "@tsed/gphoto2-driver": "3.1.1"
+    "@tsed/gphoto2-driver": "3.2.0"
   },
   "devDependencies": {
     "cli-table3": "0.6.0"

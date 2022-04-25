@@ -1,6 +1,6 @@
 {
   "name": "@tsed/gphoto2-server",
-  "version": "3.0.3",
+  "version": "3.2.0",
   "description": "",
   "private": true,
   "scripts": {
@@ -16,12 +16,12 @@
     "@tsed/core": "^6.107.4",
     "@tsed/di": "^6.107.4",
     "@tsed/exceptions": "^6.107.4",
+    "@tsed/gphoto2-driver": "3.2.0",
     "@tsed/json-mapper": "^6.107.4",
     "@tsed/logger": "6.1.1",
     "@tsed/platform-express": "^6.107.4",
     "@tsed/schema": "^6.107.4",
     "@tsed/swagger": "^6.107.4",
-    "@tsed/gphoto2-driver": "3.1.1",
     "@types/node": "^16.11.11",
     "ajv": "^8.8.2",
     "body-parser": "^1.19.0",
