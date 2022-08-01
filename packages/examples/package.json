@@ -6,7 +6,7 @@
     "@tsed/gphoto2-driver": "3.2.0"
   },
   "devDependencies": {
-    "cli-table3": "0.6.0"
+    "cli-table3": "0.6.2"
   },
   "scripts": {
     "start:abilities": "yarn ts-node -r tsconfig-paths/register src/abilities-list.ts",
