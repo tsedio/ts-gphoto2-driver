@@ -53,7 +53,7 @@
     "@types/node": "16.11.11",
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
-    "barrelsby": "2.3.3",
+    "barrelsby": "2.4.0",
     "cross-env": "7.0.3",
     "eslint": "^8.4.0",
     "eslint-config-prettier": "8.3.0",
