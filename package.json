@@ -57,7 +57,7 @@
     "cross-env": "7.0.3",
     "eslint": "^8.4.0",
     "eslint-config-prettier": "8.3.0",
-    "eslint-plugin-jest": "25.3.0",
+    "eslint-plugin-jest": "27.1.6",
     "eslint-plugin-prettier": "4.0.0",
     "gflow": "5.1.2",
     "husky": "^7.0.4",
