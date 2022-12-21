@@ -751,6 +751,11 @@
   resolved "https://registry.yarnpkg.com/@cloudflare/json-schema-walker/-/json-schema-walker-0.1.1.tgz#d1cc94065327b0b3800158db40cb78124a3476de"
   integrity sha512-P3n0hEgk1m6uKWgL4Yb1owzXVG4pM70G4kRnDQxZXiVvfCRtaqiHu+ZRiRPzmwGBiLTO1LWc2yR1M8oz0YkXww==
 
+"@colors/colors@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
+  integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
+
 "@commitlint/cli@^16.2.3":
   version "16.2.3"
   resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-16.2.3.tgz#6c250ce7a660a08a3ac35dd2ec5039421fb831df"
@@ -4075,15 +4080,14 @@ cli-cursor@^3.1.0:
   dependencies:
     restore-cursor "^3.1.0"
 
-cli-table3@0.6.0, cli-table3@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.npmjs.org/cli-table3/-/cli-table3-0.6.0.tgz"
-  integrity sha512-gnB85c3MGC7Nm9I/FkiasNBOKjOiO1RNuXXarQms37q4QMpWdlbBgD/VnOStA2faG1dpXMv31RFApjX1/QdgWQ==
+cli-table3@0.6.3, cli-table3@^0.6.0:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/cli-table3/-/cli-table3-0.6.3.tgz#61ab765aac156b52f222954ffc607a6f01dbeeb2"
+  integrity sha512-w5Jac5SykAeZJKntOxJCrm63Eg5/4dhMWIcuTbo9rpE+brgaSZo0RuNJZeOyMgsUdhDeojvgyQLmjI+K50ZGyg==
   dependencies:
-    object-assign "^4.1.0"
     string-width "^4.2.0"
   optionalDependencies:
-    colors "^1.1.2"
+    "@colors/colors" "1.5.0"
 
 cli-table@^0.3.1:
   version "0.3.6"
@@ -4259,7 +4263,7 @@ colors@1.0.3:
   resolved "https://registry.npmjs.org/colors/-/colors-1.0.3.tgz"
   integrity sha1-BDP0TYCWgP3rYO0mDxsMJi6CpAs=
 
-colors@1.4.0, colors@^1.1.2:
+colors@1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/colors/-/colors-1.4.0.tgz"
   integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
@@ -11639,16 +11643,7 @@ string-width@^3.0.0:
     is-fullwidth-code-point "^2.0.0"
     strip-ansi "^5.1.0"
 
-string-width@^4.1.0, string-width@^4.2.0:
-  version "4.2.2"
-  resolved "https://registry.npmjs.org/string-width/-/string-width-4.2.2.tgz"
-  integrity sha512-XBJbT3N4JhVumXE0eoLU9DCjcaF92KLNqTmFCnG1pf8duUxFGwtP6AD6nkjw9a3IdiRtL3E2w3JDiE/xi3vOeA==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.0"
-
-string-width@^4.2.3:
+string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
