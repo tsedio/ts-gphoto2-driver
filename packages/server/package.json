@@ -20,7 +20,7 @@
     "@tsed/json-mapper": "^6.107.4",
     "@tsed/logger": "6.1.1",
     "@tsed/platform-express": "^6.107.4",
-    "@tsed/schema": "^6.107.4",
+    "@tsed/schema": "^7.13.3",
     "@tsed/swagger": "^6.107.4",
     "@types/node": "^16.11.11",
     "ajv": "^8.8.2",
