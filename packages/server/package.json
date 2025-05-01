@@ -22,7 +22,7 @@
     "@tsed/platform-express": "^6.107.4",
     "@tsed/schema": "^6.107.4",
     "@tsed/swagger": "^6.107.4",
-    "@types/node": "^16.11.11",
+    "@types/node": "^22.15.3",
     "ajv": "^8.8.2",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
