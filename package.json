@@ -50,7 +50,7 @@
     "@types/ref-napi": "3.0.4",
     "@tsed/monorepo-utils": "1.19.3",
     "@types/jest": "27.0.3",
-    "@types/node": "16.11.11",
+    "@types/node": "22.15.29",
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
     "barrelsby": "2.5.1",
